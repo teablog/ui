@@ -1,5 +1,5 @@
 const URL="http://www.douyacun.com"
-const GITHUB_OAUTH=`https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&scope=user:email`
+const GITHUB_OAUTH=process.env.GITHUB_OAUTH
 const GITHUB_LOGO="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
 const DEFAULT_AVATAR="https://image.00h.tv/noavatar92.png"
 const PAGE_SIZE = 10;
@@ -8,6 +8,7 @@ const BACKEND_URL = {
     "oauth_github": "/api/oauth/github",
     "discussion": "/api/discussion"
 }
+
 
 const env = process.env.NODE_ENV || 'development';
 
