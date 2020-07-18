@@ -1,0 +1,13 @@
+version: "3.3"
+services:
+  blog-ui:
+    image: registry.cn-hangzhou.aliyuncs.com/douyacun/blog-ui:latest
+    container_name: blog-ui
+    restart: always
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://blog-ui:ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - 3000:3000
