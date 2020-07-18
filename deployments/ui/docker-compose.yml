@@ -10,7 +10,7 @@ services:
       timeout: 5s
       retries: 5
     environment:
-      HOST: htts://www.douyacun.com
+      HOST: htts://www.douyacun.com/
       GITHUB_CLIENT_ID: https://github.com/login/oauth/authorize?client_id=25fc4f51f48cb5d52edf&scope=user:email
     ports:
       - 3000:3000
