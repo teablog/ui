@@ -9,5 +9,8 @@ services:
       interval: 5s
       timeout: 5s
       retries: 5
+    environments:
+      HOST: htts://www.douyacun.com
+      GITHUB_CLIENT_ID: 25fc4f51f48cb5d52edf
     ports:
       - 3000:3000
