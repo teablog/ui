@@ -1,7 +1,7 @@
 version: "3.3"
 services:
   blog-ui:
-    image: registry.cn-hangzhou.aliyuncs.com/douyacun/blog-ui:latest
+    image: registry.cn-hangzhou.aliyuncs.com/douyacun/tea-ui:latest
     container_name: blog-ui
     restart: always
     healthcheck:
