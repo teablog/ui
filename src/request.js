@@ -1,7 +1,7 @@
 import axios from 'axios';
-// import generateNginxAccessToken from './nginxAccessToken';
 import https from 'https';
-import {HOST} from "./config";
+import {ENV} from "./config";
+import {ltrim, rtrim} from './utils';
 
 function checkStatus(response) {
 	if (response.status >= 200 && response.status < 300) {
@@ -18,15 +18,10 @@ function checkStatus(response) {
 function parseJson(response) {
 	return response.data
 }
-function ltrim(str) {
-	if (str && str.startsWith('/')) {
-		return str.slice(1);
-	}
-	return str;
-}
+
 async function request(params) {
-	if (!params["url"].startsWith("http")) {
-		params['url'] = HOST + ltrim(params['url'])
+	if (!params["url"].startsWith("http") && ENV.host) {
+		params['url'] = ENV.protocol + "://" + ENV.host + "/" + ltrim(params['url'], "/")
 	}
 	params['withCredentials'] = true;
 	const instance = axios.create({

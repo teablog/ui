@@ -20,7 +20,7 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import DModal from '../src/components/Modal';
 import UserList from '../src/components/UserList';
 import { POST, GET } from '../src/request';
-import { WS_ADDRESS } from '../src/config';
+import { ENV } from '../src/config';
 import '../src/css/chat.css';
 
 
@@ -84,7 +84,7 @@ function reducer(state, action) {
     }
 }
 
-export default function Chat(props) {
+function Chat({ws_address}) {
     const [state, dispatch] = useReducer(reducer, initialState);
     const [modalOpen, setModalOpen] = useState(false);
     const [loading, setloading] = useState(false);
@@ -215,7 +215,7 @@ export default function Chat(props) {
         }
     }
     const initWebsocket = () => {
-        conn = new WebSocket(WS_ADDRESS);
+        conn = new WebSocket(ws_address);
         conn.onmessage = handlerMessage;
         conn.onclose = function () {
             dispatch({ type: "dialog_open", dialogOpen: true })
@@ -396,3 +396,14 @@ export default function Chat(props) {
         </Fragment>
     );
 }
+
+Chat.getInitialProps = async ({ req, query }) => {
+    let ws_address;
+    if (ENV.protocol == "https") {
+        ws_address = "wss://" + ENV.host + "/api/ws/join"
+    } else {
+        ws_address = "ws://" + ENV.host + "/api/ws/join"
+    }
+    return { ...ENV, ws_address }
+}
+export default Chat;

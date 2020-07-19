@@ -35,7 +35,7 @@
     "react-textarea-autosize": "^7.1.0"
   },
   "scripts": {
-    "dev": "NODE_ENV=development node server.js",
+    "dev": "export $(cat .env|xargs) && node server.js",
     "build": "node_modules/.bin/next build",
     "start": "NODE_ENV=production node server.js"
   },

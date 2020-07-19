@@ -13,6 +13,7 @@ import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import Popover from '@material-ui/core/Popover';
 import { parseCookies } from 'nookies'
+import {ENV} from '../config';
 const BIG_SCREEN_WIDTH = 1276;
 
 const useStyles = makeStyles(theme => ({
@@ -114,7 +115,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function MenuPopupState({douyacun, logout}) {
+function MenuPopupState({douyacun, logout, host}) {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -242,7 +243,7 @@ function Layout({ children, leftDrawerDefaultDisplay = false }) {
     }
   }
   const logout = () => {
-    document.cookie = 'douyacun=; path=/;domain=.www.douyacun.com;expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    document.cookie = `douyacun=; path=/;domain=.${host};expires=Thu, 01 Jan 1970 00:00:00 GMT`;
     setCook(undefined);
   }
 
@@ -299,4 +300,7 @@ function Layout({ children, leftDrawerDefaultDisplay = false }) {
   );
 }
 
+Layout.getInitialProps = async ({ req, query }) => {
+  return {...ENV}
+}
 export default Layout;

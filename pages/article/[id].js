@@ -11,6 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
 import Layout from '../../src/layout/Index';
 import { GET } from '../../src/request';
+import { ENV } from "../../src/config";
 import '../../src/css/github-markdown.css';
 import '../../node_modules/highlight.js/styles/github.css';
 import Disqus from "disqus-react"
@@ -73,14 +74,15 @@ const useStyles = makeStyles(theme => ({
 }))
 
 moment.locale('zh-cn');
-function Article({ article, id }) {
+function Article({ article, id, host, disqus_short_name, protocol, disqus_enable}) {
     article = article ? article : {};
-    const disqusShortname = "douyacun" //found in your Disqus.com dashboard
+    const disqusShortname = {disqus_short_name} // Admin/Settings/General.Shortname
     const disqusConfig = {
-        url: `https://www.douyacun.com/article/${id}`, //this.props.pageUrl
+        url: `${protocol}://${host}/article/${id}`, //this.props.pageUrl
         identifier: id, //this.props.uniqueId
         title: article.title //this.props.title
     }
+
     const classes = useStyles();
     const md = new MarkdownIt({
         highlight: function (str, lang) {
@@ -113,10 +115,14 @@ function Article({ article, id }) {
             <article className="markdown-body" >
                 <div dangerouslySetInnerHTML={{ __html: md.render(article.content) }}></div>
             </article>
-            <Disqus.DiscussionEmbed
-                shortname={disqusShortname}
-                config={disqusConfig}
-            />
+            {
+                disqus_enable ?
+                    <Disqus.DiscussionEmbed
+                        shortname={disqusShortname}
+                        config={disqusConfig}
+                    /> : ''
+            }
+
             <div className={classes.qr_code}>
                 <img src={article.wechat_subscription_qrcode} />
                 <Typography variant="inherit">
@@ -144,7 +150,7 @@ Article.getInitialProps = async ({ req, query }) => {
             return {}
         }
     })
-    return { article: data, id: id }
+    return { article: data, id: id, ...ENV }
 }
 
 export default Article;

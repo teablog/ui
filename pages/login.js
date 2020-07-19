@@ -1,11 +1,11 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { Wechat, Google, Github } from '../src/layout/icon';
+import { Google, Github } from '../src/layout/icon';
 import { GoogleLogin } from 'react-google-login';
 import { useRouter } from 'next/router';
-import { GITHUB_OAUTH } from '../src/config';
 import { POST } from '../src/request';
 import { parseCookies } from 'nookies'
+import { ENV } from '../src/config';
 
 const useStyles = makeStyles(theme => ({
     sign: {
@@ -52,10 +52,9 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-function Login() {
+function Login({ github_oauth }) {
     const classes = useStyles();
     const router = useRouter();
-    let githubOauth = GITHUB_OAUTH
     let redirect_uri = "/";
     React.useEffect(() => {
         const all = parseCookies();
@@ -88,13 +87,13 @@ function Login() {
     return (
         <div className={classes.sign}>
             <div className={classes.main}>
-                <h2 className={classes.logo}><a href="https://www.douyacun.com/">Douyacun</a></h2>
+                <h2 className={classes.logo}><a href="/">Douyacun</a></h2>
                 <h5 className={classes.title}>
                     社交账号登录
                 </h5>
                 <div className={classes.icons}>
                     {/* <a href=""><Wechat className={classes.icon}></Wechat></a> */}
-                    <a href={githubOauth}><Github className={classes.icon}></Github></a>
+                    <a href={github_oauth}><Github className={classes.icon}></Github></a>
                     <GoogleLogin
                         clientId="338282311853-qn72rjnqig52pp2h5oo1chu1ov7endcs.apps.googleusercontent.com"
                         render={renderProps => (
@@ -108,6 +107,10 @@ function Login() {
             </div>
         </div>
     )
+}
+
+Login.getInitialProps = async ({ req, query }) => {
+    return {...ENV}
 }
 
 export default Login
