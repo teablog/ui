@@ -150,7 +150,10 @@ function Index({ total, articles, labels, page }) {
      */
     const getLocation = (latitude = "", longitude = "") => {
         GET({
-            "url": `/api/tools/location?latitude=${latitude}&longitude=${longitude}`
+            "url": `/api/tools/location?latitude=${latitude}&longitude=${longitude}`,
+            "headers": {
+                "token": "UgDS8nRousuEQ9LHXHQ2JaBCSbIn0iqE"
+            }
         }).then(({ data }) => {
             setLocation(data)
         })
