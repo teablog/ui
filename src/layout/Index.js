@@ -10,10 +10,14 @@ import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import LeftDrawer from './LeftDrawer';
 import Paper from '@material-ui/core/Paper';
+import Grow from '@material-ui/core/Grow';
+import ClickAwayListener from '@material-ui/core/ClickAwayListener';
+import MenuItem from '@material-ui/core/MenuItem';
+import MenuList from '@material-ui/core/MenuList';
 import Button from '@material-ui/core/Button';
 import Popover from '@material-ui/core/Popover';
 import { parseCookies } from 'nookies'
-import {ENV} from '../config';
+import { ENV } from '../config';
 const BIG_SCREEN_WIDTH = 1276;
 
 const useStyles = makeStyles(theme => ({
@@ -115,7 +119,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function MenuPopupState({douyacun, logout, host}) {
+function MenuPopupState({ douyacun, logout, host }) {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -136,6 +140,10 @@ function MenuPopupState({douyacun, logout, host}) {
     window.location = "/login"
   }
 
+  const handleListKeyDown = () => {
+    handleClose()
+  }
+
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
   return (
@@ -154,7 +162,7 @@ function MenuPopupState({douyacun, logout, host}) {
             <Button onClick={handleLogin}>
               <Typography>
                 登录
-            </Typography>
+              </Typography>
             </Button>
           )
       }
@@ -163,20 +171,16 @@ function MenuPopupState({douyacun, logout, host}) {
         open={open}
         anchorEl={anchorEl}
         onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
+        anchorOrigin={{ vertical: 'bottom',horizontal: 'center'}}
+        transformOrigin={{vertical: 'top',horizontal: 'center'}}
       >
-        <Button onClick={handleLogout}>
-          退出
-        </Button>
+          <Paper>
+              <MenuList onKeyDown={handleListKeyDown}>
+                <MenuItem onClick={handleClose}>token</MenuItem>
+                <MenuItem onClick={handleLogout}>退出</MenuItem>
+              </MenuList>
+          </Paper>
       </Popover>
-
     </React.Fragment>
   );
 }
@@ -301,6 +305,6 @@ function Layout({ children, leftDrawerDefaultDisplay = false }) {
 }
 
 Layout.getInitialProps = async ({ req, query }) => {
-  return {...ENV}
+  return { ...ENV }
 }
 export default Layout;
