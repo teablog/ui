@@ -1554,7 +1554,7 @@ body,button,dd,div,dl,dt,form,h1,h2,h3,h4,h5,h6,input,li,ol,p,td,textarea,th,ul 
 	padding: 0;
 	margin: 0
 }
-ul {
+#sec-main ul {
 	list-style: none
 }
 ::selection {
@@ -1567,30 +1567,30 @@ ul {
 	color: #fff
 }
 
-.fl {
+#sec-main .fl {
 	float: left
 }
 
-.fr {
+#sec-main .fr {
 	float: right
 }
 
-.dis {
+#sec-main .dis {
 	display: block
 }
 
-.undis {
+#sec-main .undis {
 	display: none
 }
 
-.container {
+#sec-main .container {
 	display: block;
 	max-width: 500px;
 	margin: 0 auto;
 	box-sizing: border-box;
 }
 
-ol,ul {
+#sec-main ol,#sec-main ul {
 	list-style: none
 }
 
@@ -1598,7 +1598,7 @@ ol,ul {
 	box-sizing: border-box
 } */
 
-body.modal-open {
+#sec-main body.modal-open {
 	position: fixed;
 	width: 100%
 }

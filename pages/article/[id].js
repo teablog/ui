@@ -48,29 +48,6 @@ const useStyles = makeStyles(theme => ({
         '-webkit-tap-highlight-color': 'rgba(0,0,0,0)',
         color: 'rgba(0,0,0,0.3)'
     },
-    qr_code: {
-        position: 'absolute',
-        right: -140,
-        top: 0,
-        width: 140,
-        padding: 16,
-        border: '1px solid #d9dadc',
-        backgroundColor: '#fff',
-        wordWrap: 'break-word',
-        wordBreak: 'break-all',
-        fontSize: 14,
-        textAlign: 'center',
-        color: '#717375',
-        '& img': {
-            width: 102,
-            height: 102,
-            position: 'relative'
-        },
-        display: "none",
-        [theme.breakpoints.up('md')]: {
-            display: 'block',
-        },
-    }
 }))
 
 moment.locale('zh-cn');

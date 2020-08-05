@@ -115,7 +115,6 @@ function Chat({ws_address}) {
             _isMounted = false;
         }
     }, []);
-
     const loadMore = () => {
         if (loading) {
             let channelMessages = state.messages[state.currentId];
