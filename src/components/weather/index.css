@@ -1590,7 +1590,7 @@ body,button,dd,div,dl,dt,form,h1,h2,h3,h4,h5,h6,input,li,ol,p,td,textarea,th,ul 
 	box-sizing: border-box;
 }
 
-#sec-main ol,#sec-main ul {
+#sec-hours ol{
 	list-style: none
 }
 
