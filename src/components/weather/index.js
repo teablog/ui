@@ -125,7 +125,7 @@ function Weather({ location }) {
                 )
             }
         })
-        if (list.length > 25) {
+        while (list.length > 25) {
             list.pop()
         }
         return list
