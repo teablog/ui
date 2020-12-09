@@ -14,7 +14,7 @@ import { GET } from '../../src/request';
 import { ENV } from "../../src/config";
 import '../../src/css/github-markdown.css';
 import '../../node_modules/highlight.js/styles/github.css';
-import Disqus from "disqus-react"
+// import Disqus from "disqus-react"
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -76,13 +76,6 @@ const useStyles = makeStyles(theme => ({
 moment.locale('zh-cn');
 function Article({ article, id, host, disqus_short_name, protocol, disqus_enable }) {
     article = article ? article : {};
-    const disqusShortname = { disqus_short_name } // Admin/Settings/General.Shortname
-    const disqusConfig = {
-        url: `${protocol}://${host}/article/${id}`, //this.props.pageUrl
-        identifier: id, //this.props.uniqueId
-        title: article.title //this.props.title
-    }
-
     const classes = useStyles();
     const md = new MarkdownIt({
         highlight: function (str, lang) {

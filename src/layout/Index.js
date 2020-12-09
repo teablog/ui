@@ -270,7 +270,7 @@ function Layout({ children, leftDrawerDefaultDisplay = false }) {
                 <MenuIcon />
               </IconButton>
               <Typography className={classes.title} variant="h2" noWrap>
-                <a href="/" style={{ color: "inherit" }}>Douyacun</a>
+                <a href="/" style={{ color: "inherit" }}><img src="/logo.png"></img></a>
               </Typography>
             </div>
             <div className={classes.wc + ' ' + classes.fullWidth}>
