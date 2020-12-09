@@ -74,6 +74,240 @@ function reducer(state, action) {
     }
 }
 
+const messages = [
+    {
+        "id": "4505040792cc359c870f4f7566055667",
+        "date": "2020-05-20T21:22:21.312387+08:00",
+        "sender": {
+            "id": "a647d9d3d464a8fa",
+            "name": "douyacun liu"
+        },
+        "type": "TEXT",
+        "content": "😍",
+        "channel_id": "douyacun"
+    },
+    {
+        "id": "4505040792cc359c870f4f7566055667",
+        "date": "2020-05-20T21:22:21.312387+08:00",
+        "sender": {
+            "id": "a647d9d3d464a8fa",
+            "name": "douyacun liu"
+        },
+        "type": "TEXT",
+        "content": "😍",
+        "channel_id": "douyacun"
+    },
+    {
+        "id": "4505040792cc359c870f4f7566055667",
+        "date": "2020-05-20T21:22:21.312387+08:00",
+        "sender": {
+            "id": "a647d9d3d464a8fa",
+            "name": "douyacun liu"
+        },
+        "type": "TEXT",
+        "content": "😍",
+        "channel_id": "douyacun"
+    },
+    {
+        "id": "4505040792cc359c870f4f7566055667",
+        "date": "2020-05-20T21:22:21.312387+08:00",
+        "sender": {
+            "id": "a647d9d3d464a8fa",
+            "name": "douyacun liu"
+        },
+        "type": "TEXT",
+        "content": "😍",
+        "channel_id": "douyacun"
+    },
+    {
+        "id": "4505040792cc359c870f4f7566055667",
+        "date": "2020-05-20T21:22:21.312387+08:00",
+        "sender": {
+            "id": "a647d9d3d464a8fa",
+            "name": "douyacun liu"
+        },
+        "type": "TEXT",
+        "content": "😍",
+        "channel_id": "douyacun"
+    },
+    {
+        "id": "4505040792cc359c870f4f7566055667",
+        "date": "2020-05-20T21:22:21.312387+08:00",
+        "sender": {
+            "id": "a647d9d3d464a8fa",
+            "name": "douyacun liu"
+        },
+        "type": "TEXT",
+        "content": "😍",
+        "channel_id": "douyacun"
+    },
+    {
+        "id": "4505040792cc359c870f4f7566055667",
+        "date": "2020-05-20T21:22:21.312387+08:00",
+        "sender": {
+            "id": "a647d9d3d464a8fa",
+            "name": "douyacun liu"
+        },
+        "type": "TEXT",
+        "content": "😍",
+        "channel_id": "douyacun"
+    },
+    {
+        "id": "4505040792cc359c870f4f7566055667",
+        "date": "2020-05-20T21:22:21.312387+08:00",
+        "sender": {
+            "id": "a647d9d3d464a8fa",
+            "name": "douyacun liu"
+        },
+        "type": "TEXT",
+        "content": "😍",
+        "channel_id": "douyacun"
+    },
+    {
+        "id": "4505040792cc359c870f4f7566055667",
+        "date": "2020-05-20T21:22:21.312387+08:00",
+        "sender": {
+            "id": "a647d9d3d464a8fa",
+            "name": "douyacun liu"
+        },
+        "type": "TEXT",
+        "content": "😍",
+        "channel_id": "douyacun"
+    },
+    {
+        "id": "4505040792cc359c870f4f7566055667",
+        "date": "2020-05-20T21:22:21.312387+08:00",
+        "sender": {
+            "id": "a647d9d3d464a8fa",
+            "name": "douyacun liu"
+        },
+        "type": "TEXT",
+        "content": "😍",
+        "channel_id": "douyacun"
+    },
+    {
+        "id": "4505040792cc359c870f4f7566055667",
+        "date": "2020-05-20T21:22:21.312387+08:00",
+        "sender": {
+            "id": "a647d9d3d464a8fa",
+            "name": "douyacun liu"
+        },
+        "type": "TEXT",
+        "content": "😍",
+        "channel_id": "douyacun"
+    },
+    {
+        "id": "4505040792cc359c870f4f7566055667",
+        "date": "2020-05-20T21:22:21.312387+08:00",
+        "sender": {
+            "id": "a647d9d3d464a8fa",
+            "name": "douyacun liu"
+        },
+        "type": "TEXT",
+        "content": "😍",
+        "channel_id": "douyacun"
+    },
+    {
+        "id": "4505040792cc359c870f4f7566055667",
+        "date": "2020-05-20T21:22:21.312387+08:00",
+        "sender": {
+            "id": "a647d9d3d464a8fa",
+            "name": "douyacun liu"
+        },
+        "type": "TEXT",
+        "content": "😍",
+        "channel_id": "douyacun"
+    },
+    {
+        "id": "4505040792cc359c870f4f7566055667",
+        "date": "2020-05-20T21:22:21.312387+08:00",
+        "sender": {
+            "id": "a647d9d3d464a8fa",
+            "name": "douyacun liu"
+        },
+        "type": "TEXT",
+        "content": "😍",
+        "channel_id": "douyacun"
+    },
+    {
+        "id": "4505040792cc359c870f4f7566055667",
+        "date": "2020-05-20T21:22:21.312387+08:00",
+        "sender": {
+            "id": "a647d9d3d464a8fa",
+            "name": "douyacun liu"
+        },
+        "type": "TEXT",
+        "content": "😍",
+        "channel_id": "douyacun"
+    },
+    {
+        "id": "4505040792cc359c870f4f7566055667",
+        "date": "2020-05-20T21:22:21.312387+08:00",
+        "sender": {
+            "id": "a647d9d3d464a8fa",
+            "name": "douyacun liu"
+        },
+        "type": "TEXT",
+        "content": "😍",
+        "channel_id": "douyacun"
+    },
+    {
+        "id": "4505040792cc359c870f4f7566055667",
+        "date": "2020-05-20T21:22:21.312387+08:00",
+        "sender": {
+            "id": "a647d9d3d464a8fa",
+            "name": "douyacun liu"
+        },
+        "type": "TEXT",
+        "content": "😍",
+        "channel_id": "douyacun"
+    },
+    {
+        "id": "4505040792cc359c870f4f7566055667",
+        "date": "2020-05-20T21:22:21.312387+08:00",
+        "sender": {
+            "id": "a647d9d3d464a8fa",
+            "name": "douyacun liu"
+        },
+        "type": "TEXT",
+        "content": "😍",
+        "channel_id": "douyacun"
+    },
+    {
+        "id": "4505040792cc359c870f4f7566055667",
+        "date": "2020-05-20T21:22:21.312387+08:00",
+        "sender": {
+            "id": "a647d9d3d464a8fa",
+            "name": "douyacun liu"
+        },
+        "type": "TEXT",
+        "content": "😍",
+        "channel_id": "douyacun"
+    },
+    {
+        "id": "4505040792cc359c870f4f7566055667",
+        "date": "2020-05-20T21:22:21.312387+08:00",
+        "sender": {
+            "id": "a647d9d3d464a8fa",
+            "name": "douyacun liu"
+        },
+        "type": "TEXT",
+        "content": "😍",
+        "channel_id": "douyacun"
+    },
+    {
+        "id": "4505040792cc359c870f4f7566055667",
+        "date": "2020-05-20T21:22:21.312387+08:00",
+        "sender": {
+            "id": "a647d9d3d464a8fa",
+            "name": "douyacun liu"
+        },
+        "type": "TEXT",
+        "content": "😍",
+        "channel_id": "douyacun"
+    },
+
+]
 function Discusss({ws_address}) {
     const [state, dispatch] = useReducer(reducer, initialState);
     const [modalOpen, setModalOpen] = useState(false);
@@ -312,7 +546,7 @@ function Discusss({ws_address}) {
                                 {loading && <div className="loading">
                                     <CircularProgress color="inherit" />
                                 </div>}
-                                {renderMessages(state.messages[state.currentId])}
+                                {renderMessages(messages)}
                             </div>
                             <div className="message-input-fix">
                                 <MessageInputSmall send={send} />
