@@ -12,18 +12,34 @@ import moment from 'moment';
 import Layout from '../../src/layout/Index';
 import { GET } from '../../src/request';
 import { ENV } from "../../src/config";
+import Discuss from '../../src/components/discuss';
 import '../../src/css/github-markdown.css';
 import '../../node_modules/highlight.js/styles/github.css';
-// import Disqus from "disqus-react"
 
 const useStyles = makeStyles(theme => ({
     root: {
-        margin: 'auto',
+        width: "100vw",
+        height: "100vh",
+        display: "inline-flex",
+        backgroundColor: "rgb(250,250,250)"
+    },
+    left: {
+        marginLeft: '280px',
         maxWidth: 980,
         minWidth: 200,
-        padding: '16px 32px 32px 32px',
-        marginTop: 32,
+        padding: '32px',
         position: 'relative',
+        backgroundColor: "#fff",
+        marginTop: "64px"
+    },
+    right: {
+        flex: 1,
+        transform: "scale(1,1)",
+        backgroundColor: "#fff",
+    },
+    scrollable: {
+        position: "relative",
+        "overflow-y": "scroll",
     },
     bottom: {
         height: '3rem',
@@ -50,7 +66,7 @@ const useStyles = makeStyles(theme => ({
     },
     qr_code: {
         position: 'absolute',
-        right: -140,
+        left: -180,
         top: 0,
         width: 140,
         padding: 16,
@@ -91,7 +107,7 @@ function Article({ article, id, host, disqus_short_name, protocol, disqus_enable
     md.use(toc)
     md.use(lists)
     md.use(table)
-    return (<Layout >
+    return (<Layout marginTop={false} >
         <Head>
             <title>{article.title} (douyacun)</title>
             <meta name="viewport" content="initial-scale=1.0, width=device-width" />
@@ -99,32 +115,30 @@ function Article({ article, id, host, disqus_short_name, protocol, disqus_enable
             <meta name="description" content={article.description} />
         </Head>
         <div className={classes.root}>
-            <Typography variant="h2" className={classes.title}>{article.title}</Typography>
-            <div className={classes.meta_content}>
-                <Typography component="span" className={classes.media_meta}>原创:</Typography>
-                <Typography component="span" className={classes.media_meta}>{article.author}</Typography>
-                <Typography component="span" className={classes.media_meta}>{moment(article.date).calendar()}发布</Typography>
+            <div className={classes.left + " " + classes.scrollable }>
+                {/* <div style={{ height: '64px' }}></div> */}
+                <Typography variant="h2" className={classes.title}>{article.title}</Typography>
+                <div className={classes.meta_content}>
+                    <Typography component="span" className={classes.media_meta}>原创:</Typography>
+                    <Typography component="span" className={classes.media_meta}>{article.author}</Typography>
+                    <Typography component="span" className={classes.media_meta}>{moment(article.date).calendar()}发布</Typography>
+                </div>
+                <article className="markdown-body" >
+                    <div dangerouslySetInnerHTML={{ __html: md.render(article.content) }}></div>
+                </article>
+                {/* <div className={classes.qr_code}>
+                    <img src={article.wechat_subscription_qrcode} />
+                    <Typography variant="inherit">
+                        微信扫一扫<br />
+                        关注该公众号
+                    </Typography>
+                </div> */}
             </div>
-            <article className="markdown-body" >
-                <div dangerouslySetInnerHTML={{ __html: md.render(article.content) }}></div>
-            </article>
-            {
-                disqus_enable ?
-                    <Disqus.DiscussionEmbed
-                        shortname={disqusShortname}
-                        config={disqusConfig}
-                    /> : ''
-            }
+            <div className={classes.right  + " " + classes.scrollable }>
+                <Discuss />
+            </div>
 
-            <div className={classes.qr_code}>
-                <img src={article.wechat_subscription_qrcode} />
-                <Typography variant="inherit">
-                    微信扫一扫<br />
-                    关注该公众号
-                </Typography>
-            </div>
         </div>
-
     </Layout >
     );
 }
@@ -134,7 +148,7 @@ Article.getInitialProps = async ({ req, query }) => {
     const { data } = await GET({
         "url": `/api/article/${id}`,
         "headers": {
-            "User-Agent": req.headers["user-agent"]
+            // "User-Agent": req.headers["user-agent"]
         }
     }).then(resp => {
         if (resp.code === 0) {

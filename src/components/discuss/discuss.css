@@ -1,15 +1,3 @@
-.messenger {
-    width: 100vw;
-    height: 100vh;
-    background: #eeeef1;
-    display: inline-flex;
-    /* display: grid;
-    grid-template-columns: 350px auto;
-    grid-template-rows: 60px auto 60px;
-    grid-column-gap: 1px;
-    grid-row-gap: 1px; */
-}
-
 .container {
     padding: 10px;
 }
@@ -106,11 +94,9 @@
 
 .message-input-fix {
     position: fixed;
-    left: 400px;
+    left: 0px;
     right: 0;
     bottom: 0px;
-    /* left: 0; */
-    /* right: 0px; */
 }
 
 .message-list {

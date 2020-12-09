@@ -67,14 +67,6 @@ function reducer(state, action) {
                 newChannels.push(channel)
             }
             return { ...state, channels: newChannels, messages: m };
-        case 'new_channel':// 创建新的channel
-        console.log(channels, action);
-            for (let k in channels) {
-                if (channels[k].id == action.channel.id) {
-                    return { ...state, currentId: action.channel.id };
-                }
-            }
-            return { ...state, channels: [...state.channels, action.channel], currentId: action.channel.id }
         case 'current':// 当前阅读窗口
             return { ...state, currentId: action.channel_id }
         case "dialog_open"://
@@ -308,7 +300,7 @@ function Chat({ws_address}) {
     return (
         <Fragment>
             <div className="messenger">
-                <div className="scrollable sidebar">
+                {/* <div className="scrollable sidebar">
                     <Toolbar
                         title="Messenger"
                         leftItems={[
@@ -346,7 +338,7 @@ function Chat({ws_address}) {
                             ))
                         }
                     </div>
-                </div>
+                </div> */}
                 <div className="scrollable content" ref={contentRef} onScroll={upScrollLoadMore}>
                     <div className="message-list">
                         {

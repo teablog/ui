@@ -187,7 +187,7 @@ function MenuPopupState({ douyacun, logout, host }) {
   );
 }
 
-function Layout({ children, leftDrawerDefaultDisplay = false }) {
+function Layout({ children, leftDrawerDefaultDisplay = false, marginTop = true }) {
   const classes = useStyles();
   const [wideEl, setWideEl] = React.useState(null); // 判断屏幕是否为宽屏
   const [drawerStat, setDrawerStat] = React.useState(false);// leftDrawer
@@ -255,7 +255,6 @@ function Layout({ children, leftDrawerDefaultDisplay = false }) {
 
   return (
     <dyc-app className={classes.root} open-and-visible={isWide && isDrawerOpen ? "true" : "false"}>
-      {/* Header */}
       <header className={classes.grow}>
         <AppBar position="fixed" component="div" style={{ zIndex: 1000 }}>
           <Toolbar>
@@ -270,7 +269,7 @@ function Layout({ children, leftDrawerDefaultDisplay = false }) {
                 <MenuIcon />
               </IconButton>
               <Typography className={classes.title} variant="h2" noWrap>
-                <a href="/" style={{ color: "inherit" }}><img src="/logo.png"></img></a>
+                <a href="/" style={{ color: "#666" }}>Douyacun</a>
               </Typography>
             </div>
             <div className={classes.wc + ' ' + classes.fullWidth}>
@@ -297,9 +296,12 @@ function Layout({ children, leftDrawerDefaultDisplay = false }) {
           </Toolbar>
         </AppBar>
         <LeftDrawer isOpen={isDrawerOpen} toggleDrawer={() => toggleDrawer(false)} isWide={isWide} />
-        <div style={{ height: '64px' }}></div>
+        {
+          marginTop ? (<div style={{ height: '64px' }}></div>) : ""
+        }
       </header>
       <Paper square={true} elevation={0}>
+
         {children}
       </Paper>
     </dyc-app>
