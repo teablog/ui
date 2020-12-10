@@ -16,13 +16,15 @@ import Discuss from '../../src/components/discuss';
 import '../../src/css/github-markdown.css';
 import '../../node_modules/highlight.js/styles/github.css';
 import { Autorenew } from '@material-ui/icons';
+import Drawer from '@material-ui/core/Drawer';
 
 const useStyles = makeStyles(theme => ({
     root: {
         width: "100%",
         height: "100vh",
         display: "inline-flex",
-        backgroundColor: "rgb(250,250,250)",
+        overflow: "auto"
+        // backgroundColor: "rgb(250,250,250)",
     },
     left: {
         // marginLeft: '2px',
@@ -31,6 +33,7 @@ const useStyles = makeStyles(theme => ({
         //         marginLeft: '280px'
         //     }
         // },
+        margin: "auto",
         maxWidth: 980,
         minWidth: 200,
         padding: '32px',
@@ -38,14 +41,16 @@ const useStyles = makeStyles(theme => ({
         backgroundColor: "#fff",
         marginTop: "64px"
     },
-    right: {
-        flex: 1,
-        transform: "scale(1,1)",
-        backgroundColor: "#fff",
-    },
-    scrollable: {
-        position: "relative",
-        "overflow-y": "scroll",
+    drawerPaper: {
+        // width: 800,
+        overflow: "auto",
+        minWidth: 480,
+        [theme.breakpoints.up('sm')]: {
+          width: 480,
+        },
+        backgroundColor: 'rgb(250,250,250)',
+        borderRight: 'None',
+        zIndex: 200
     },
     bottom: {
         height: '3rem',
@@ -139,11 +144,23 @@ function Article({ article, id, host, disqus_short_name, protocol, disqus_enable
                     </Typography>
                 </div> */}
             </div>
-            <div className={classes.right + " " + classes.scrollable}>
-                <div style={{ height: '64px' }}></div>
-                <Discuss />
-            </div>
 
+            <Drawer
+                open={true}
+                // onClose={toggleDrawer()}
+                // variant={props.isWide ? "persistent" : "temporary"}
+                classes={{
+                    paper: classes.drawerPaper,
+                }}
+                anchor="right"
+                variant="persistent"
+                transitionDuration={200}
+            >
+                <div>
+                    <div style={{ height: '64px' }}></div>
+                    <Discuss />
+                </div>
+            </Drawer>
         </div>
     </Layout >
     );

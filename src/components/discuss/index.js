@@ -534,12 +534,6 @@ function Discusss({ ws_address }) {
             <div ref={contentRef} onScroll={upScrollLoadMore}>
                 <div className="message-list">
                     <div>
-                        <Toolbar
-                            title="hello world!"
-                            rightItems={[
-                                // <Info key="info" className="button" />
-                            ]}
-                        />
                         <div className="message-list-container">
                             {loading && <div className="loading">
                                 <CircularProgress color="inherit" />
