@@ -1,5 +1,6 @@
 .container {
-    padding: 10px;
+
+    transform: translate(0, 0);
 }
 
 .scrollable {
@@ -93,7 +94,8 @@
 }
 
 .message-input-fix {
-    position: fixed;
+    position: sticky;
+    position: -webkit-sticky;
     left: 0px;
     right: 0;
     bottom: 0px;
@@ -108,7 +110,7 @@
 
 .message-list .message-list-container {
     padding: 0px 20px;
-    margin-bottom: 70px;
+    margin-bottom: 30px;
 }
 
 .conversation-list {

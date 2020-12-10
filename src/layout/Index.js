@@ -114,6 +114,12 @@ const useStyles = makeStyles(theme => ({
   },
   button: {
     textTransform: "none"
+  },
+  marginLeft: {
+    marginLeft: 280,
+  },
+  marginLeftTranslation: {
+    transition: "margin-left 200ms"
   }
 }));
 
@@ -301,7 +307,6 @@ function Layout({ children, leftDrawerDefaultDisplay = false, marginTop = true }
         }
       </header>
       <Paper square={true} elevation={0}>
-
         {children}
       </Paper>
     </dyc-app>

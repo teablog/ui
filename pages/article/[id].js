@@ -15,16 +15,22 @@ import { ENV } from "../../src/config";
 import Discuss from '../../src/components/discuss';
 import '../../src/css/github-markdown.css';
 import '../../node_modules/highlight.js/styles/github.css';
+import { Autorenew } from '@material-ui/icons';
 
 const useStyles = makeStyles(theme => ({
     root: {
-        width: "100vw",
+        width: "100%",
         height: "100vh",
         display: "inline-flex",
-        backgroundColor: "rgb(250,250,250)"
+        backgroundColor: "rgb(250,250,250)",
     },
     left: {
-        marginLeft: '280px',
+        // marginLeft: '2px',
+        // '@media screen and (min-width: 1736px)': {
+        //     'dyc-app[open-and-visible="true"] &': {
+        //         marginLeft: '280px'
+        //     }
+        // },
         maxWidth: 980,
         minWidth: 200,
         padding: '32px',
@@ -115,8 +121,7 @@ function Article({ article, id, host, disqus_short_name, protocol, disqus_enable
             <meta name="description" content={article.description} />
         </Head>
         <div className={classes.root}>
-            <div className={classes.left + " " + classes.scrollable }>
-                {/* <div style={{ height: '64px' }}></div> */}
+            <div className={classes.left + " " + classes.scrollable}>
                 <Typography variant="h2" className={classes.title}>{article.title}</Typography>
                 <div className={classes.meta_content}>
                     <Typography component="span" className={classes.media_meta}>原创:</Typography>
@@ -134,7 +139,8 @@ function Article({ article, id, host, disqus_short_name, protocol, disqus_enable
                     </Typography>
                 </div> */}
             </div>
-            <div className={classes.right  + " " + classes.scrollable }>
+            <div className={classes.right + " " + classes.scrollable}>
+                <div style={{ height: '64px' }}></div>
                 <Discuss />
             </div>
 

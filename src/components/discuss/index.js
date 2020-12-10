@@ -308,7 +308,7 @@ const messages = [
     },
 
 ]
-function Discusss({ws_address}) {
+function Discusss({ ws_address }) {
     const [state, dispatch] = useReducer(reducer, initialState);
     const [modalOpen, setModalOpen] = useState(false);
     const [loading, setloading] = useState(false);
@@ -530,29 +530,26 @@ function Discusss({ws_address}) {
     //     })
     // }
     return (
-        <Fragment>
+        <div className="container">
             <div ref={contentRef} onScroll={upScrollLoadMore}>
-                <div style={{ height: '64px' }}></div>
                 <div className="message-list">
-                    {
-                        state.currentId ? (<div>
-                            <Toolbar
-                                title="hello world!"
-                                rightItems={[
-                                    // <Info key="info" className="button" />
-                                ]}
-                            />
-                            <div className="message-list-container">
-                                {loading && <div className="loading">
-                                    <CircularProgress color="inherit" />
-                                </div>}
-                                {renderMessages(messages)}
-                            </div>
-                            <div className="message-input-fix">
-                                <MessageInputSmall send={send} />
-                            </div>
-                        </div>) : ''
-                    }
+                    <div>
+                        <Toolbar
+                            title="hello world!"
+                            rightItems={[
+                                // <Info key="info" className="button" />
+                            ]}
+                        />
+                        <div className="message-list-container">
+                            {loading && <div className="loading">
+                                <CircularProgress color="inherit" />
+                            </div>}
+                            {renderMessages(messages)}
+                        </div>
+                    </div>
+                </div>
+                <div className="message-input-fix">
+                    <MessageInputSmall send={send} />
                 </div>
             </div>
             <Dialog
@@ -574,7 +571,7 @@ function Discusss({ws_address}) {
                     </Button>
                 </DialogActions>
             </Dialog>
-        </Fragment>
+        </div>
     );
 }
 
