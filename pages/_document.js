@@ -1,12 +1,12 @@
 /* eslint-disable react/no-danger */
 import React from 'react';
-import Document, { Head, Main, NextScript } from 'next/document';
+import Document, { Html, Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/styles';
 
 class MyDocument extends Document {
   render() {
     return (
-      <html
+      <Html
         lang="en"
         style={{
           height: '100%',
@@ -34,7 +34,7 @@ class MyDocument extends Document {
         <div style={{display: "none"}}>
           <script type="text/javascript" src="https://s9.cnzz.com/z_stat.php?id=1278122506&web_id=1278122506"></script>
         </div>
-      </html>
+      </Html>
     );
   }
 }

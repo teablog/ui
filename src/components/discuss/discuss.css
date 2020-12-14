@@ -1,6 +1,6 @@
 .container {
-
     transform: translate(0, 0);
+    height: 100vh;
 }
 
 .scrollable {

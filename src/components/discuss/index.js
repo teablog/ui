@@ -23,50 +23,18 @@ import './discuss.css';
 
 
 let MY_USER_ID, conn;
-const initialState = { messages: {}, channels: [], currentId: "douyacun", dialogOpen: false };
+const initialState = { messages: [], dialogOpen: false };
 const READ_HISTORY = "read_history";
 moment.locale('zh-cn');
 
 function reducer(state, action) {
-    let prev = [];
     let m = state.messages;
-    let newChannels = [];
-    let channels = state.channels;
     switch (action.type) {
         case 'new_message':// 新消息
-            if (m.hasOwnProperty(action.channel_id)) {
-                prev = m[action.channel_id];
-            }
-            m[action.channel_id] = [...prev, action.msg];
-            // console.log(m);
-            return { ...state, messages: m };
+            console.log("new message: " + action.msg);
+            return { ...state, messages: [...state.messages, action.msg] };
         case 'history_messages': // 加载更多历史消息
-            m = state.messages;
-            if (m.hasOwnProperty(action.channel_id)) {
-                prev = m[action.channel_id];
-            }
-            for (let k in channels) {
-                if (channels[k].id == action.channel_id) {
-                    channels[k].total = action.total
-                }
-            }
-            m[action.channel_id] = [...action.messages, ...prev];
-            return { ...state, messages: m, channels: channels };
-        case 'channels':// 加载订阅channel
-            let channel;
-            for (let k in action.channels) {
-                channel = action.channels[k];
-                prev = [];
-                if (m.hasOwnProperty(channel.id)) {
-                    prev = m[channel.id];
-                }
-                m[channel.id] = [...channel['messages'], ...prev]
-                delete (channel.messages);
-                newChannels.push(channel)
-            }
-            return { ...state, channels: newChannels, messages: m };
-        case 'current':// 当前阅读窗口
-            return { ...state, currentId: action.channel_id }
+            return { ...state, messages: [...action.messages, ...state.messages] };
         case "dialog_open"://
             return { ...state, dialogOpen: action.dialogOpen }
         default:
@@ -308,7 +276,7 @@ const messages = [
     },
 
 ]
-function Discusss({ ws_address }) {
+function Discusss({ ws_address, articleId }) {
     const [state, dispatch] = useReducer(reducer, initialState);
     const [modalOpen, setModalOpen] = useState(false);
     const [loading, setloading] = useState(false);
@@ -318,59 +286,59 @@ function Discusss({ ws_address }) {
     const scrollToBottom = () => {
         // 保证消息在最下面
         contentRef.current.scrollTop = contentRef.current.scrollHeight
+        console.log(contentRef.current.scrollHeight);
     }
-    // /**
-    //  * const [messages, setMessages] = React.useState([]);
-    //  * useEffect 第二个参数的含义，保证initWebsocket只会初始化一次，这样会导致messages变化后，handlerMessage中message不会变化，故此采用dispatch的方式
-    //  * @link https://zh-hans.reactjs.org/docs/hooks-faq.html#what-can-i-do-if-my-effect-dependencies-change-too-often
-    //  */
-    // useEffect(() => {
-    //     initWebsocket();
-    //     getChannels().then(scrollToBottom)
-    //     const all = parseCookies();
-    //     if (all.douyacun) {
-    //         const douyacun = JSON.parse(all.douyacun);
-    //         MY_USER_ID = douyacun.id
-    //         console.log(MY_USER_ID);
-    //     } else {
-    //         window.location = `/login?redirect_uri=` + escape(router.asPath)
-    //     }
-    //     return () => {
-    //         _isMounted = false;
-    //     }
-    // }, []);
-    const loadMore = () => {
-        if (loading) {
-            let channelMessages = state.messages[state.currentId];
-            if (channelMessages && channelMessages.length > 0) {
-                let channel = getChannelById(state.currentId);
-                if (channel.total > 0) {
-                    let lastMessage = channelMessages[0];
-                    let before = moment(lastMessage.date).valueOf();
-                    setMessagesHeight(contentRef.current.scrollHeight);
-                    GET({
-                        url: "/api/ws/channel/messages",
-                        params: {
-                            before: before,
-                            channel_id: state.currentId
-                        }
-                    }).then(({ data: { messages, total } }) => {
-                        dispatch({ type: "history_messages", channel_id: state.currentId, messages: messages, total: total });
-                        setloading(false);
-                    });
-                }
-            }
+    /**
+     * const [messages, setMessages] = React.useState([]);
+     * useEffect 第二个参数的含义，保证initWebsocket只会初始化一次，这样会导致messages变化后，handlerMessage中message不会变化，故此采用dispatch的方式
+     * @link https://zh-hans.reactjs.org/docs/hooks-faq.html#what-can-i-do-if-my-effect-dependencies-change-too-often
+     */
+    useEffect(() => {
+        initWebsocket();
+        loadMore().then(scrollToBottom);
+        scrollToBottom()
+        const all = parseCookies();
+        if (all.douyacun) {
+            const douyacun = JSON.parse(all.douyacun);
+            MY_USER_ID = douyacun.id
+            console.log(MY_USER_ID);
+        } else {
+            window.location = `/login?redirect_uri=` + escape(router.asPath)
         }
+        return () => {
+            // _isMounted = false;
+        }
+    }, []);
+
+    const loadMore = () => {
+        let before;
+        if (state.messages.length > 0) {
+            let lastMessage = state.messages[0];
+            before = moment(lastMessage.date).valueOf();
+        } else {
+            before = moment().valueOf();
+        }
+        setMessagesHeight(contentRef.current.scrollHeight);
+        return GET({
+            url: "/api/ws/article/messages",
+            params: {
+                before: before,
+                article_id: articleId
+            }
+        }).then(({ data: { messages, total } }) => {
+            dispatch({ type: "history_messages", messages: messages });
+            setloading(false);
+        });
     }
-    // useEffect(() => {
-    //     let t = setTimeout(loadMore, 1000);
-    //     if (!loading) {
-    //         contentRef.current.scrollTop = contentRef.current.scrollHeight - messagesHeight;
-    //     }
-    //     return () => {
-    //         clearTimeout(t);
-    //     }
-    // }, [loading]);
+    useEffect(() => {
+        let t = setTimeout(loadMore, 1000);
+        if (!loading) {
+            contentRef.current.scrollTop = contentRef.current.scrollHeight - messagesHeight;
+        }
+        return () => {
+            clearTimeout(t);
+        }
+    }, [loading]);
 
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -385,33 +353,17 @@ function Discusss({ ws_address }) {
         //     }
         // }
     }
-    // const getChannelById = (channel_id) => {
-    //     let channels = state.channels;
-    //     for (let k in channels) {
-    //         if (channels[k].id == channel_id) {
-    //             return channels[k];
-    //         }
-    //     }
-    //     return undefined;
-    // }
-    // const getChannelTitle = (channel_id) => {
-    //     let channel = getChannelById(channel_id);
-    //     if (channel) {
-    //         return channel.title
-    //     } else {
-    //         return "douyacun"
-    //     }
-    // }
-    // const handlerMessage = function (evt) {
-    //     let msg = JSON.parse(evt.data)
-    //     switch (msg['type']) {
-    //         case "SYSTEM":
-    //         case "TEXT":
-    //             dispatch({ type: "new_message", msg: msg, channel_id: msg['channel_id'] });
-    //             scrollToBottom();
-    //             break;
-    //     }
-    // }
+    const handlerMessage = function (evt) {
+        let msg = JSON.parse(evt.data)
+        console.log("new message: " + msg)
+        switch (msg['type']) {
+            case "SYSTEM":
+            case "TEXT":
+                dispatch({ type: "new_message", msg: msg });
+                scrollToBottom();
+                break;
+        }
+    }
     const handlerExit = () => {
         conn.close();
         window.close();
@@ -420,37 +372,21 @@ function Discusss({ ws_address }) {
         initWebsocket();
         dispatch({ type: "dialog_open", dialogOpen: false })
     }
-    // const switchChannel = (channel_id) => {
-    //     dispatch({ type: "current", channel_id: channel_id })
-    //     // 获取消息的最后一条的时间
-    //     let messages = state.messages[channel_id];
-    //     if (messages && messages.length > 0) {
-    //         let message = messages[messages.length - 1];
-    //         let data = localStorage.getItem(READ_HISTORY);
-    //         let read;
-    //         if (data) {
-    //             read = JSON.parse(data);
-    //         } else {
-    //             read = {};
-    //         }
-    //         read[channel_id] = message.date
-    //         localStorage.setItem(READ_HISTORY, JSON.stringify(read));
-    //     }
-    // }
-    // const initWebsocket = () => {
-    //     conn = new WebSocket(ws_address);
-    //     conn.onmessage = handlerMessage;
-    //     conn.onclose = function () {
-    //         dispatch({ type: "dialog_open", dialogOpen: true })
-    //     };
-    //     conn.onerror = function () {
-    //         console.log("连接失败");
-    //     }
-    // }
+    const initWebsocket = () => {
+        conn = new WebSocket("ws://douyacun.io/api/ws/join");
+        conn.onmessage = handlerMessage;
+        conn.onclose = function () {
+            dispatch({ type: "dialog_open", dialogOpen: true })
+        };
+        conn.onerror = function () {
+            console.log("连接失败");
+        }
+    }
     const send = (content) => {
         let data = JSON.stringify({
             content: content,
-            channel_id: state.currentId
+            article_id: articleId,
+            type: "TEXT"
         })
         conn.send(data);
     }
@@ -491,60 +427,30 @@ function Discusss({ ws_address }) {
         }
         return tempMessages;
     }
-    // const getLastMessage = (messages) => {
-    //     if (messages && messages.length > 0) {
-    //         let message = messages[messages.length - 1];
-    //         return message['sender']["name"] + ": " + message["content"];
-    //     } else {
-    //         return ""
-    //     }
-    // }
-    // // 请求接口
-    // const createChannel = async (members) => {
-    //     if (members.length > 0) {
-    //         let type = "";
-    //         if (members.length == 1) {
-    //             type = "private";
-    //         } else {
-    //             type = "public"
-    //         }
-    //         POST({
-    //             url: "/api/ws/channel",
-    //             data: {
-    //                 type: type,
-    //                 members: members,
-    //                 title: ""
-    //             }
-    //         }).then(({ data }) => {
-    //             dispatch({ type: 'new_channel', channel: data })
-    //         })
-    //     }
-    // }
-    // const getChannels = () => {
-    //     let readHistory = localStorage.getItem(READ_HISTORY);
-    //     return GET({
-    //         url: "/api/ws/channel/subscribe",
-    //         q: readHistory
-    //     }).then(({ data }) => {
-    //         dispatch({ type: "channels", channels: data })
-    //     })
-    // }
+    const getLastMessage = (messages) => {
+        if (messages && messages.length > 0) {
+            let message = messages[messages.length - 1];
+            return message['sender']["name"] + ": " + message["content"];
+        } else {
+            return ""
+        }
+    }
+
+    // console.log(state.messages);
     return (
-        <div className="container">
-            <div ref={contentRef} onScroll={upScrollLoadMore}>
-                <div className="message-list">
-                    <div>
-                        <div className="message-list-container">
-                            {loading && <div className="loading">
-                                <CircularProgress color="inherit" />
-                            </div>}
-                            {renderMessages(messages)}
-                        </div>
+        <div className="container" ref={contentRef} onScroll={upScrollLoadMore}>
+            <div className="message-list">
+                <div>
+                    <div className="message-list-container">
+                        {loading && <div className="loading">
+                            <CircularProgress color="inherit" />
+                        </div>}
+                        {renderMessages(state.messages)}
                     </div>
                 </div>
-                <div className="message-input-fix">
-                    <MessageInputSmall send={send} />
-                </div>
+            </div>
+            <div className="message-input-fix">
+                <MessageInputSmall send={send} />
             </div>
             <Dialog
                 fullScreen={fullScreen}
@@ -569,13 +475,13 @@ function Discusss({ ws_address }) {
     );
 }
 
-Discusss.getInitialProps = async ({ req, query }) => {
-    let ws_address;
-    if (ENV.protocol == "https") {
-        ws_address = "wss://" + ENV.host + "/api/ws/join"
-    } else {
-        ws_address = "ws://" + ENV.host + "/api/ws/join"
-    }
-    return { ...ENV, ws_address }
-}
+// Discusss.getInitialProps = async ({ req, query }) => {
+//     let ws_address;
+//     if (ENV.protocol == "https") {
+//         ws_address = "wss://" + ENV.host + "/api/ws/join"
+//     } else {
+//         ws_address = "ws://" + ENV.host + "/api/ws/join"
+//     }
+//     return { ...ENV, ws_address }
+// }
 export default Discusss;
