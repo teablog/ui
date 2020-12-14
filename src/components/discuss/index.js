@@ -22,20 +22,22 @@ import './discuss.css';
 let MY_USER_ID, conn;
 const TOP = 1;
 const BOTTOME = 2;
-const initialState = { messages: [], dialogOpen: false, topOrBottom: BOTTOME };
+/**
+ * topOrBottom: 滑动条位置
+ * - 新消息在最下方
+ * - 下拉加载消息，保持滑动条原位置
+ * remain: 剩余消息数量
+ */
+const initialState = { messages: [], dialogOpen: false, topOrBottom: BOTTOME, remain: 0};
 moment.locale('zh-cn');
 
 function reducer(state, action) {
     let m = state.messages;
     switch (action.type) {
-        case 'push_message':// 栈底：压入
+        case 'new_message':
             return { ...state, messages: [...state.messages, ...action.msgs], topOrBottom: BOTTOME };
-        case 'unshift_messages': // 栈顶：压入
-            let t = TOP
-            if (m.length == 0) {
-                t = BOTTOME
-            }
-            return { ...state, messages: [...action.messages, ...state.messages], topOrBottom: t };
+        case 'history_messages':
+            return { ...state, messages: [...action.messages, ...state.messages], topOrBottom: m.length > 0 ? TOP : BOTTOME, remain: action.remain };
         case "dialog_open"://
             return { ...state, dialogOpen: action.dialogOpen }
         default:
@@ -43,7 +45,7 @@ function reducer(state, action) {
     }
 }
 
-function Discusss({ ws_address, articleId }) {
+function Discusss({ ws_address, articleId, styles }) {
     const [state, dispatch] = useReducer(reducer, initialState);
     const [loading, setloading] = useState(false);
     const [messagesHeight, setMessagesHeight] = useState(0);
@@ -52,7 +54,6 @@ function Discusss({ ws_address, articleId }) {
     const scrollToBottom = () => {
         // 保证消息在最下面
         contentRef.current.scrollTop = contentRef.current.scrollHeight
-        console.log(contentRef.current.scrollHeight);
     }
     /**
      * const [messages, setMessages] = React.useState([]);
@@ -61,7 +62,7 @@ function Discusss({ ws_address, articleId }) {
      */
     useEffect(() => {
         initWebsocket();
-        loadMore();
+        loadMore(true);
         const all = parseCookies();
         if (all.douyacun) {
             const douyacun = JSON.parse(all.douyacun);
@@ -69,9 +70,7 @@ function Discusss({ ws_address, articleId }) {
         } else {
             window.location = `/login?redirect_uri=` + escape(router.asPath)
         }
-        return () => {
-            // _isMounted = false;
-        }
+        return () => {}
     }, []);
     /**
      * 滚动条位置
@@ -79,22 +78,17 @@ function Discusss({ ws_address, articleId }) {
     useEffect(() => {
         if (state.topOrBottom == BOTTOME) {
             scrollToBottom()
-            return () => {}
         } else {
-            let t = setTimeout(loadMore, 1000);
-            if (!loading) {
-                contentRef.current.scrollTop = contentRef.current.scrollHeight - messagesHeight;
-            }
-            return () => {
-                clearTimeout(t);
-            }
+            contentRef.current.scrollTop = contentRef.current.scrollHeight - messagesHeight;
         }
+        return () => { }
     }, [state.messages]);
+
     /**
      * websocket: 初始化 
      */
     const initWebsocket = () => {
-        conn = new WebSocket("ws://douyacun.io/api/ws/join");
+        conn = new WebSocket("ws://douyacun.io/api/ws/join?article_id=8c110cb1533e75217e89bdfd4c0b1e7a");
         conn.onmessage = handlerMessage;
         conn.onclose = function () {
             dispatch({ type: "dialog_open", dialogOpen: true })
@@ -112,7 +106,7 @@ function Discusss({ ws_address, articleId }) {
         switch (msg['type']) {
             case "SYSTEM":
             case "TEXT":
-                dispatch({ type: "push_message", msgs: [msg] });
+                dispatch({ type: "new_message", msgs: [msg] });
                 break;
         }
     }
@@ -134,9 +128,8 @@ function Discusss({ ws_address, articleId }) {
                 before: before,
                 article_id: articleId
             }
-        }).then(({ data: { list } }) => {
-            dispatch({ type: "unshift_messages", messages: list });
-            setloading(false);
+        }).then(({ data: { list, total } }) => {
+            dispatch({ type: "history_messages", messages: list, remain: total - list.length > 0 ? total - list.length : 0 });
         });
     }
     /**
@@ -144,13 +137,12 @@ function Discusss({ ws_address, articleId }) {
      */
     const upScrollLoadMore = () => {
         let scrollTop = contentRef.current.scrollTop;
-        console.log("scrollTop: ", scrollTop);
-
-        // if (scrollTop == 0 && !loading && state.messages.length > 0) {
-        //     setloading(true);
-        // }
+        if (scrollTop == 0 && !loading && state.messages.length > 0 && state.remain > 0 ) {
+            setloading(true);
+            loadMore().then(setloading(false))
+            setTimeout(()=> (loadMore().then(setloading(false))), 500);
+        }
     }
-
     /**
      * 消息：渲染
      */
@@ -191,7 +183,6 @@ function Discusss({ ws_address, articleId }) {
         }
         return tempMessages;
     }
-
     /**
      * 关闭websocket
      */
@@ -199,12 +190,10 @@ function Discusss({ ws_address, articleId }) {
         conn.close();
         window.close();
     }
-
     const handlerRetry = () => {
         initWebsocket();
         dispatch({ type: "dialog_open", dialogOpen: false })
     }
-
     const send = (content) => {
         let data = JSON.stringify({
             content: content,
@@ -213,22 +202,10 @@ function Discusss({ ws_address, articleId }) {
         })
         conn.send(data);
     }
-
-    const getLastMessage = (messages) => {
-        if (messages && messages.length > 0) {
-            let message = messages[messages.length - 1];
-            return message['sender']["name"] + ": " + message["content"];
-        } else {
-            return ""
-        }
-    }
-
-    // console.log(state.messages);
-
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
     return (
-        <div className="container">
+        <div className="container" style={styles}>
             <div className="full scrollable" ref={contentRef} onScroll={upScrollLoadMore}>
                 <div className="message-list">
                     <div>

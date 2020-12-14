@@ -27,12 +27,6 @@ const useStyles = makeStyles(theme => ({
         // backgroundColor: "rgb(250,250,250)",
     },
     left: {
-        // marginLeft: '2px',
-        // '@media screen and (min-width: 1736px)': {
-        //     'dyc-app[open-and-visible="true"] &': {
-        //         marginLeft: '280px'
-        //     }
-        // },
         margin: "auto",
         maxWidth: 980,
         minWidth: 200,
@@ -43,14 +37,15 @@ const useStyles = makeStyles(theme => ({
     },
     drawerPaper: {
         // width: 800,
-        overflow: "auto",
+        overflow: "overlay",
         minWidth: 480,
         [theme.breakpoints.up('sm')]: {
           width: 480,
         },
         backgroundColor: 'rgb(250,250,250)',
         borderRight: 'None',
-        zIndex: 200
+        zIndex: 200,
+        overflow: "hidden",
     },
     bottom: {
         height: '3rem',
@@ -126,7 +121,7 @@ function Article({ article, id, host, disqus_short_name, protocol, disqus_enable
             <meta name="description" content={article.description} />
         </Head>
         <div className={classes.root}>
-            <div className={classes.left + " " + classes.scrollable}>
+            <div className={classes.left}>
                 <Typography variant="h2" className={classes.title}>{article.title}</Typography>
                 <div className={classes.meta_content}>
                     <Typography component="span" className={classes.media_meta}>原创:</Typography>
@@ -157,8 +152,8 @@ function Article({ article, id, host, disqus_short_name, protocol, disqus_enable
                 transitionDuration={200}
             >
                 <div>
-                    <div style={{ height: '64px' }}></div>
-                    <Discuss />
+                    {/* <div style={{ paddingTop: '64px' }}></div> */}
+                    <Discuss articleId={id} styles={{paddingTop: 64}}/>
                 </div>
             </Drawer>
         </div>
