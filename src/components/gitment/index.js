@@ -133,13 +133,14 @@ const userStyle = makeStyles(theme => ({
     },
 }))
 
-function Gitment({ userInfo, comments }) {
+function Gitment({articleId, messages}) {
+    // console.log(messages);
     const [user] = react.useState(() => {
         // return userInfo && userInfo.length > 0 ? JSON.parse(Base64.decode(userInfo)) : {}
         return {}
     })
     const [commentValue, setCommentValue] = react.useState("")
-    const [list, setList] = react.useState(comments)
+    const [comments, setComments] = react.useState(messages)
     const isLogin = () => {
         // return user && user.id > 0
         return true
@@ -149,6 +150,28 @@ function Gitment({ userInfo, comments }) {
     // const oauth = GITHUB_OAUTH + escape("https://www.00h.tv/oauth/github?redirect=" + router.asPath)
     const oauth = "" // 登录页
 
+    /**
+     * 消息：加载
+     */
+    const LoadMore = () => {
+        let after = moment().unix()
+        if (comments.length > 0) {
+            after = moment(comments[0].date).unix()
+        }
+        return GET({
+            url: "/api/ws/article/messages",
+            params: {
+                after: after,
+                article_id: articleId
+            }
+        }).then((list, total) => {
+            setComments([...list, ...comments])
+        })
+    } 
+
+    /**
+     * 消息：发布
+     */
     const onComment = async () => {
         if (!isLogin()) {
             return;
@@ -159,15 +182,7 @@ function Gitment({ userInfo, comments }) {
                 content: commentValue,
                 user_id: user.id
             }
-        }).then(() => {
-            GET({
-                url: BACKEND_URL.discussion + router.query.id,
-                data: {},
-            }).then((data) => {
-                setList(data)
-                return true
-            })
-        })
+        }).then(LoadMore)
         return false
     }
 
@@ -175,13 +190,13 @@ function Gitment({ userInfo, comments }) {
         <div className={classes.discussion_timeline}>
             <div>
                 {
-                    list && list.length > 0 ? list.map((item, key) => (
+                    comments && comments.length > 0 ? comments.map((item, key) => (
                         <div className={classes.timeline_comment_wrapper} key={key}>
                             <div className={classes.timeline_comment_avatar}>
                                 {
-                                    item.user.link ?
-                                        <a href={item.user.link} target="_blank" rel="nofollow"><img src={item.user.avatar_url ? item.user.avatar_url : DEFAULT_AVATAR} height="44" weight="44" /></a> :
-                                        <img src={item.user.avatar_url ? item.user.avatar_url : DEFAULT_AVATAR} height="44" weight="44" />
+                                    item.sender.link ?
+                                        <a href={item.sender.link} target="_blank" rel="nofollow"><img src={item.sender.avatar_url ? item.sender.avatar_url : DEFAULT_AVATAR} height="44" weight="44" /></a> :
+                                        <img src={item.sender.avatar_url ? item.sender.avatar_url : DEFAULT_AVATAR} height="44" weight="44" />
                                 }
                             </div>
                             <div className={classes.timeline_comment}>
@@ -189,9 +204,9 @@ function Gitment({ userInfo, comments }) {
                                     <Typography variant="h5" className={classes.timeline_comment_header_text}>
                                         <strong>
                                             {
-                                               item.user.link ? 
-                                                <a href={item.user.link} className={classes.author} target="_blank" rel="nofollow">{item.user.name}</a>:
-                                                item.user.name
+                                               item.sender.link ? 
+                                                <a href={item.sender.link} className={classes.author} target="_blank" rel="nofollow">{item.sender.name}</a>:
+                                                item.sender.name
                                             }
                                         </strong> commented <relative-time datetime=""> {moment(item.created_at).calendar()}</relative-time>
                                     </Typography>
@@ -233,20 +248,6 @@ function Gitment({ userInfo, comments }) {
             </div>
         </div>
     )
-}
-
-Gitment.getInitialProps = async ({ req, query }) => {
-    const { id } = query
-    const { data } = await GET({
-        "url": `/api/article/${id}`,
-    }).then(resp => {
-        if (resp.code === 0) {
-            return resp.data
-        } else {
-            return {}
-        }
-    })
-    return { article: data, id: id, ...ENV }
 }
 
 

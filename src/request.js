@@ -24,6 +24,7 @@ async function request(params) {
 		params['url'] = ENV.protocol + "://" + ENV.host + "/" + ltrim(params['url'], "/")
 	}
 	params['withCredentials'] = true;
+	
 	const instance = axios.create({
 		httpsAgent: new https.Agent({  
 			rejectUnauthorized: false
