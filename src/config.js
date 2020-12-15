@@ -1,10 +1,10 @@
-const GITHUB_LOGO="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
-const DEFAULT_AVATAR="https://image.00h.tv/noavatar92.png"
+const GITHUB_LOGO = "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
+const DEFAULT_AVATAR = "https://image.00h.tv/noavatar92.png"
 const PAGE_SIZE = 10;
 
 const BACKEND_URL = {
-    "oauth_github": "/api/oauth/github",
-    "discussion": "/api/discussion"
+  "oauth_github": "/api/oauth/github",
+  "discussion": "/api/discussion"
 }
 
 const ENV = {
@@ -16,9 +16,9 @@ const ENV = {
 }
 
 export {
-    GITHUB_LOGO,
-    BACKEND_URL,
-    DEFAULT_AVATAR,
-    PAGE_SIZE,
-    ENV
+  GITHUB_LOGO,
+  BACKEND_URL,
+  DEFAULT_AVATAR,
+  PAGE_SIZE,
+  ENV
 }

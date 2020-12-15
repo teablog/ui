@@ -1,16 +1,16 @@
 import react from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from '@material-ui/core/Typography';
-import MarkdownTextarea from './textarea'
-import { POST, GET } from '../request';
-import { GITHUB_LOGO, GITHUB_OAUTH, BACKEND_URL, DEFAULT_AVATAR } from '../config';
+import MarkdownTextarea from './markdown_textarea'
+import { POST, GET } from '../../request';
+import { GITHUB_LOGO, BACKEND_URL, DEFAULT_AVATAR } from '../../config';
 import { useRouter } from 'next/router'
-import { Base64 } from 'js-base64';
 import moment from 'moment';
 import MarkdownIt from 'markdown-it';
-import "../css/github.css";
+import "../../css/github-markdown.css";
 
 const markdown = new MarkdownIt();
+
 
 const userStyle = makeStyles(theme => ({
     discussion_timeline: {
@@ -133,18 +133,21 @@ const userStyle = makeStyles(theme => ({
     },
 }))
 
-function Discussion({ userInfo, comments }) {
+function Gitment({ userInfo, comments }) {
     const [user] = react.useState(() => {
-        return userInfo && userInfo.length > 0 ? JSON.parse(Base64.decode(userInfo)) : {}
+        // return userInfo && userInfo.length > 0 ? JSON.parse(Base64.decode(userInfo)) : {}
+        return {}
     })
     const [commentValue, setCommentValue] = react.useState("")
     const [list, setList] = react.useState(comments)
     const isLogin = () => {
-        return user && user.id > 0
+        // return user && user.id > 0
+        return true
     }
     const classes = userStyle()
     const router = useRouter()
-    const oauth = GITHUB_OAUTH + escape("https://www.00h.tv/oauth/github?redirect=" + router.asPath)
+    // const oauth = GITHUB_OAUTH + escape("https://www.00h.tv/oauth/github?redirect=" + router.asPath)
+    const oauth = "" // 登录页
 
     const onComment = async () => {
         if (!isLogin()) {
@@ -172,7 +175,7 @@ function Discussion({ userInfo, comments }) {
         <div className={classes.discussion_timeline}>
             <div>
                 {
-                    list && list.length ? list.map((item, key) => (
+                    list && list.length > 0 ? list.map((item, key) => (
                         <div className={classes.timeline_comment_wrapper} key={key}>
                             <div className={classes.timeline_comment_avatar}>
                                 {
@@ -213,7 +216,7 @@ function Discussion({ userInfo, comments }) {
                         </span>
                         <div className={classes.timeline_comment_group}>
                             {
-                                isLogin() ? '' : (<a href={oauth} target="_blank" rel="nofollow" className={classes.comment_login} />)
+                                // isLogin() ? '' : (<a href={oauth} target="_blank" rel="nofollow" className={classes.comment_login} />)
                             }
                             <div>
                                 <MarkdownTextarea
@@ -231,4 +234,20 @@ function Discussion({ userInfo, comments }) {
         </div>
     )
 }
-export default Discussion
+
+Gitment.getInitialProps = async ({ req, query }) => {
+    const { id } = query
+    const { data } = await GET({
+        "url": `/api/article/${id}`,
+    }).then(resp => {
+        if (resp.code === 0) {
+            return resp.data
+        } else {
+            return {}
+        }
+    })
+    return { article: data, id: id, ...ENV }
+}
+
+
+export default Gitment

@@ -245,13 +245,13 @@ function Discusss({ ws_address, articleId, styles }) {
     );
 }
 
-// Discusss.getInitialProps = async ({ req, query }) => {
-//     let ws_address;
-//     if (ENV.protocol == "https") {
-//         ws_address = "wss://" + ENV.host + "/api/ws/join"
-//     } else {
-//         ws_address = "ws://" + ENV.host + "/api/ws/join"
-//     }
-//     return { ...ENV, ws_address }
-// }
+Discusss.getInitialProps = async ({ req, query }) => {
+    let ws_address;
+    if (ENV.protocol == "https") {
+        ws_address = "wss://" + ENV.host + "/api/ws/join?article_id="
+    } else {
+        ws_address = "ws://" + ENV.host + "/api/ws/join?article_id="
+    }
+    return { ...ENV, ws_address }
+}
 export default Discusss;

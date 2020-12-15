@@ -15,7 +15,6 @@ import { ENV } from "../../src/config";
 import Discuss from '../../src/components/discuss';
 import '../../src/css/github-markdown.css';
 import '../../node_modules/highlight.js/styles/github.css';
-import { Autorenew } from '@material-ui/icons';
 import Drawer from '@material-ui/core/Drawer';
 
 const useStyles = makeStyles(theme => ({
@@ -96,7 +95,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 moment.locale('zh-cn');
-function Article({ article, id, host, disqus_short_name, protocol, disqus_enable }) {
+function Article({ article, id }) {
     article = article ? article : {};
     const classes = useStyles();
     const md = new MarkdownIt({
@@ -165,9 +164,6 @@ Article.getInitialProps = async ({ req, query }) => {
     const { id } = query
     const { data } = await GET({
         "url": `/api/article/${id}`,
-        "headers": {
-            // "User-Agent": req.headers["user-agent"]
-        }
     }).then(resp => {
         if (resp.code === 0) {
             return resp.data
