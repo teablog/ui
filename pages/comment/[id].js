@@ -8,13 +8,13 @@ function Comment({messages, articleId}) {
     )
 }
 
-
 Comment.getInitialProps = async ({ req, query }) => {
     const { id } = query
     const data = await GET({
         url: "/api/ws/article/messages",
         params: {
-            article_id: id
+            article_id: id,
+            sort: "asc"
         },
         headers: {
             Cookie: req.headers.cookie

@@ -1,12 +1,15 @@
 import react from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from '@material-ui/core/Typography';
+import Pagination from '@material-ui/lab/Pagination';
+import PaginationItem from '@material-ui/lab/PaginationItem';
 import MarkdownTextarea from './markdown_textarea'
 import { POST, GET } from '../../request';
 import { GITHUB_LOGO, BACKEND_URL, DEFAULT_AVATAR } from '../../config';
 import { useRouter } from 'next/router'
 import moment from 'moment';
 import MarkdownIt from 'markdown-it';
+
 import "../../css/github-markdown.css";
 
 const markdown = new MarkdownIt();
@@ -90,7 +93,7 @@ const userStyle = makeStyles(theme => ({
             borderRightColor: "rgb(246, 248, 250)",
         },
     },
-    timeline_comment_current_user:{
+    timeline_comment_current_user: {
         '&:before': {
             borderRightColor: "rgb(212, 226, 248)",
         },
@@ -144,9 +147,13 @@ const userStyle = makeStyles(theme => ({
         backgroundColor: "#fff",
         borderTop: "2px solid #e6ebf1"
     },
+    discussion_timeline_pagenation: {
+        display: "flex",
+        marginTop: "10px",
+        justifyContent: "center"
+    },
     timeline_new_comment: {
         marginBottom: 0,
-        // maxWidth: 780,
     },
     timeline_comment_group: {
         backgroundColor: '#fff',
@@ -178,7 +185,7 @@ const userStyle = makeStyles(theme => ({
     },
 }))
 
-function Gitment({articleId, messages}) {
+function Gitment({ articleId, messages }) {
     // console.log(messages);
     const [user] = react.useState(() => {
         // return userInfo && userInfo.length > 0 ? JSON.parse(Base64.decode(userInfo)) : {}
@@ -195,6 +202,11 @@ function Gitment({articleId, messages}) {
     // const oauth = GITHUB_OAUTH + escape("https://www.00h.tv/oauth/github?redirect=" + router.asPath)
     const oauth = "" // 登录页
 
+    const [page, setPage] = react.useState(1);
+    const handleChange = (event, value) => {
+        setPage(value);
+    };
+
     /**
      * 消息：加载
      */
@@ -207,12 +219,13 @@ function Gitment({articleId, messages}) {
             url: "/api/ws/article/messages",
             params: {
                 after: after,
-                article_id: articleId
+                article_id: articleId,
+                sort: "asc"
             }
         }).then((list, total) => {
             setComments([...list, ...comments])
         })
-    } 
+    }
 
     /**
      * 消息：发布
@@ -230,6 +243,7 @@ function Gitment({articleId, messages}) {
         }).then(LoadMore)
         return false
     }
+
     return (
         <div className={classes.discussion_timeline}>
             <div>
@@ -238,39 +252,45 @@ function Gitment({articleId, messages}) {
                         // let isMe = user.id == item.sender.id ? true : false;
                         let isMe = false;
                         return (<div className={classes.timeline_comment_wrapper} key={key}>
-                                <div className={classes.timeline_comment_avatar}>
-                                    {
-                                        item.sender.url ?
-                                            <a href={item.sender.url} target="_blank" rel="nofollow"><img src={item.sender.avatar_url ? item.sender.avatar_url : DEFAULT_AVATAR} height="44" weight="44" /></a> :
-                                            <img src={item.sender.avatar_url ? item.sender.avatar_url : DEFAULT_AVATAR} height="44" weight="44" />
-                                    }
-                                </div>
-                                <div className={classes.timeline_comment + " " + (isMe ? classes.timeline_comment_current_user : "")}>
-                                    <div className={classes.timeline_comment_header + " " + (isMe ? classes.timeline_comment_header_current_user : '')}>
-                                        <Typography variant="h5" className={classes.timeline_comment_header_text}>
-                                            <strong>
-                                                {
-                                                   item.sender.url ? 
-                                                    <a href={item.sender.url} className={classes.author} target="_blank" rel="nofollow">{item.sender.name}</a>:
+                            <div className={classes.timeline_comment_avatar}>
+                                {
+                                    item.sender.url ?
+                                        <a href={item.sender.url} target="_blank" rel="nofollow"><img src={item.sender.avatar_url ? item.sender.avatar_url : DEFAULT_AVATAR} height="44" weight="44" /></a> :
+                                        <img src={item.sender.avatar_url ? item.sender.avatar_url : DEFAULT_AVATAR} height="44" weight="44" />
+                                }
+                            </div>
+                            <div className={classes.timeline_comment + " " + (isMe ? classes.timeline_comment_current_user : "")}>
+                                <div className={classes.timeline_comment_header + " " + (isMe ? classes.timeline_comment_header_current_user : '')}>
+                                    <Typography variant="h5" className={classes.timeline_comment_header_text}>
+                                        <strong>
+                                            {
+                                                item.sender.url ?
+                                                    <a href={item.sender.url} className={classes.author} target="_blank" rel="nofollow">{item.sender.name}</a> :
                                                     item.sender.name
-                                                }
-                                            </strong> commented <relative-time datetime=""> {moment(item.date).calendar()}</relative-time>
-                                        </Typography>
-                                    </div>
-                                    <div className={classes.comment_body}>
-                                        <div
-                                            dangerouslySetInnerHTML={{ __html: markdown.render(item.content) }}
-                                            className="markdown-body"
-                                        />
-                                    </div>
+                                            }
+                                        </strong> commented <relative-time datetime=""> {moment(item.date).calendar()}</relative-time>
+                                    </Typography>
                                 </div>
-                            </div>)}) : ""
+                                <div className={classes.comment_body}>
+                                    <div
+                                        dangerouslySetInnerHTML={{ __html: markdown.render(item.content) }}
+                                        className="markdown-body"
+                                    />
+                                </div>
+                            </div>
+                        </div>)
+                    }) : ""
                 }
                 <div className={classes.discussion_timeline_actions}>
+                    <div className={classes.discussion_timeline_pagenation}>
+                        <Pagination count={10} page={page} onChange={handleChange} />
+                    </div>
                     <div className={classes.timeline_comment_wrapper + " " + classes.timeline_new_comment}>
                         <span className={classes.timeline_comment_avatar}>
                             {
-                                user.link ? <a href={user.link} target="_blank" rel="nofollow"><img src={user.avatar_url ? user.avatar_url : GITHUB_LOGO} alt={user.name} width="44" height="44" /></a> : ''
+                                user.url ?
+                                    <a href={user.url} target="_blank" rel="nofollow"><img src={user.avatar_url ? user.avatar_url : DEFAULT_AVATAR} height="44" weight="44" /></a> :
+                                    <img src={user.avatar_url ? user.avatar_url : DEFAULT_AVATAR} height="44" weight="44" />
                             }
                         </span>
                         <div className={classes.timeline_comment_group}>
