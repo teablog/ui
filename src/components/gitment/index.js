@@ -11,7 +11,6 @@ import "../../css/github-markdown.css";
 
 const markdown = new MarkdownIt();
 
-
 const userStyle = makeStyles(theme => ({
     discussion_timeline: {
         position: "relative",
@@ -45,24 +44,70 @@ const userStyle = makeStyles(theme => ({
         borderRadius: 3,
         float: "left",
         marginLeft: -60,
-        position: "relative"
+        position: "relative",
+
     },
     timeline_comment: {
         backgroundColor: '#fff',
         border: "1px solid #d1d5da",
         borderRadius: 3,
-        position: "relative"
+        position: "relative",
+        '&:before': {
+            position: 'absolute',
+            top: 11,
+            right: "100%",
+            bottom: 0,
+            left: -16,
+            zIndex: 2,
+            content: '" "',
+            width: 0,
+            height: 0,
+            display: 'block',
+            pointerEvents: 'none',
+            borderColor: 'transparent',
+            borderStyle: 'solid solid outset',
+            transition: 'border-color .25s ease-in-out',
+            borderWidth: 8,
+            borderRightColor: "rgb(209, 213, 218)",
+        },
+        '&:after': {
+            position: 'absolute',
+            top: 11,
+            right: "100%",
+            bottom: 0,
+            left: -16,
+            zIndex: 2,
+            content: '" "',
+            width: 0,
+            height: 0,
+            display: 'block',
+            pointerEvents: 'none',
+            borderColor: 'transparent',
+            borderStyle: 'solid solid outset',
+            borderWidth: 7,
+            marginTop: 1,
+            marginLeft: 2,
+            borderRightColor: "rgb(246, 248, 250)",
+        },
+    },
+    timeline_comment_current_user:{
+        '&:before': {
+            borderRightColor: "rgb(212, 226, 248)",
+        },
+        '&:after': {
+            borderRightColor: "rgb(241, 248, 255)",
+        },
     },
     timeline_comment_header: {
         backgroundColor: '#f6f8fa',
-        borderBottom: "1px solid #d1d5da",
+        borderBottom: "1px solid rgba(3, 102, 214, 0.2)",
         borderTopLeftRadius: 3,
         borderTopRightRadius: 3,
         color: "#586069",
         paddingLeft: 15,
         paddingRight: 15,
     },
-    timeline_comment_current_user: {
+    timeline_comment_header_current_user: {
         borderBottomColor: '#c0d3eb',
         backgroundColor: '#f1f8ff'
     },
@@ -156,7 +201,7 @@ function Gitment({articleId, messages}) {
     const LoadMore = () => {
         let after = moment().unix()
         if (comments.length > 0) {
-            after = moment(comments[0].date).unix()
+            after = moment(comments[comments.length - 1].date).unix()
         }
         return GET({
             url: "/api/ws/article/messages",
@@ -185,42 +230,41 @@ function Gitment({articleId, messages}) {
         }).then(LoadMore)
         return false
     }
-
     return (
         <div className={classes.discussion_timeline}>
             <div>
                 {
-                    comments && comments.length > 0 ? comments.map((item, key) => (
-                        <div className={classes.timeline_comment_wrapper} key={key}>
-                            <div className={classes.timeline_comment_avatar}>
-                                {
-                                    item.sender.link ?
-                                        <a href={item.sender.link} target="_blank" rel="nofollow"><img src={item.sender.avatar_url ? item.sender.avatar_url : DEFAULT_AVATAR} height="44" weight="44" /></a> :
-                                        <img src={item.sender.avatar_url ? item.sender.avatar_url : DEFAULT_AVATAR} height="44" weight="44" />
-                                }
-                            </div>
-                            <div className={classes.timeline_comment}>
-                                <div className={classes.timeline_comment_header + " " + (user.id == item.user_id ? classes.timeline_comment_current_user : '')}>
-                                    <Typography variant="h5" className={classes.timeline_comment_header_text}>
-                                        <strong>
-                                            {
-                                               item.sender.link ? 
-                                                <a href={item.sender.link} className={classes.author} target="_blank" rel="nofollow">{item.sender.name}</a>:
-                                                item.sender.name
-                                            }
-                                        </strong> commented <relative-time datetime=""> {moment(item.created_at).calendar()}</relative-time>
-                                    </Typography>
+                    comments && comments.length > 0 ? comments.map((item, key) => {
+                        // let isMe = user.id == item.sender.id ? true : false;
+                        let isMe = false;
+                        return (<div className={classes.timeline_comment_wrapper} key={key}>
+                                <div className={classes.timeline_comment_avatar}>
+                                    {
+                                        item.sender.url ?
+                                            <a href={item.sender.url} target="_blank" rel="nofollow"><img src={item.sender.avatar_url ? item.sender.avatar_url : DEFAULT_AVATAR} height="44" weight="44" /></a> :
+                                            <img src={item.sender.avatar_url ? item.sender.avatar_url : DEFAULT_AVATAR} height="44" weight="44" />
+                                    }
                                 </div>
-                                <div className={classes.comment_body}>
-                                    <div
-                                        dangerouslySetInnerHTML={{ __html: markdown.render(item.content) }}
-                                        className="markdown-body"
-                                    />
+                                <div className={classes.timeline_comment + " " + (isMe ? classes.timeline_comment_current_user : "")}>
+                                    <div className={classes.timeline_comment_header + " " + (isMe ? classes.timeline_comment_header_current_user : '')}>
+                                        <Typography variant="h5" className={classes.timeline_comment_header_text}>
+                                            <strong>
+                                                {
+                                                   item.sender.url ? 
+                                                    <a href={item.sender.url} className={classes.author} target="_blank" rel="nofollow">{item.sender.name}</a>:
+                                                    item.sender.name
+                                                }
+                                            </strong> commented <relative-time datetime=""> {moment(item.date).calendar()}</relative-time>
+                                        </Typography>
+                                    </div>
+                                    <div className={classes.comment_body}>
+                                        <div
+                                            dangerouslySetInnerHTML={{ __html: markdown.render(item.content) }}
+                                            className="markdown-body"
+                                        />
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                    )) :
-                        ""
+                            </div>)}) : ""
                 }
                 <div className={classes.discussion_timeline_actions}>
                     <div className={classes.timeline_comment_wrapper + " " + classes.timeline_new_comment}>
@@ -249,6 +293,5 @@ function Gitment({articleId, messages}) {
         </div>
     )
 }
-
 
 export default Gitment

@@ -3,7 +3,6 @@ import Gitment from '../../src/components/gitment';
 import { POST, GET } from '../../src/request';
 
 function Comment({messages, articleId}) {
-    console.log(messages, articleId);
     return (
         <Gitment articleId={articleId} messages={messages}/>
     )

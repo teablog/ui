@@ -1,5 +1,5 @@
 const GITHUB_LOGO = "https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png"
-const DEFAULT_AVATAR = "https://image.00h.tv/noavatar92.png"
+const DEFAULT_AVATAR = "/images/avatar/noavatar88.png"
 const PAGE_SIZE = 10;
 
 const BACKEND_URL = {
