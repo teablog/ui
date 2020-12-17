@@ -2,9 +2,7 @@ import React, { Fragment, useReducer, useState, useEffect, useRef } from 'react'
 import MessageInputSmall from '../messageInput/messageInputSmall';
 import Button from '@material-ui/core/Button';
 import Message from '../message';
-import Toolbar from '../Toolbar';
 import Dialog from '@material-ui/core/Dialog';
-import Avatar from '@material-ui/core/Avatar';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
@@ -14,7 +12,7 @@ import moment from 'moment';
 import { useRouter } from 'next/router';
 import { parseCookies } from 'nookies'
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { POST, GET } from '../../request';
+import { GET } from '../../request';
 import { ENV } from '../../config';
 import './discuss.css';
 

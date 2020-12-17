@@ -134,9 +134,9 @@ function Index({ total, articles, labels, page }) {
     const [snackbarState, setSnackbarState] = useState(false)
     const [errMessage, setErrMessage] = useState("")
     useEffect(() => {
-        if (!/(iPhone|Android|iPad|iPod|iOS)/i.test(navigator.userAgent)) {  
+        if (!/(iPhone|Android|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
             getLocation()
-        }  
+        }
     }, [])
     useEffect(() => {
         if (errMessage != "") {
@@ -144,7 +144,6 @@ function Index({ total, articles, labels, page }) {
         }
     }, [errMessage])
     /**
-     * 
      * @param {string} latitude 
      * @param {string} longitude 
      */
@@ -219,8 +218,8 @@ function Index({ total, articles, labels, page }) {
                     <aside className={classes.aside + ' ' + classes.dycGrid}>
                         {
                             location && location.hasOwnProperty("city") && location.hasOwnProperty("province") ?
-                            (<div className={classes.dycGridColmn}> <Weather location={location} /> </div>) :
-                            ""
+                                (<div className={classes.dycGridColmn}> <Weather location={location} /> </div>) :
+                                ""
                         }
                         <div className={classes.dycGridColmn}>
                             <div className={classes.dycAsideColumn}>

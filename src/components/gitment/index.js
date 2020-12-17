@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import Pagination from '@material-ui/lab/Pagination';
 import MarkdownTextarea from './markdown_textarea'
 import { POST, GET } from '../../request';
-import { GITHUB_LOGO, BACKEND_URL, DEFAULT_AVATAR } from '../../config';
+import { BACKEND_URL, DEFAULT_AVATAR } from '../../config';
 import { useRouter } from 'next/router'
 import moment from 'moment';
 import MarkdownIt from 'markdown-it';
@@ -15,6 +15,8 @@ const markdown = new MarkdownIt();
 
 const userStyle = makeStyles(theme => ({
     discussion_timeline: {
+        marginTop: "10px",
+        borderTop: "2px solid #e6ebf1",
         position: "relative",
         "&::before": {
             content: '""',
@@ -182,25 +184,23 @@ const userStyle = makeStyles(theme => ({
     tabnav_tabs: {
         marginBottom: -1,
     },
+    avatar: {
+        borderRadius: "50%",
+    }
 }))
 
-function Gitment({ account, articleId, messages, messagesTotal}) {
-    const [user] = React.useState(() => {
-        returnu
-    })
+function Gitment({ user = {}, articleId = "", messages = [], messagesTotal = 0}) {
     const [commentValue, setCommentValue] = React.useState("")
     const [comments, setComments] = React.useState(messages)
     const [total, setTotal] = React.useState(messagesTotal)
     const [size, setSize] = React.useState(20)
     const [page, setPage] = React.useState(1);
     const isLogin = () => {
-        // return user && user.id > 0
-        return true
+        return user && user.id > 0
     }
     const classes = userStyle()
     const router = useRouter()
-    // const oauth = GITHUB_OAUTH + escape("https://www.00h.tv/oauth/github?redirect=" + router.asPath)
-    const oauth = "" // 登录页
+    const oauth = "/login"
 
     /**
      * 分页：
@@ -208,7 +208,6 @@ function Gitment({ account, articleId, messages, messagesTotal}) {
     const changePage = (event, value) => {
         LoadMessage(value)
     };
-
     /**
      * 消息：加载
      */
@@ -242,7 +241,8 @@ function Gitment({ account, articleId, messages, messagesTotal}) {
             }
         }).then(LoadMore)
         return false
-    }
+    }  
+    console.log(user);
 
     return (
         <div className={classes.discussion_timeline}>
@@ -255,8 +255,8 @@ function Gitment({ account, articleId, messages, messagesTotal}) {
                             <div className={classes.timeline_comment_avatar}>
                                 {
                                     item.sender.url ?
-                                        <a href={item.sender.url} target="_blank" rel="nofollow"><img src={item.sender.avatar_url ? item.sender.avatar_url : DEFAULT_AVATAR} height="44" weight="44" /></a> :
-                                        <img src={item.sender.avatar_url ? item.sender.avatar_url : DEFAULT_AVATAR} height="44" weight="44" />
+                                        <a href={item.sender.url} target="_blank" rel="nofollow"><img className={classes.avatar} src={item.sender.avatar_url ? item.sender.avatar_url : DEFAULT_AVATAR} height="44" weight="44" /></a> :
+                                        <img className={classes.avatar} src={item.sender.avatar_url ? item.sender.avatar_url : DEFAULT_AVATAR} height="44" weight="44" />
                                 }
                             </div>
                             <div className={classes.timeline_comment + " " + (isMe ? classes.timeline_comment_current_user : "")}>
@@ -265,7 +265,7 @@ function Gitment({ account, articleId, messages, messagesTotal}) {
                                         <strong>
                                             {
                                                 item.sender.url ?
-                                                    <a href={item.sender.url} className={classes.author} target="_blank" rel="nofollow">{item.sender.name}</a> :
+                                                    <a href={item.sender.url}  className={classes.author} target="_blank" rel="nofollow">{item.sender.name}</a> :
                                                     item.sender.name
                                             }
                                         </strong> commented <relative-time datetime=""> {moment(item.date).calendar()}</relative-time>
@@ -289,13 +289,13 @@ function Gitment({ account, articleId, messages, messagesTotal}) {
                         <span className={classes.timeline_comment_avatar}>
                             {
                                 user.url ?
-                                    <a href={user.url} target="_blank" rel="nofollow"><img src={user.avatar_url ? user.avatar_url : DEFAULT_AVATAR} height="44" weight="44" /></a> :
-                                    <img src={user.avatar_url ? user.avatar_url : DEFAULT_AVATAR} height="44" weight="44" />
+                                    <a href={user.url} target="_blank" rel="nofollow"><img className={classes.avatar} src={user.avatar_url ? user.avatar_url : DEFAULT_AVATAR} height="44" weight="44" /></a> :
+                                    <img className={classes.avatar} src={user.avatar_url ? user.avatar_url : DEFAULT_AVATAR} height="44" weight="44" />
                             }
                         </span>
                         <div className={classes.timeline_comment_group}>
                             {
-                                // isLogin() ? '' : (<a href={oauth} target="_blank" rel="nofollow" className={classes.comment_login} />)
+                                isLogin() ? '' : (<a href={oauth} target="_blank" rel="nofollow" className={classes.comment_login} />)
                             }
                             <div>
                                 <MarkdownTextarea

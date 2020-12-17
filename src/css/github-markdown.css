@@ -59,6 +59,7 @@
     word-wrap: break-word;
 }
 
+
 .markdown-body .pl-c {
     color: #6a737d;
 }
@@ -953,4 +954,12 @@
 
 .markdown-body .pl-12 {
     padding-left: 128px!important;
+}
+
+@media only screen and (max-width: 460px) {
+    .markdown-body {
+        line-height: 1.6;
+        font-size: .8em;
+        font-weight: 500;
+    }
 }

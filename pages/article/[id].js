@@ -11,35 +11,63 @@ import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
 import Layout from '../../src/layout/Index';
 import { GET } from '../../src/request';
-import { ENV } from "../../src/config";
 import Discuss from '../../src/components/discuss';
+import Drawer from '@material-ui/core/Drawer';
+import { parseCookies } from 'nookies'
+import Gitment from '../../src/components/gitment';
 import '../../src/css/github-markdown.css';
 import '../../node_modules/highlight.js/styles/github.css';
-import Drawer from '@material-ui/core/Drawer';
 
 const useStyles = makeStyles(theme => ({
     root: {
         width: "100%",
         height: "100vh",
         display: "inline-flex",
-        overflow: "auto"
-        // backgroundColor: "rgb(250,250,250)",
+        overflow: "auto",
     },
     left: {
-        margin: "auto",
         maxWidth: 980,
         minWidth: 200,
-        padding: '32px',
+        padding: '0 10px 30px 0px',
         position: 'relative',
         backgroundColor: "#fff",
-        marginTop: "64px"
+        marginTop: "84px",
+        '@media screen and (max-width: 1736px)': {
+            'dyc-app[open-and-visible="true"] &': {
+                marginLeft: '300px'
+            }
+        },
+        '@media screen and (min-width: 460px)': {
+            '&': {
+                paddingBottom: 0,
+            }
+        },
+        '@media screen and (min-width: 1280px)': {
+            '&': {
+                marginLeft: "20px",
+                maxWidth: 700,
+            }
+        },
+        '@media screen and (min-width: 1460px)': {
+            '&': {
+                // marginLeft: "320px",
+                maxWidth: 980,
+            }
+        },
+        '@media screen and (min-width: 1700px)': {
+            '&': {
+                // margin: "auto",
+                marginLeft: "320px",
+                maxWidth: 980,
+            }
+        },
     },
     drawerPaper: {
         // width: 800,
         overflow: "overlay",
         minWidth: 480,
         [theme.breakpoints.up('sm')]: {
-          width: 480,
+            width: 480,
         },
         backgroundColor: 'rgb(250,250,250)',
         borderRight: 'None',
@@ -95,8 +123,15 @@ const useStyles = makeStyles(theme => ({
 }))
 
 moment.locale('zh-cn');
-function Article({ article, id }) {
-    article = article ? article : {};
+function Article({ article = {}, articleId, isSmallDevice, messages, messagesTotal }) {
+    const [user, setUser] = React.useState({})
+    React.useEffect(() => {
+        const all = parseCookies();
+        if (all.douyacun) {
+            setUser(JSON.parse(all.douyacun));
+        }
+        return () => { }
+    }, [])
     const classes = useStyles();
     const md = new MarkdownIt({
         highlight: function (str, lang) {
@@ -130,6 +165,14 @@ function Article({ article, id }) {
                 <article className="markdown-body" >
                     <div dangerouslySetInnerHTML={{ __html: md.render(article.content) }}></div>
                 </article>
+                {
+                    isSmallDevice ? (
+                        <div>
+                            <Gitment articleId={articleId} messages={messages} messagesTotal={messagesTotal} user={user} />
+                        </div>
+                    ) : ""
+                }
+
                 {/* <div className={classes.qr_code}>
                     <img src={article.wechat_subscription_qrcode} />
                     <Typography variant="inherit">
@@ -138,23 +181,26 @@ function Article({ article, id }) {
                     </Typography>
                 </div> */}
             </div>
+            {
+                !isSmallDevice ? (
+                    <Drawer
+                        open={true}
+                        // onClose={toggleDrawer()}
+                        // variant={props.isWide ? "persistent" : "temporary"}
+                        classes={{
+                            paper: classes.drawerPaper,
+                        }}
+                        anchor="right"
+                        variant="persistent"
+                        transitionDuration={200}
+                    >
+                        <div>
+                            <Discuss articleId={articleId} styles={{ paddingTop: 64 }} />
+                        </div>
+                    </Drawer>
+                ) : ""
+            }
 
-            <Drawer
-                open={true}
-                // onClose={toggleDrawer()}
-                // variant={props.isWide ? "persistent" : "temporary"}
-                classes={{
-                    paper: classes.drawerPaper,
-                }}
-                anchor="right"
-                variant="persistent"
-                transitionDuration={200}
-            >
-                <div>
-                    {/* <div style={{ paddingTop: '64px' }}></div> */}
-                    <Discuss articleId={id} styles={{paddingTop: 64}}/>
-                </div>
-            </Drawer>
         </div>
     </Layout >
     );
@@ -162,6 +208,12 @@ function Article({ article, id }) {
 
 Article.getInitialProps = async ({ req, query }) => {
     const { id } = query
+    // 是否位小设备
+    let isSmallDevice = false;
+    if (/(iPhone|Android|iPad|iPod|iOS)/i.test(req.headers["user-agent"])) {
+        isSmallDevice = true
+    }
+    // 文章详情
     const { data } = await GET({
         "url": `/api/article/${id}`,
     }).then(resp => {
@@ -171,7 +223,20 @@ Article.getInitialProps = async ({ req, query }) => {
             return {}
         }
     })
-    return { article: data, id: id, ...ENV }
+    // 评论列表
+    const { messages, messagesTotal } = await GET({
+        url: "/api/ws/article/messages",
+        params: {
+            article_id: id,
+            sort: "asc"
+        },
+        headers: {
+            Cookie: req.headers.cookie
+        }
+    }).then(({ data: { list, total } }) => {
+        return { messages: list, messagesTotal: total }
+    })
+    return { article: data, articleId: id, isSmallDevice, messages, messagesTotal }
 }
 
 export default Article;
