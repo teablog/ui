@@ -2,7 +2,6 @@ import React from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from '@material-ui/core/Typography';
 import Pagination from '@material-ui/lab/Pagination';
-import PaginationItem from '@material-ui/lab/PaginationItem';
 import MarkdownTextarea from './markdown_textarea'
 import { POST, GET } from '../../request';
 import { GITHUB_LOGO, BACKEND_URL, DEFAULT_AVATAR } from '../../config';
@@ -185,11 +184,9 @@ const userStyle = makeStyles(theme => ({
     },
 }))
 
-function Gitment({ articleId, messages, messagesTotal = 0 }) {
-    // console.log(messages);
+function Gitment({ account, articleId, messages, messagesTotal}) {
     const [user] = React.useState(() => {
-        // return userInfo && userInfo.length > 0 ? JSON.parse(Base64.decode(userInfo)) : {}
-        return {}
+        returnu
     })
     const [commentValue, setCommentValue] = React.useState("")
     const [comments, setComments] = React.useState(messages)
@@ -205,7 +202,10 @@ function Gitment({ articleId, messages, messagesTotal = 0 }) {
     // const oauth = GITHUB_OAUTH + escape("https://www.00h.tv/oauth/github?redirect=" + router.asPath)
     const oauth = "" // 登录页
 
-    const handleChange = (event, value) => {
+    /**
+     * 分页：
+     */
+    const changePage = (event, value) => {
         LoadMessage(value)
     };
 
@@ -221,14 +221,14 @@ function Gitment({ articleId, messages, messagesTotal = 0 }) {
                 size: size,
                 page: page
             }
-        }).then( ({data: {list, total}})=> {
+        }).then(({ data: { list, total } }) => {
             setComments(list)
             setTotal(total)
             setPage(page)
         })
     }
     /**
-     * 消息：发布
+     * 消息：发布 todo
      */
     const onComment = async () => {
         if (!isLogin()) {
@@ -283,7 +283,7 @@ function Gitment({ articleId, messages, messagesTotal = 0 }) {
                 }
                 <div className={classes.discussion_timeline_actions}>
                     <div className={classes.discussion_timeline_pagenation}>
-                        <Pagination count={Math.ceil(total/size)} page={page} onChange={handleChange} />
+                        <Pagination count={Math.ceil(total / size)} page={page} onChange={changePage} />
                     </div>
                     <div className={classes.timeline_comment_wrapper + " " + classes.timeline_new_comment}>
                         <span className={classes.timeline_comment_avatar}>
