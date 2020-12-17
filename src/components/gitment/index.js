@@ -1,4 +1,4 @@
-import react from 'react';
+import React from 'react';
 import { makeStyles } from "@material-ui/core/styles";
 import Typography from '@material-ui/core/Typography';
 import Pagination from '@material-ui/lab/Pagination';
@@ -185,14 +185,17 @@ const userStyle = makeStyles(theme => ({
     },
 }))
 
-function Gitment({ articleId, messages }) {
+function Gitment({ articleId, messages, messagesTotal = 0 }) {
     // console.log(messages);
-    const [user] = react.useState(() => {
+    const [user] = React.useState(() => {
         // return userInfo && userInfo.length > 0 ? JSON.parse(Base64.decode(userInfo)) : {}
         return {}
     })
-    const [commentValue, setCommentValue] = react.useState("")
-    const [comments, setComments] = react.useState(messages)
+    const [commentValue, setCommentValue] = React.useState("")
+    const [comments, setComments] = React.useState(messages)
+    const [total, setTotal] = React.useState(messagesTotal)
+    const [size, setSize] = React.useState(20)
+    const [page, setPage] = React.useState(1);
     const isLogin = () => {
         // return user && user.id > 0
         return true
@@ -202,31 +205,28 @@ function Gitment({ articleId, messages }) {
     // const oauth = GITHUB_OAUTH + escape("https://www.00h.tv/oauth/github?redirect=" + router.asPath)
     const oauth = "" // 登录页
 
-    const [page, setPage] = react.useState(1);
     const handleChange = (event, value) => {
-        setPage(value);
+        LoadMessage(value)
     };
 
     /**
      * 消息：加载
      */
-    const LoadMore = () => {
-        let after = moment().unix()
-        if (comments.length > 0) {
-            after = moment(comments[comments.length - 1].date).unix()
-        }
+    const LoadMessage = (page) => {
         return GET({
             url: "/api/ws/article/messages",
             params: {
-                after: after,
                 article_id: articleId,
-                sort: "asc"
+                sort: "asc",
+                size: size,
+                page: page
             }
-        }).then((list, total) => {
-            setComments([...list, ...comments])
+        }).then( ({data: {list, total}})=> {
+            setComments(list)
+            setTotal(total)
+            setPage(page)
         })
     }
-
     /**
      * 消息：发布
      */
@@ -283,7 +283,7 @@ function Gitment({ articleId, messages }) {
                 }
                 <div className={classes.discussion_timeline_actions}>
                     <div className={classes.discussion_timeline_pagenation}>
-                        <Pagination count={10} page={page} onChange={handleChange} />
+                        <Pagination count={Math.ceil(total/size)} page={page} onChange={handleChange} />
                     </div>
                     <div className={classes.timeline_comment_wrapper + " " + classes.timeline_new_comment}>
                         <span className={classes.timeline_comment_avatar}>

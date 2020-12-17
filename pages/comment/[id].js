@@ -2,15 +2,16 @@ import React from 'react';
 import Gitment from '../../src/components/gitment';
 import { POST, GET } from '../../src/request';
 
-function Comment({messages, articleId}) {
+function Comment({messages, articleId, messagesTotal}) {
+    console.log(messagesTotal);
     return (
-        <Gitment articleId={articleId} messages={messages}/>
+        <Gitment articleId={articleId} messages={messages} messagesTotal={100}/>
     )
 }
 
 Comment.getInitialProps = async ({ req, query }) => {
     const { id } = query
-    const data = await GET({
+    const {list, total} = await GET({
         url: "/api/ws/article/messages",
         params: {
             article_id: id,
@@ -19,10 +20,10 @@ Comment.getInitialProps = async ({ req, query }) => {
         headers: {
             Cookie: req.headers.cookie
         }
-    }).then(({ data: { list, total } }) => {
-        return list
+    }).then(({ data }) => {
+        return data
     })
-    return { messages: data, articleId: id}
+    return { messages: list, articleId: id, messagesTotal: total}
 }
 
 
