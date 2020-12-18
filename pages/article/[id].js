@@ -200,7 +200,6 @@ function Article({ article = {}, articleId, isSmallDevice, messages, messagesTot
                     </Drawer>
                 ) : ""
             }
-
         </div>
     </Layout >
     );
