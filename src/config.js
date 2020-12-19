@@ -2,11 +2,6 @@ const GITHUB_LOGO = "https://github.githubassets.com/images/modules/logos_page/G
 const DEFAULT_AVATAR = "/images/avatar/noavatar88.png"
 const PAGE_SIZE = 10;
 
-const BACKEND_URL = {
-  "oauth_github": "/api/oauth/github",
-  "discussion": "/api/discussion"
-}
-
 const ENV = {
   host: process.env.HOST,
   protocol: process.env.PROTOCOL,
@@ -17,7 +12,6 @@ const ENV = {
 
 export {
   GITHUB_LOGO,
-  BACKEND_URL,
   DEFAULT_AVATAR,
   PAGE_SIZE,
   ENV

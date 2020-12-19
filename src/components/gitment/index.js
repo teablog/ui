@@ -12,11 +12,16 @@ import MarkdownIt from 'markdown-it';
 import "../../css/github-markdown.css";
 
 const markdown = new MarkdownIt();
+const TEXTMSG = "TEXT"
+const IMGMSG = "IMAGE"
 
 const userStyle = makeStyles(theme => ({
+    root: {
+        marginTop: 10,
+    },
     discussion_timeline: {
         marginTop: "10px",
-        borderTop: "2px solid #e6ebf1",
+        borderTop: "1px solid #e6ebf1",
         position: "relative",
         "&::before": {
             content: '""',
@@ -155,6 +160,12 @@ const userStyle = makeStyles(theme => ({
     },
     timeline_new_comment: {
         marginBottom: 0,
+        '@media screen and (max-width: 600px)': {
+            '&': {
+                paddingBottom: 10,
+                paddingLeft: 10,
+            }
+        },
     },
     timeline_comment_group: {
         backgroundColor: '#fff',
@@ -189,14 +200,14 @@ const userStyle = makeStyles(theme => ({
     }
 }))
 
-function Gitment({ user = {}, articleId = "", messages = [], messagesTotal = 0}) {
+function Gitment({ user = {}, articleId = "", messages = [], messagesTotal = 0, isSmallDevice = false }) {
     const [commentValue, setCommentValue] = React.useState("")
     const [comments, setComments] = React.useState(messages)
     const [total, setTotal] = React.useState(messagesTotal)
     const [size, setSize] = React.useState(20)
     const [page, setPage] = React.useState(1);
     const isLogin = () => {
-        return user && user.id > 0
+        return user && user.id
     }
     const classes = userStyle()
     const router = useRouter()
@@ -234,23 +245,34 @@ function Gitment({ user = {}, articleId = "", messages = [], messagesTotal = 0})
             return;
         }
         await POST({
-            url: BACKEND_URL.discussion + router.query.id,
+            url: "/api/ws/article/comment",
             data: {
                 content: commentValue,
-                user_id: user.id
+                article_id: articleId,
+                type: TEXTMSG,
             }
-        }).then(LoadMore)
+        })
+        let data = {
+            "id": moment().unix,
+            "date": moment(),
+            "sender": user,
+            "type": TEXTMSG,
+            "content": commentValue,
+            "article_id": articleId
+        }
+        setCommentValue([...commentValue, data])
         return false
-    }  
-    console.log(user);
+    }
 
     return (
-        <div className={classes.discussion_timeline}>
-            <div>
+        <div className={classes.root}>
+            <Typography variant="subtitle2">{messagesTotal} 条评论 </Typography>
+
+            <div className={classes.discussion_timeline}>
                 {
                     comments && comments.length > 0 ? comments.map((item, key) => {
-                        // let isMe = user.id == item.sender.id ? true : false;
-                        let isMe = false;
+                        let isMe = user.id == item.sender.id ? true : false;
+                        // let isMe = false;
                         return (<div className={classes.timeline_comment_wrapper} key={key}>
                             <div className={classes.timeline_comment_avatar}>
                                 {
@@ -265,7 +287,7 @@ function Gitment({ user = {}, articleId = "", messages = [], messagesTotal = 0})
                                         <strong>
                                             {
                                                 item.sender.url ?
-                                                    <a href={item.sender.url}  className={classes.author} target="_blank" rel="nofollow">{item.sender.name}</a> :
+                                                    <a href={item.sender.url} className={classes.author} target="_blank" rel="nofollow">{item.sender.name}</a> :
                                                     item.sender.name
                                             }
                                         </strong> commented <relative-time datetime=""> {moment(item.date).calendar()}</relative-time>
@@ -282,17 +304,20 @@ function Gitment({ user = {}, articleId = "", messages = [], messagesTotal = 0})
                     }) : ""
                 }
                 <div className={classes.discussion_timeline_actions}>
+
                     <div className={classes.discussion_timeline_pagenation}>
                         <Pagination count={Math.ceil(total / size)} page={page} onChange={changePage} />
                     </div>
                     <div className={classes.timeline_comment_wrapper + " " + classes.timeline_new_comment}>
-                        <span className={classes.timeline_comment_avatar}>
-                            {
-                                user.url ?
-                                    <a href={user.url} target="_blank" rel="nofollow"><img className={classes.avatar} src={user.avatar_url ? user.avatar_url : DEFAULT_AVATAR} height="44" weight="44" /></a> :
-                                    <img className={classes.avatar} src={user.avatar_url ? user.avatar_url : DEFAULT_AVATAR} height="44" weight="44" />
-                            }
-                        </span>
+                        {
+                            !isSmallDevice && (<span className={classes.timeline_comment_avatar}>
+                                {
+                                    user.url ?
+                                        <a href={user.url} target="_blank" rel="nofollow"><img className={classes.avatar} src={user.avatar_url ? user.avatar_url : DEFAULT_AVATAR} height="44" weight="44" /></a> :
+                                        <img className={classes.avatar} src={user.avatar_url ? user.avatar_url : DEFAULT_AVATAR} height="44" weight="44" />
+                                }
+                            </span>)
+                        }
                         <div className={classes.timeline_comment_group}>
                             {
                                 isLogin() ? '' : (<a href={oauth} target="_blank" rel="nofollow" className={classes.comment_login} />)

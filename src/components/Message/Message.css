@@ -64,8 +64,8 @@
 }
 
 .message.mine .bubble-container .bubble {
-  background: #007aff;
-  color: white;
+  background: #44abec2e;
+  /* color: white; */
   /* border-top-left-radius: 20px;
   border-bottom-left-radius: 20px;
   border-top-right-radius: 2px;

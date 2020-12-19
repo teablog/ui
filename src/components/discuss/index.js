@@ -1,7 +1,6 @@
 import React, { Fragment, useReducer, useState, useEffect, useRef } from 'react';
 import MessageInputSmall from '../messageInput/messageInputSmall';
 import Button from '@material-ui/core/Button';
-import Message from '../message';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -12,9 +11,12 @@ import moment from 'moment';
 import { useRouter } from 'next/router';
 import { parseCookies } from 'nookies'
 import CircularProgress from '@material-ui/core/CircularProgress';
+import MarkdownIt from 'markdown-it'
 import { GET } from '../../request';
-import { ENV } from '../../config';
+
 import './discuss.css';
+import '../../css/github-markdown.css';
+import '../../css/highlight-github.css';
 
 
 let MY_USER_ID, conn;
@@ -26,7 +28,7 @@ const BOTTOME = 2;
  * - 下拉加载消息，保持滑动条原位置
  * remain: 剩余消息数量
  */
-const initialState = { messages: [], dialogOpen: false, topOrBottom: BOTTOME, remain: 0};
+const initialState = { messages: [], dialogOpen: false, topOrBottom: BOTTOME, remain: 0 };
 moment.locale('zh-cn');
 
 function reducer(state, action) {
@@ -43,8 +45,8 @@ function reducer(state, action) {
     }
 }
 
-function Discusss({ ws_address, articleId, styles }) {
-    const [state, dispatch] = useReducer(reducer, initialState);
+function Discusss({ ws_address, articleId, styles, messages = [], messagesTotal }) {
+    const [state, dispatch] = useReducer(reducer, { messages: messages, dialogOpen: false, topOrBottom: BOTTOME, remain: messagesTotal-messages.length });
     const [loading, setloading] = useState(false);
     const [messagesHeight, setMessagesHeight] = useState(0);
     const router = useRouter();
@@ -54,13 +56,30 @@ function Discusss({ ws_address, articleId, styles }) {
         contentRef.current.scrollTop = contentRef.current.scrollHeight
     }
     /**
+     * markdown
+     */
+    const md = new MarkdownIt({
+        highlight: function (str, lang) {
+            if (lang && hljs.getLanguage(lang)) {
+                try {
+                    return hljs.highlight(lang, str).value;
+                } catch (__) { }
+            }
+            return '';
+        },
+        html: true,
+        linkify: true,
+    });
+    /**
      * const [messages, setMessages] = React.useState([]);
      * useEffect 第二个参数的含义，保证initWebsocket只会初始化一次，这样会导致messages变化后，handlerMessage中message不会变化，故此采用dispatch的方式
      * @link https://zh-hans.reactjs.org/docs/hooks-faq.html#what-can-i-do-if-my-effect-dependencies-change-too-often
      */
     useEffect(() => {
         initWebsocket();
-        loadMore(true);
+        if (messages.length == 0) {
+            loadMore();
+        }
         const all = parseCookies();
         if (all.douyacun) {
             const douyacun = JSON.parse(all.douyacun);
@@ -68,7 +87,7 @@ function Discusss({ ws_address, articleId, styles }) {
         } else {
             window.location = `/login?redirect_uri=` + escape(router.asPath)
         }
-        return () => {}
+        return () => { }
     }, []);
     /**
      * 滚动条位置
@@ -86,7 +105,7 @@ function Discusss({ ws_address, articleId, styles }) {
      * websocket: 初始化 
      */
     const initWebsocket = () => {
-        conn = new WebSocket("ws://douyacun.io/api/ws/join?article_id=8c110cb1533e75217e89bdfd4c0b1e7a");
+        conn = new WebSocket(ws_address);
         conn.onmessage = handlerMessage;
         conn.onclose = function () {
             dispatch({ type: "dialog_open", dialogOpen: true })
@@ -135,10 +154,11 @@ function Discusss({ ws_address, articleId, styles }) {
      */
     const upScrollLoadMore = () => {
         let scrollTop = contentRef.current.scrollTop;
-        if (scrollTop == 0 && !loading && state.messages.length > 0 && state.remain > 0 ) {
+        if (scrollTop == 0 && !loading && state.messages.length > 0 && state.remain > 0) {
             setloading(true);
             loadMore().then(setloading(false))
-            setTimeout(()=> (loadMore().then(setloading(false))), 500);
+            // 上方显示加载框
+            // setTimeout(() => (loadMore().then(setloading(false))), 500);
         }
     }
     /**
@@ -168,14 +188,26 @@ function Discusss({ ws_address, articleId, styles }) {
                     showTimestamp = false;
                 }
             }
+            let friendlyTimestamp = moment(current.date).calendar();
             tempMessages.push(
-                <Message
-                    key={i}
-                    isMine={isMine}
-                    isSystem={isSystem}
-                    showTimestamp={showTimestamp}
-                    data={current}
-                />
+                <div className={['message', `${isMine ? 'mine' : ''}`].join(' ')} key={i}>
+                    {
+                        showTimestamp && (<div className="reminder">{friendlyTimestamp}</div>)
+                    }
+                    {
+                        isSystem ?
+                            (<div className="reminder"><div dangerouslySetInnerHTML={{ __html: md.render(current.content) }}></div></div>) :
+                            <div>
+                                {!isMine && (<div className="name">{current.sender.name}</div>)}
+                                <div className="bubble-container">
+                                    <div className="markdown-body bubble" title={friendlyTimestamp}>
+                                        <div dangerouslySetInnerHTML={{ __html: md.render(current.content) }}></div>
+                                    </div>
+                                </div>
+                            </div>
+                    }
+                </div>
+
             );
             i += 1;
         }
@@ -244,12 +276,6 @@ function Discusss({ ws_address, articleId, styles }) {
 }
 
 Discusss.getInitialProps = async ({ req, query }) => {
-    let ws_address;
-    if (ENV.protocol == "https") {
-        ws_address = "wss://" + ENV.host + "/api/ws/join?article_id="
-    } else {
-        ws_address = "ws://" + ENV.host + "/api/ws/join?article_id="
-    }
-    return { ...ENV, ws_address }
+
 }
 export default Discusss;

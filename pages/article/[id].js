@@ -15,6 +15,7 @@ import Discuss from '../../src/components/discuss';
 import Drawer from '@material-ui/core/Drawer';
 import { parseCookies } from 'nookies'
 import Gitment from '../../src/components/gitment';
+import { ENV } from '../../src/config';
 import '../../src/css/github-markdown.css';
 import '../../node_modules/highlight.js/styles/github.css';
 
@@ -32,7 +33,12 @@ const useStyles = makeStyles(theme => ({
         position: 'relative',
         backgroundColor: "#fff",
         marginTop: "84px",
-        '@media screen and (max-width: 1736px)': {
+        '@media screen and (max-width: 600px)': {
+            '&': {
+                padding: '10px 10px 30px 10px',
+            }
+        },
+        '@media screen and (max-width: 1700px)': {
             'dyc-app[open-and-visible="true"] &': {
                 marginLeft: '300px'
             }
@@ -42,16 +48,19 @@ const useStyles = makeStyles(theme => ({
                 paddingBottom: 0,
             }
         },
-        '@media screen and (min-width: 1280px)': {
+        '@media screen and (min-width: 1200px)': {
             '&': {
                 marginLeft: "20px",
                 maxWidth: 700,
             }
         },
-        '@media screen and (min-width: 1460px)': {
+        '@media screen and (min-width: 1400px)': {
             '&': {
                 // marginLeft: "320px",
                 maxWidth: 980,
+            },
+            'dyc-app[open-and-visible="true"] &': {
+                maxWidth: 700,
             }
         },
         '@media screen and (min-width: 1700px)': {
@@ -123,7 +132,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 moment.locale('zh-cn');
-function Article({ article = {}, articleId, isSmallDevice, messages, messagesTotal }) {
+function Article({ article = {}, articleId, isSmallDevice, messages, messagesTotal, ws_address }) {
     const [user, setUser] = React.useState({})
     React.useEffect(() => {
         const all = parseCookies();
@@ -142,6 +151,8 @@ function Article({ article = {}, articleId, isSmallDevice, messages, messagesTot
             }
             return ''; // use external default escaping
         },
+        html: true,
+        linkify: true,
     });
     md.use(anchor)
     md.use(toc)
@@ -168,11 +179,16 @@ function Article({ article = {}, articleId, isSmallDevice, messages, messagesTot
                 {
                     isSmallDevice ? (
                         <div>
-                            <Gitment articleId={articleId} messages={messages} messagesTotal={messagesTotal} user={user} />
+                            <Gitment
+                                articleId={articleId}
+                                messages={messages}
+                                messagesTotal={messagesTotal}
+                                user={user}
+                                isSmallDevice={isSmallDevice}
+                            />
                         </div>
                     ) : ""
                 }
-
                 {/* <div className={classes.qr_code}>
                     <img src={article.wechat_subscription_qrcode} />
                     <Typography variant="inherit">
@@ -187,15 +203,19 @@ function Article({ article = {}, articleId, isSmallDevice, messages, messagesTot
                         open={true}
                         // onClose={toggleDrawer()}
                         // variant={props.isWide ? "persistent" : "temporary"}
-                        classes={{
-                            paper: classes.drawerPaper,
-                        }}
+                        classes={{ paper: classes.drawerPaper }}
                         anchor="right"
                         variant="persistent"
                         transitionDuration={200}
                     >
                         <div>
-                            <Discuss articleId={articleId} styles={{ paddingTop: 64 }} />
+                            <Discuss
+                                ws_address={ws_address}
+                                articleId={articleId}
+                                styles={{ paddingTop: 64 }}
+                                messages={messages}
+                                messagesTotal={messagesTotal}
+                            />
                         </div>
                     </Drawer>
                 ) : ""
@@ -209,9 +229,13 @@ Article.getInitialProps = async ({ req, query }) => {
     const { id } = query
     // 是否位小设备
     let isSmallDevice = false;
+    let sort = "desc"
     if (/(iPhone|Android|iPad|iPod|iOS)/i.test(req.headers["user-agent"])) {
         isSmallDevice = true
+        sort = "asc"
     }
+    // let isSmallDevice = true;
+    // let sort = "asc"
     // 文章详情
     const { data } = await GET({
         "url": `/api/article/${id}`,
@@ -227,7 +251,7 @@ Article.getInitialProps = async ({ req, query }) => {
         url: "/api/ws/article/messages",
         params: {
             article_id: id,
-            sort: "asc"
+            sort: sort
         },
         headers: {
             Cookie: req.headers.cookie
@@ -235,7 +259,14 @@ Article.getInitialProps = async ({ req, query }) => {
     }).then(({ data: { list, total } }) => {
         return { messages: list, messagesTotal: total }
     })
-    return { article: data, articleId: id, isSmallDevice, messages, messagesTotal }
+    // websocket 地址
+    let ws_address;
+    if (ENV.protocol == "https") {
+        ws_address = "wss://" + ENV.host + "/api/ws/join?article_id=" + id
+    } else {
+        ws_address = "ws://" + ENV.host + "/api/ws/join?article_id=" + id
+    }
+    return { article: data, articleId: id, isSmallDevice, messages, messagesTotal, ws_address: ws_address }
 }
 
 export default Article;
