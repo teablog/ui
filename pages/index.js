@@ -5,11 +5,14 @@ import Button from '@material-ui/core/Button';
 import Topic from '../src/layout/Topic';
 import Layout from '../src/layout/Index';
 import { GET } from '../src/request';
-import { PAGE_SIZE } from '../src/config';
+import { PAGE_SIZE, ENV } from '../src/config';
 import Weather from '../src/components/weather';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import { useRouter } from 'next/router';
+import { parseCookies } from 'nookies'
+
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -133,6 +136,7 @@ function Index({ total, articles, labels, page }) {
     const [location, setLocation] = useState(undefined)
     const [snackbarState, setSnackbarState] = useState(false)
     const [errMessage, setErrMessage] = useState("")
+    const router = useRouter();
     useEffect(() => {
         if (!/(iPhone|Android|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
             getLocation()
@@ -142,9 +146,9 @@ function Index({ total, articles, labels, page }) {
             const douyacun = JSON.parse(all.douyacun);
             if (Boolean(douyacun)) {
                 if (router.query["redirect_uri"]) {
-                    redirect_uri = unescape(router.query["redirect_uri"])
+                    let redirect_uri = unescape(router.query["redirect_uri"])
+                    window.location = redirect_uri
                 }
-                window.location = redirect_uri
             }
         }
     }, [])
@@ -265,10 +269,9 @@ function Index({ total, articles, labels, page }) {
     );
 }
 
-Index.getInitialProps = async ({ req, query }) => {
-    let { page } = query;
+Index.getInitialProps = async ({ req, query, res }) => {
+    let { page, redirect_uri } = query;
     page = page > 0 ? page : 1;
-    // console.log(req.connection.remoteAddress);
     const { data, total } = await GET({
         url: `/api/articles?page=${page}`,
         headers: {
