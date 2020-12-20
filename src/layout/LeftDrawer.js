@@ -91,11 +91,11 @@ function LeftDrawer(props) {
   // ];
 
   const Topics = [
-    {
-      name: 'Chat',
-      icon: <Chat className={classes.dycListItemIcon} />,
-      link: "/chat"
-    },
+    // {
+    //   name: 'Chat',
+    //   icon: <Chat className={classes.dycListItemIcon} />,
+    //   link: "/chat"
+    // },
     {
       name: 'Redis',
       icon: <Redis className={classes.dycListItemIcon} />,
