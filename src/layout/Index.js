@@ -255,7 +255,7 @@ function Layout({ children, leftDrawerDefaultDisplay = false, marginTop = true }
     }
   }
   const logout = () => {
-    document.cookie = `douyacun=; path=/;domain=.${host};expires=Thu, 01 Jan 1970 00:00:00 GMT`;
+    document.cookie = `douyacun=; path=/;domain=.www.douyacun.com;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
     setCook(undefined);
   }
 

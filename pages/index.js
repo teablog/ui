@@ -137,6 +137,16 @@ function Index({ total, articles, labels, page }) {
         if (!/(iPhone|Android|iPad|iPod|iOS)/i.test(navigator.userAgent)) {
             getLocation()
         }
+        const all = parseCookies();
+        if (all.douyacun) {
+            const douyacun = JSON.parse(all.douyacun);
+            if (Boolean(douyacun)) {
+                if (router.query["redirect_uri"]) {
+                    redirect_uri = unescape(router.query["redirect_uri"])
+                }
+                window.location = redirect_uri
+            }
+        }
     }, [])
     useEffect(() => {
         if (errMessage != "") {
