@@ -48,6 +48,7 @@ function reducer(state, action) {
 function Discusss({ ws_address, articleId, styles, messages = [], messagesTotal }) {
     const [state, dispatch] = useReducer(reducer, { messages: messages, dialogOpen: false, topOrBottom: BOTTOME, remain: messagesTotal-messages.length });
     const [loading, setloading] = useState(false);
+    const [isLogin, setIsLogin] = useState(false);
     const [messagesHeight, setMessagesHeight] = useState(0);
     const router = useRouter();
     const contentRef = useRef(null);
@@ -76,7 +77,6 @@ function Discusss({ ws_address, articleId, styles, messages = [], messagesTotal 
      * @link https://zh-hans.reactjs.org/docs/hooks-faq.html#what-can-i-do-if-my-effect-dependencies-change-too-often
      */
     useEffect(() => {
-        initWebsocket();
         if (messages.length == 0) {
             loadMore();
         }
@@ -84,8 +84,10 @@ function Discusss({ ws_address, articleId, styles, messages = [], messagesTotal 
         if (all.douyacun) {
             const douyacun = JSON.parse(all.douyacun);
             MY_USER_ID = douyacun.id
-        } else {
-            window.location = `/login?redirect_uri=` + escape(router.asPath)
+            if (douyacun.id) {
+                initWebsocket();
+                setIsLogin(true);
+            }
         }
         return () => { }
     }, []);
@@ -225,12 +227,16 @@ function Discusss({ ws_address, articleId, styles, messages = [], messagesTotal 
         dispatch({ type: "dialog_open", dialogOpen: false })
     }
     const send = (content) => {
-        let data = JSON.stringify({
-            content: content,
-            article_id: articleId,
-            type: "TEXT"
-        })
-        conn.send(data);
+        if (!isLogin) {
+            window.location = `/login?redirect_uri=` + escape(router.asPath)
+        } else {
+            let data = JSON.stringify({
+                content: content,
+                article_id: articleId,
+                type: "TEXT"
+            })
+            conn.send(data);
+        }
     }
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
