@@ -253,14 +253,14 @@ function Gitment({ user = {}, articleId = "", messages = [], messagesTotal = 0, 
             }
         })
         let data = {
-            "id": moment().unix,
+            "id": moment().unix() + "",
             "date": moment(),
             "sender": user,
             "type": TEXTMSG,
             "content": commentValue,
             "article_id": articleId
         }
-        setCommentValue([...commentValue, data])
+        setComments([...comments, data])
         return false
     }
 
@@ -304,9 +304,8 @@ function Gitment({ user = {}, articleId = "", messages = [], messagesTotal = 0, 
                     }) : ""
                 }
                 <div className={classes.discussion_timeline_actions}>
-
                     <div className={classes.discussion_timeline_pagenation}>
-                        <Pagination count={Math.ceil(total / size)} page={page} onChange={changePage} />
+                        <Pagination count={Math.ceil(total / size) > 0 ? Math.ceil(total / size) : 1} page={page} onChange={changePage} />
                     </div>
                     <div className={classes.timeline_comment_wrapper + " " + classes.timeline_new_comment}>
                         {

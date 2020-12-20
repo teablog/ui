@@ -161,7 +161,6 @@ function Article({ article = {}, articleId, isSmallDevice, messages, messagesTot
     return (<Layout marginTop={false} >
         <Head>
             <title>{article.title} (douyacun)</title>
-            <meta name="viewport" content="initial-scale=1.0, width=device-width" />
             <meta name="Keywords" content={article.keywords} />
             <meta name="description" content={article.description} />
         </Head>
