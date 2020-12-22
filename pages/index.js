@@ -254,7 +254,7 @@ function Index({ total, articles, labels, page }) {
                                 <div className={classes.dycFooter}>
                                     <div className={classes.dycIPC}>
                                         <img src="/images/icp.png" style={{ width: 20, height: 20, marginRight: 8 }} />
-                                        鲁ICP备20003688号
+                                        <a href="https://beian.miit.gov.cn/#/Integrated/recordQuery" target="_blank" style={{color: "#8590a6"}}>鲁ICP备20003688号-1</a>
                                     </div>
                                     <div>
                                         联系我: douyacun@gmail.com
