@@ -52,18 +52,15 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-function Login({ github_oauth }) {
+function Login({ github_oauth, host, protocol }) {
     const classes = useStyles();
     const router = useRouter();
-    let redirect_uri = "/";
     React.useEffect(() => {
+        let redirect_uri = unescape(router.query["redirect_uri"])
         const all = parseCookies();
         if (all.douyacun) {
             const douyacun = JSON.parse(all.douyacun);
             if (Boolean(douyacun)) {
-                if (router.query["redirect_uri"]) {
-                    redirect_uri = unescape(router.query["redirect_uri"])
-                }
                 window.location = redirect_uri
             }
         }
@@ -84,6 +81,7 @@ function Login({ github_oauth }) {
     const errorHandlerGoogle = (error) => {
         console.log(error);
     }
+    github_oauth = github_oauth + escape(`${protocol}://${host}/api/oauth/github?redirect_uri=${protocol}://${host}${router.query["redirect_uri"]}`)
     return (
         <div className={classes.sign}>
             <div className={classes.main}>
