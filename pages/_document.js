@@ -1,43 +1,34 @@
-/* eslint-disable react/no-danger */
 import React from 'react';
 import Document, { Html, Head, Main, NextScript } from 'next/document';
-import { ServerStyleSheets } from '@material-ui/styles';
+import { ServerStyleSheets } from '@material-ui/core/styles';
+import theme from '../src/theme';
 
-class MyDocument extends Document {
+export default class MyDocument extends Document {
   render() {
     return (
-      <Html
-        lang="en"
-        style={{
-          height: '100%',
-        }}
-      >
+      <Html lang="en">
         <Head>
-          <meta charSet="utf-8" />
-          <meta name="google" content="notranslate" />
-          <meta name="theme-color" content="#1976D2" />
+          {/* PWA primary color */}
+          <meta name="theme-color" content={theme.palette.primary.main} />
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+          />
         </Head>
-        <body
-          style={{
-            font: '16px Muli',
-            color: '#222',
-            margin: '0px auto',
-            fontWeight: '400',
-            lineHeight: '1.5em',
-            minHeight: '100%',
-          }}
-        >
+        <body>
           <Main />
           <NextScript />
+          <div style={{ display: "none" }}>
+            <script type="text/javascript" src="https://s9.cnzz.com/z_stat.php?id=1278122506&web_id=1278122506"></script>
+          </div>
         </body>
-        <div style={{display: "none"}}>
-          <script type="text/javascript" src="https://s9.cnzz.com/z_stat.php?id=1278122506&web_id=1278122506"></script>
-        </div>
       </Html>
     );
   }
 }
 
+// `getInitialProps` belongs to `_document` (instead of `_app`),
+// it's compatible with server-side generation (SSG).
 MyDocument.getInitialProps = async (ctx) => {
   // Resolution order
   //
@@ -75,13 +66,6 @@ MyDocument.getInitialProps = async (ctx) => {
   return {
     ...initialProps,
     // Styles fragment is rendered after the app and page rendering finish.
-    styles: (
-      <React.Fragment>
-        {initialProps.styles}
-        {sheets.getStyleElement()}
-      </React.Fragment>
-    ),
+    styles: [...React.Children.toArray(initialProps.styles), sheets.getStyleElement()],
   };
 };
-
-export default MyDocument;

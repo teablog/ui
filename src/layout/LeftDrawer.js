@@ -9,7 +9,7 @@ import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Typography from '@material-ui/core/Typography';
-import { Redis, Mysql, Golang, Elastic, Linux, Tools } from './icon'
+import { Redis, Mysql, Golang, Elastic, Linux, Tools, Kafka } from './icon'
 // import HdIcon from '@material-ui/icons/Hd';
 // import TvIcon from '@material-ui/icons/Tv';
  
@@ -120,6 +120,11 @@ function LeftDrawer(props) {
       name: 'Linux',
       icon: <Linux className={classes.dycListItemIcon} />,
       link: "/topics/linux"
+    },
+    {
+      name: 'Kafka',
+      icon: <Kafka className={classes.dycListItemIcon} />,
+      link: "/topics/kafka"
     },
     {
       name: 'Tools',
