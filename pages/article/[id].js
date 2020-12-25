@@ -108,7 +108,7 @@ const useStyles = makeStyles(theme => ({
     },
     qr_code: {
         position: 'absolute',
-        left: -180,
+        right: 0,
         top: 0,
         width: 140,
         padding: 16,
@@ -188,13 +188,13 @@ function Article({ article = {}, articleId, isSmallDevice, messages, messagesTot
                         </div>
                     ) : ""
                 }
-                {/* <div className={classes.qr_code}>
+                <div className={classes.qr_code}>
                     <img src={article.wechat_subscription_qrcode} />
                     <Typography variant="inherit">
                         微信扫一扫<br />
                         关注该公众号
                     </Typography>
-                </div> */}
+                </div>
             </div>
             {
                 !isSmallDevice ? (
