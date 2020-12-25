@@ -24,52 +24,29 @@ const useStyles = makeStyles(theme => ({
         width: "100%",
         height: "100vh",
         display: "inline-flex",
-        overflow: "auto",
+        position: "fixed",
+        "::-webkit-scrollbar-thumb:hover" : {
+            height: 50,
+        }
     },
     left: {
+        marginTop: "64px",
         maxWidth: 980,
+        overflowY: "scroll",
+        "&::-webkit-resizer": {
+
+        }
+    },
+    content: {
         minWidth: 200,
         padding: '0 10px 30px 0px',
         position: 'relative',
         backgroundColor: "#fff",
-        marginTop: "84px",
-        '@media screen and (max-width: 600px)': {
-            '&': {
-                padding: '10px 10px 30px 10px',
-            }
-        },
-        '@media screen and (max-width: 1700px)': {
-            'dyc-app[open-and-visible="true"] &': {
-                marginLeft: '300px'
-            }
-        },
-        '@media screen and (min-width: 460px)': {
-            '&': {
-                paddingBottom: 0,
-            }
-        },
-        '@media screen and (min-width: 1200px)': {
-            '&': {
-                marginLeft: "20px",
-                maxWidth: 700,
-            }
-        },
-        '@media screen and (min-width: 1400px)': {
-            '&': {
-                // marginLeft: "320px",
-                maxWidth: 980,
-            },
-            'dyc-app[open-and-visible="true"] &': {
-                maxWidth: 700,
-            }
-        },
-        '@media screen and (min-width: 1700px)': {
-            '&': {
-                // margin: "auto",
-                marginLeft: "320px",
-                maxWidth: 980,
-            }
-        },
+        margin: "0 auto",
+    },
+    right: {
+        width: "100%",
+        border: "1px solid"
     },
     drawerPaper: {
         // width: 800,
@@ -166,59 +143,47 @@ function Article({ article = {}, articleId, isSmallDevice, messages, messagesTot
         </Head>
         <div className={classes.root}>
             <div className={classes.left}>
-                <Typography variant="h2" className={classes.title}>{article.title}</Typography>
-                <div className={classes.meta_content}>
-                    <Typography component="span" className={classes.media_meta}>原创:</Typography>
-                    <Typography component="span" className={classes.media_meta}>{article.author}</Typography>
-                    <Typography component="span" className={classes.media_meta}>{moment(article.date).calendar()}发布</Typography>
-                </div>
-                <article className="markdown-body" >
-                    <div dangerouslySetInnerHTML={{ __html: md.render(article.content) }}></div>
-                </article>
-                {
-                    isSmallDevice ? (
-                        <div>
-                            <Gitment
-                                articleId={articleId}
-                                messages={messages}
-                                messagesTotal={messagesTotal}
-                                user={user}
-                                isSmallDevice={isSmallDevice}
-                            />
-                        </div>
-                    ) : ""
-                }
-                <div className={classes.qr_code}>
-                    <img src={article.wechat_subscription_qrcode} />
-                    <Typography variant="inherit">
-                        微信扫一扫<br />
+                <div className={classes.content}>
+                    <Typography variant="h2" className={classes.title}>{article.title}</Typography>
+                    <div className={classes.meta_content}>
+                        <Typography component="span" className={classes.media_meta}>原创:</Typography>
+                        <Typography component="span" className={classes.media_meta}>{article.author}</Typography>
+                        <Typography component="span" className={classes.media_meta}>{moment(article.date).calendar()}发布</Typography>
+                    </div>
+                    <article className="markdown-body" >
+                        <div dangerouslySetInnerHTML={{ __html: md.render(article.content) }}></div>
+                    </article>
+                    {
+                        isSmallDevice ? (
+                            <div>
+                                <Gitment
+                                    articleId={articleId}
+                                    messages={messages}
+                                    messagesTotal={messagesTotal}
+                                    user={user}
+                                    isSmallDevice={isSmallDevice}
+                                />
+                            </div>
+                        ) : ""
+                    }
+                    <div className={classes.qr_code}>
+                        <img src={article.wechat_subscription_qrcode} />
+                        <Typography variant="inherit">
+                            微信扫一扫<br />
                         关注该公众号
                     </Typography>
+                    </div>
                 </div>
             </div>
-            {
-                !isSmallDevice ? (
-                    <Drawer
-                        open={true}
-                        // onClose={toggleDrawer()}
-                        // variant={props.isWide ? "persistent" : "temporary"}
-                        classes={{ paper: classes.drawerPaper }}
-                        anchor="right"
-                        variant="persistent"
-                        transitionDuration={200}
-                    >
-                        <div>
-                            <Discuss
-                                ws_address={ws_address}
-                                articleId={articleId}
-                                styles={{ paddingTop: 64 }}
-                                messages={messages}
-                                messagesTotal={messagesTotal}
-                            />
-                        </div>
-                    </Drawer>
-                ) : ""
-            }
+            <div className={classes.right}>
+                <Discuss
+                    ws_address={ws_address}
+                    articleId={articleId}
+                    styles={{ paddingTop: 64 }}
+                    messages={messages}
+                    messagesTotal={messagesTotal}
+                />
+            </div>
         </div>
     </Layout >
     );
