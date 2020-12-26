@@ -12,7 +12,6 @@ import moment from 'moment';
 import Layout from '../../src/layout/Index';
 import { GET } from '../../src/request';
 import Discuss from '../../src/components/discuss';
-import Drawer from '@material-ui/core/Drawer';
 import { parseCookies } from 'nookies'
 import Gitment from '../../src/components/gitment';
 import { ENV } from '../../src/config';
@@ -25,28 +24,41 @@ const useStyles = makeStyles(theme => ({
         height: "100vh",
         display: "inline-flex",
         position: "fixed",
-        "::-webkit-scrollbar-thumb:hover" : {
-            height: 50,
-        }
     },
     left: {
         marginTop: "64px",
-        maxWidth: 980,
         overflowY: "scroll",
-        "&::-webkit-resizer": {
-
+        "&::-webkit-scrollbar": {
+            width: 4,
+            height: 16,
+        },
+        "&::-webkit-scrollbar-thumb": {
+            backgroundColor: "rgba(105, 112, 125, 0.5)",
+            // border: "3px solid transparent",
+            backgroundClip: "content-box"
         }
     },
     content: {
-        minWidth: 200,
-        padding: '0 10px 30px 0px',
+        maxWidth: 980,
+        minWidth: 700,
+        padding: '20px 10px 30px 0px',
         position: 'relative',
         backgroundColor: "#fff",
         margin: "0 auto",
     },
+    conAppResizer: {
+        userSelect: "none",
+        display: "flex",
+        backgroundColor: "#fafbfd",
+        width: 14,
+        cursor: "ew-resize",
+        flex: "0 0 14px",
+        alignItems: "center",
+        justifyContent: "center",
+        border: "0.5px solid rgba(0, 0, 0, 0.07)",
+    },
     right: {
         width: "100%",
-        border: "1px solid"
     },
     drawerPaper: {
         // width: 800,
@@ -86,7 +98,7 @@ const useStyles = makeStyles(theme => ({
     qr_code: {
         position: 'absolute',
         right: 0,
-        top: 0,
+        top: 20,
         width: 140,
         padding: 16,
         border: '1px solid #d9dadc',
@@ -109,15 +121,68 @@ const useStyles = makeStyles(theme => ({
 }))
 
 moment.locale('zh-cn');
+const DiscussLeftWidth = "article_discuss_left_width" 
+const DiscussRightWidth = "article_discuss_right_right"
 function Article({ article = {}, articleId, isSmallDevice, messages, messagesTotal, ws_address }) {
     const [user, setUser] = React.useState({})
+    const [canMove, setCanMove] = React.useState(false) // 聊天框：是否移动
+    const [leftWidth, setLeftWidth] = React.useState(70);   // 窗口：文章宽度
+    const [rightWidth, setRightWidth] = React.useState(29); // 窗口：聊天框宽度Î
+    const [screenWidth, setScreenWidth] = React.useState(100); // 聊天框：当前窗口宽度，计算左右比例
+    const [lockResize, setLockResize] = React.useState(false); // 聊天框：加载锁，不要设置太快了
+    const [userSelect, setUserSelect] = React.useState("text"); // 聊天框：移动时，文章内容不要选中
+    const leftRef = React.useRef(null);
+    // 首次加载
     React.useEffect(() => {
         const all = parseCookies();
         if (all.douyacun) {
             setUser(JSON.parse(all.douyacun));
         }
-        return () => { }
+        // 加载聊天框宽度
+        let lw = localStorage.getItem(DiscussLeftWidth);
+        if (lw > 0) {
+            setLeftWidth(lw);
+        }
+        let rw = localStorage.getItem(DiscussRightWidth);
+        if (rw > 0) {
+            setRightWidth(rw);
+        }
+        setScreenWidth(document.body.clientWidth);
+        return () => {
+        }
     }, [])
+    // 订阅聊天框宽度
+    React.useEffect(() => {
+        document.addEventListener("mouseup", mouseUpHandler);
+        return () => {
+            document.removeEventListener("mouseup", mouseUpHandler);
+        }
+    }, [leftWidth, rightWidth])
+    // 聊天框：开启移动
+    const mousedownHandler = (e) => {
+        setCanMove(true)
+        setUserSelect("none");
+    }
+    // 聊天框：关闭移动
+    const mouseUpHandler = () => {
+        setCanMove(false)
+        setUserSelect("text");
+        // 持久化聊天宽度
+        localStorage.setItem(DiscussLeftWidth, leftWidth);
+        localStorage.setItem(DiscussRightWidth, rightWidth);
+    }
+    const mouseMoveHandler = (e) => {
+        if (canMove) {
+            let lw = (e.clientX / screenWidth * 100).toFixed(3)
+            let rw = (100 - lw - 1).toFixed(3);
+            if (!lockResize && lw > 50 && (screenWidth - e.clientX) > 300) {
+                setLeftWidth(lw)
+                setRightWidth(rw)
+                setLockResize(true)
+                setTimeout(() => { setLockResize(false) }, 10)
+            }
+        }
+    }
     const classes = useStyles();
     const md = new MarkdownIt({
         highlight: function (str, lang) {
@@ -141,8 +206,8 @@ function Article({ article = {}, articleId, isSmallDevice, messages, messagesTot
             <meta name="Keywords" content={article.keywords} />
             <meta name="description" content={article.description} />
         </Head>
-        <div className={classes.root}>
-            <div className={classes.left}>
+        <div className={classes.root} onMouseMove={mouseMoveHandler}>
+            <div className={classes.left} style={{ width: leftWidth + "%", userSelect: userSelect }} ref={leftRef}>
                 <div className={classes.content}>
                     <Typography variant="h2" className={classes.title}>{article.title}</Typography>
                     <div className={classes.meta_content}>
@@ -175,7 +240,11 @@ function Article({ article = {}, articleId, isSmallDevice, messages, messagesTot
                     </div>
                 </div>
             </div>
-            <div className={classes.right}>
+            <div
+                className={classes.conAppResizer}
+                onMouseDown={mousedownHandler}
+            >︙</div>
+            <div className={classes.right} style={{ width: rightWidth + "%" }}>
                 <Discuss
                     ws_address={ws_address}
                     articleId={articleId}
