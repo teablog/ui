@@ -123,6 +123,23 @@ const useStyles = makeStyles(theme => ({
 moment.locale('zh-cn');
 const DiscussLeftWidth = "article_discuss_left_width" 
 const DiscussRightWidth = "article_discuss_right_right"
+const md = new MarkdownIt({
+    highlight: function (str, lang) {
+        if (lang && hljs.getLanguage(lang)) {
+            try {
+                return hljs.highlight(lang, str).value;
+            } catch (__) { }
+        }
+        return ''; // use external default escaping
+    },
+    html: true,
+    linkify: true,
+});
+md.use(anchor)
+md.use(toc)
+md.use(lists)
+md.use(table)
+
 function Article({ article = {}, articleId, isSmallDevice, messages, messagesTotal, ws_address }) {
     const [user, setUser] = React.useState({})
     const [canMove, setCanMove] = React.useState(false) // 聊天框：是否移动
@@ -184,22 +201,7 @@ function Article({ article = {}, articleId, isSmallDevice, messages, messagesTot
         }
     }
     const classes = useStyles();
-    const md = new MarkdownIt({
-        highlight: function (str, lang) {
-            if (lang && hljs.getLanguage(lang)) {
-                try {
-                    return hljs.highlight(lang, str).value;
-                } catch (__) { }
-            }
-            return ''; // use external default escaping
-        },
-        html: true,
-        linkify: true,
-    });
-    md.use(anchor)
-    md.use(toc)
-    md.use(lists)
-    md.use(table)
+
     return (<Layout marginTop={false} >
         <Head>
             <title>{article.title} (douyacun)</title>
