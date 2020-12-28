@@ -20,6 +20,7 @@
     "markdown-it": "latest",
     "markdown-it-anchor": "^5.2.4",
     "markdown-it-multimd-table": "^3.2.3",
+    "markdown-it-smartarrows": "^1.0.1",
     "markdown-it-task-lists": "^2.1.1",
     "markdown-it-toc-done-right": "^4.0.2",
     "material-ui-popup-state": "^1.5.3",

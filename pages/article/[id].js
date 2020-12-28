@@ -6,6 +6,7 @@ import toc from "markdown-it-toc-done-right";
 import anchor from 'markdown-it-anchor';
 import lists from 'markdown-it-task-lists';
 import table from 'markdown-it-multimd-table';
+import mdSmartArrows from 'markdown-it-smartarrows';
 import Head from 'next/head'
 import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
@@ -30,13 +31,10 @@ const useStyles = makeStyles(theme => ({
         overflowY: "scroll",
         padding: 10,
         "&::-webkit-scrollbar": {
-            width: 4,
-            height: 16,
+            width: 4
         },
         "&::-webkit-scrollbar-thumb": {
-            backgroundColor: "rgba(105, 112, 125, 0.5)",
-            // border: "3px solid transparent",
-            backgroundClip: "content-box"
+            backgroundColor: "rgba(105, 112, 125, 0.5)"
         }
     },
     content: {
@@ -139,6 +137,7 @@ md.use(anchor)
 md.use(toc)
 md.use(lists)
 md.use(table)
+md.use(mdSmartArrows)
 
 function Article({ article = {}, articleId, isSmallDevice, messages, messagesTotal, ws_address }) {
     const [user, setUser] = React.useState({})
@@ -168,23 +167,19 @@ function Article({ article = {}, articleId, isSmallDevice, messages, messagesTot
                 setRightWidth(rw);
             }
         }
-        setScreenWidth(document.body.clientWidth);
-        return () => {
-        }
-    }, [])
-    // 订阅聊天框宽度
-    React.useEffect(() => {
+        // document：鼠标抬起时结束移动
         document.addEventListener("mouseup", mouseUpHandler);
+        setScreenWidth(document.body.clientWidth);
         return () => {
             document.removeEventListener("mouseup", mouseUpHandler);
         }
-    }, [leftWidth, rightWidth])
+    }, [])
     // 聊天框：开启移动
     const mousedownHandler = (e) => {
         setCanMove(true)
         setUserSelect("none");
     }
-    // 聊天框：关闭移动
+    // 聊天框：结束移动
     const mouseUpHandler = () => {
         setCanMove(false)
         setUserSelect("text");
