@@ -28,6 +28,7 @@ const useStyles = makeStyles(theme => ({
     left: {
         marginTop: "64px",
         overflowY: "scroll",
+        padding: 10,
         "&::-webkit-scrollbar": {
             width: 4,
             height: 16,
@@ -40,7 +41,6 @@ const useStyles = makeStyles(theme => ({
     },
     content: {
         maxWidth: 980,
-        minWidth: 700,
         padding: '20px 10px 30px 0px',
         position: 'relative',
         backgroundColor: "#fff",
@@ -121,7 +121,7 @@ const useStyles = makeStyles(theme => ({
 }))
 
 moment.locale('zh-cn');
-const DiscussLeftWidth = "article_discuss_left_width" 
+const DiscussLeftWidth = "article_discuss_left_width"
 const DiscussRightWidth = "article_discuss_right_right"
 const md = new MarkdownIt({
     highlight: function (str, lang) {
@@ -156,13 +156,17 @@ function Article({ article = {}, articleId, isSmallDevice, messages, messagesTot
             setUser(JSON.parse(all.douyacun));
         }
         // 加载聊天框宽度
-        let lw = localStorage.getItem(DiscussLeftWidth);
-        if (lw > 0) {
-            setLeftWidth(lw);
-        }
-        let rw = localStorage.getItem(DiscussRightWidth);
-        if (rw > 0) {
-            setRightWidth(rw);
+        if (isSmallDevice) {
+            setLeftWidth(100)
+        } else {
+            let lw = localStorage.getItem(DiscussLeftWidth);
+            if (lw > 0) {
+                setLeftWidth(lw);
+            }
+            let rw = localStorage.getItem(DiscussRightWidth);
+            if (rw > 0) {
+                setRightWidth(rw);
+            }
         }
         setScreenWidth(document.body.clientWidth);
         return () => {
@@ -242,19 +246,26 @@ function Article({ article = {}, articleId, isSmallDevice, messages, messagesTot
                     </div>
                 </div>
             </div>
-            <div
-                className={classes.conAppResizer}
-                onMouseDown={mousedownHandler}
-            >︙</div>
-            <div className={classes.right} style={{ width: rightWidth + "%" }}>
-                <Discuss
-                    ws_address={ws_address}
-                    articleId={articleId}
-                    styles={{ paddingTop: 64 }}
-                    messages={messages}
-                    messagesTotal={messagesTotal}
-                />
-            </div>
+            {
+                !isSmallDevice ?
+                    (
+                        <React.Fragment>
+                            <div
+                                className={classes.conAppResizer}
+                                onMouseDown={mousedownHandler}
+                            >︙</div>
+                            <div className={classes.right} style={{ width: rightWidth + "%" }}>
+                                <Discuss
+                                    ws_address={ws_address}
+                                    articleId={articleId}
+                                    styles={{ paddingTop: 64 }}
+                                    messages={messages}
+                                    messagesTotal={messagesTotal}
+                                />
+                            </div>
+                        </React.Fragment>
+                    ) : ""
+            }
         </div>
     </Layout >
     );
