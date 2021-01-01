@@ -1,4 +1,5 @@
 import React from 'react';
+import Error from "../_error"
 import { makeStyles } from '@material-ui/core/styles'
 import MarkdownIt from 'markdown-it';
 import hljs from 'highlight.js';
@@ -139,7 +140,7 @@ md.use(lists)
 md.use(table)
 md.use(mdSmartArrows)
 
-function Article({ article = {}, articleId, isSmallDevice, messages, messagesTotal, ws_address }) {
+function Article({ article = {}, statusCode, errMessage, articleId, isSmallDevice, messages, messagesTotal, ws_address }) {
     const [user, setUser] = React.useState({})
     const [canMove, setCanMove] = React.useState(false) // 聊天框：是否移动
     const [leftWidth, setLeftWidth] = React.useState(70);   // 窗口：文章宽度
@@ -200,7 +201,9 @@ function Article({ article = {}, articleId, isSmallDevice, messages, messagesTot
         }
     }
     const classes = useStyles();
-
+    if (statusCode != 0) {
+        return <Error statusCode={statusCode} message={errMessage}/>
+    }
     return (<Layout marginTop={false} >
         <Head>
             <title>{article.title} (douyacun)</title>
@@ -278,14 +281,10 @@ Article.getInitialProps = async ({ req, query }) => {
     // let isSmallDevice = true;
     // let sort = "asc"
     // 文章详情
-    const { data } = await GET({
+    const { article, statusCode, errMessage } = await GET({
         "url": `/api/article/${id}`,
     }).then(resp => {
-        if (resp.code === 0) {
-            return resp.data
-        } else {
-            return {}
-        }
+        return {article: resp.data, statusCode: resp.code, errMessage: resp.message}
     })
     // 评论列表
     const { messages, messagesTotal } = await GET({
@@ -307,7 +306,7 @@ Article.getInitialProps = async ({ req, query }) => {
     } else {
         ws_address = "ws://" + ENV.host + "/api/ws/join?article_id=" + id
     }
-    return { article: data, articleId: id, isSmallDevice, messages, messagesTotal, ws_address: ws_address }
+    return { article: article, statusCode: statusCode, errMessage: errMessage, articleId: id, isSmallDevice, messages, messagesTotal, ws_address: ws_address }
 }
 
 export default Article;

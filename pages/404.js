@@ -1,18 +1,14 @@
 import React from 'react'
 import Head from 'next/head'
 
-export default class Error extends React.Component {
-  render () {
-    const { statusCode, message } = this.props
+export default class Custom404 extends React.Component {
+  render() {
     return <div style={styles.error}>
-      <Head>
-        <title>{statusCode}: {message}</title>
-      </Head>
       <div>
         <style dangerouslySetInnerHTML={{ __html: 'body { margin: 0 }' }} />
-        {statusCode ? <h1 style={styles.h1}>{statusCode}</h1> : null}
+        404
         <div style={styles.desc}>
-          <h2 style={styles.h2}>{message}.</h2>
+          <h2 style={styles.h2}>Page Not Found.</h2>
         </div>
       </div>
     </div>
