@@ -168,13 +168,17 @@ function Article({ article = {}, statusCode, errMessage, articleId, isSmallDevic
                 setRightWidth(rw);
             }
         }
+        setScreenWidth(document.body.clientWidth);
+        return () => {
+        }
+    }, [])
+    React.useEffect(() => {
         // document：鼠标抬起时结束移动
         document.addEventListener("mouseup", mouseUpHandler);
-        setScreenWidth(document.body.clientWidth);
         return () => {
             document.removeEventListener("mouseup", mouseUpHandler);
         }
-    }, [])
+    }, [leftWidth, rightWidth])
     // 聊天框：开启移动
     const mousedownHandler = (e) => {
         setCanMove(true)
