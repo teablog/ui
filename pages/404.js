@@ -6,7 +6,7 @@ export default class Custom404 extends React.Component {
     return <div style={styles.error}>
       <div>
         <style dangerouslySetInnerHTML={{ __html: 'body { margin: 0 }' }} />
-        404
+        <h1 style={styles.h1}>404</h1>
         <div style={styles.desc}>
           <h2 style={styles.h2}>Page Not Found.</h2>
         </div>
