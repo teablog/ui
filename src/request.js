@@ -30,6 +30,9 @@ async function request(params) {
 			rejectUnauthorized: false
 		})
 	});
+	if (params["noCheck"]) {
+		return instance(params)
+	}
 	return instance(params).then(checkStatus).then(parseJson)
 }
 
