@@ -6,13 +6,12 @@ import Topic from '../src/layout/Topic';
 import Layout from '../src/layout/Index';
 import { GET } from '../src/request';
 import { PAGE_SIZE, ENV } from '../src/config';
-import Weather from '../src/components/weather';
 import Snackbar from '@material-ui/core/Snackbar';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import { useRouter } from 'next/router';
 import { parseCookies } from 'nookies'
-
+import Weather from '../src/components/weather';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -168,6 +167,7 @@ function Index({ total, articles, labels, page }) {
                 "token": "UgDS8nRousuEQ9LHXHQ2JaBCSbIn0iqE"
             }
         }).then(({ data }) => {
+            // console.log(data)
             setLocation(data)
         })
     }
@@ -232,7 +232,7 @@ function Index({ total, articles, labels, page }) {
                     <aside className={classes.aside + ' ' + classes.dycGrid}>
                         {
                             location && location.hasOwnProperty("city") && location.hasOwnProperty("province") ?
-                                (<div className={classes.dycGridColmn}> <Weather location={location} /> </div>) :
+                                (<div className={classes.dycGridColmn}> <Weather province={location["province"]["name"]} city={location["city"]["name"]} showDays={false} showLiving={false}/> </div>) :
                                 ""
                         }
                         <div className={classes.dycGridColmn}>

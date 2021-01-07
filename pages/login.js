@@ -81,7 +81,8 @@ function Login({ github_oauth, host, protocol }) {
     const errorHandlerGoogle = (error) => {
         console.log(error);
     }
-    github_oauth = github_oauth + escape(`${protocol}://${host}/api/oauth/github?redirect_uri=${protocol}://${host}${router.query["redirect_uri"]}`)
+    let redirect_uri = router.query["redirect_uri"] ? router.query["redirect_uri"] : "/"
+    github_oauth = github_oauth + escape(`${protocol}://${host}/api/oauth/github?redirect_uri=${protocol}://${host}${redirect_uri}`)
     return (
         <div className={classes.sign}>
             <div className={classes.main}>
