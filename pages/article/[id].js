@@ -210,9 +210,20 @@ function Article({ article = {}, statusCode, errMessage, articleId, isSmallDevic
     }
     return (<Layout marginTop={false} >
         <Head>
-            <title>{article.title} (douyacun)</title>
-            <meta name="Keywords" content={article.keywords} />
-            <meta name="description" content={article.description} />
+            <title data-react-helmet="true">{article.title} (douyacun)</title> 
+            <meta data-react-helmet="true" http-equiv="cleartype" content="on" />
+            <meta data-react-helmet="true" name="apple-mobile-web-app-capable" content="yes" />
+            <meta data-react-helmet="true" name="viewport" content="width=device-width,minimum-scale=1.0,initial-scale=1,user-scalable=yes" />
+            <meta data-react-helmet="true" name="description" content={article.description} />
+            <meta data-react-helmet="true" property="og:description" content={article.description}  />
+            <meta data-react-helmet="true" property="og:title" content={article.title}/>
+            <meta data-react-helmet="true" property="og:url" content={"https://www.douyacun.com/article/" + articleId} />
+            <meta data-react-helmet="true" property="og:site_name" content="douyacun" />
+            <meta data-react-helmet="true" name="keywords" content={article.keywords}/>
+            <meta data-react-helmet="true" name="twitter:card" content="summary" />
+            <meta data-react-helmet="true" name="twitter:url" content={"https://www.douyacun.com/article/" + articleId} />
+            <meta data-react-helmet="true" name="twitter:title" content={article.title}/>
+            <meta data-react-helmet="true" name="twitter:description" content={article.description}/> 
         </Head>
         <div className={classes.root} onMouseMove={mouseMoveHandler}>
             <div className={classes.left} style={{ width: leftWidth + "%", userSelect: userSelect }} ref={leftRef}>

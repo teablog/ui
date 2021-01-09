@@ -11,7 +11,8 @@ import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import { useRouter } from 'next/router';
 import { parseCookies } from 'nookies'
-import Weather from '../src/components/weather';
+import Weather from 'react-tencent-weather/lib/ssr/index.js';
+import 'react-tencent-weather/lib/ssr/index.css';
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -231,7 +232,7 @@ function Index({ total, articles, labels, page }) {
                     </main>
                     <aside className={classes.aside + ' ' + classes.dycGrid}>
                         {
-                            location && location.hasOwnProperty("city") && location.hasOwnProperty("province") ?
+                            location && location.hasOwnProperty("city") && location.hasOwnProperty("province") && typeof document !== "undefined" ?
                                 (<div className={classes.dycGridColmn}> <Weather province={location["province"]["name"]} city={location["city"]["name"]} showDays={false} showLiving={false}/> </div>) :
                                 ""
                         }
