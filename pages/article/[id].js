@@ -298,6 +298,9 @@ Article.getInitialProps = async ({ req, query }) => {
     // 文章详情
     const { article, statusCode, errMessage } = await GET({
         "url": `/api/article/${id}`,
+        "headers": {
+            "User-Agent": req.headers["user-agent"]
+        }
     }).then(resp => {
         return {article: resp.data, statusCode: resp.code, errMessage: resp.message}
     })
