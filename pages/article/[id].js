@@ -140,7 +140,7 @@ md.use(lists)
 md.use(table)
 md.use(mdSmartArrows)
 
-function Article({ article = {}, statusCode, errMessage, articleId, isSmallDevice, messages, messagesTotal, ws_address }) {
+function Article({ article = {}, statusCode, errMessage, articleId, isSmallDevice = true, messages, messagesTotal, ws_address }) {
     const [user, setUser] = React.useState({})
     const [canMove, setCanMove] = React.useState(false) // 聊天框：是否移动
     const [leftWidth, setLeftWidth] = React.useState(70);   // 窗口：文章宽度
