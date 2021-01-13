@@ -8,6 +8,7 @@ import anchor from 'markdown-it-anchor';
 import lists from 'markdown-it-task-lists';
 import table from 'markdown-it-multimd-table';
 import mdSmartArrows from 'markdown-it-smartarrows';
+import mila from 'markdown-it-link-attributes';
 import Head from 'next/head'
 import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
@@ -19,6 +20,7 @@ import Gitment from '../../src/components/gitment';
 import { ENV } from '../../src/config';
 import '../../src/css/github-markdown.css';
 import '../../node_modules/highlight.js/styles/github.css';
+
 
 const useStyles = makeStyles(theme => ({
     root: {
@@ -139,6 +141,21 @@ md.use(toc)
 md.use(lists)
 md.use(table)
 md.use(mdSmartArrows)
+md.use(mila, [
+    {
+        pattern: /^https:\/\/www\.douyacun\.com/,
+        attrs: {
+            target: '_blank',
+            rel: 'follow'
+        }
+    },
+    {
+        attrs: {
+            target: '_blank',
+            rel: 'nofollow'
+        }
+    }
+])
 
 function Article({ article = {}, statusCode, errMessage, articleId, isSmallDevice = true, messages, messagesTotal, ws_address }) {
     const [user, setUser] = React.useState({})
@@ -206,24 +223,24 @@ function Article({ article = {}, statusCode, errMessage, articleId, isSmallDevic
     }
     const classes = useStyles();
     if (statusCode != 0) {
-        return <Error statusCode={statusCode} message={errMessage}/>
+        return <Error statusCode={statusCode} message={errMessage} />
     }
     return (<Layout marginTop={false} >
         <Head>
-            <title data-react-helmet="true">{article.title} (douyacun)</title> 
+            <title data-react-helmet="true">{article.title} (douyacun)</title>
             <meta data-react-helmet="true" http-equiv="cleartype" content="on" />
             <meta data-react-helmet="true" name="apple-mobile-web-app-capable" content="yes" />
             <meta data-react-helmet="true" name="viewport" content="width=device-width,minimum-scale=1.0,initial-scale=1,user-scalable=yes" />
             <meta data-react-helmet="true" name="description" content={article.description} />
-            <meta data-react-helmet="true" property="og:description" content={article.description}  />
-            <meta data-react-helmet="true" property="og:title" content={article.title}/>
+            <meta data-react-helmet="true" property="og:description" content={article.description} />
+            <meta data-react-helmet="true" property="og:title" content={article.title} />
             <meta data-react-helmet="true" property="og:url" content={"https://www.douyacun.com/article/" + articleId} />
             <meta data-react-helmet="true" property="og:site_name" content="douyacun" />
-            <meta data-react-helmet="true" name="keywords" content={article.keywords}/>
+            <meta data-react-helmet="true" name="keywords" content={article.keywords} />
             <meta data-react-helmet="true" name="twitter:card" content="summary" />
             <meta data-react-helmet="true" name="twitter:url" content={"https://www.douyacun.com/article/" + articleId} />
-            <meta data-react-helmet="true" name="twitter:title" content={article.title}/>
-            <meta data-react-helmet="true" name="twitter:description" content={article.description}/> 
+            <meta data-react-helmet="true" name="twitter:title" content={article.title} />
+            <meta data-react-helmet="true" name="twitter:description" content={article.description} />
         </Head>
         <div className={classes.root} onMouseMove={mouseMoveHandler}>
             <div className={classes.left} style={{ width: leftWidth + "%", userSelect: userSelect }} ref={leftRef}>
@@ -302,7 +319,7 @@ Article.getInitialProps = async ({ req, query }) => {
             "User-Agent": req.headers["user-agent"]
         }
     }).then(resp => {
-        return {article: resp.data, statusCode: resp.code, errMessage: resp.message}
+        return { article: resp.data, statusCode: resp.code, errMessage: resp.message }
     })
     // 评论列表
     const { messages, messagesTotal } = await GET({

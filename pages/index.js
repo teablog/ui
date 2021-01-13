@@ -245,7 +245,7 @@ function Index({ total, articles, labels, page }) {
                                     {
                                         labels.map((item, key) => (
                                             <Button variant="outlined" className={classes.dycAsideTagButton} key={key}>
-                                                <a href={`/search/articles?q=${item}`}><Typography variant="h6">{item}</Typography></a>
+                                                <a href={`/article/${item.id}`}><Typography variant="h6">{item.label}</Typography></a>
                                             </Button>
                                         ))
                                     }
@@ -255,7 +255,7 @@ function Index({ total, articles, labels, page }) {
                                 <div className={classes.dycFooter}>
                                     <div className={classes.dycIPC}>
                                         <img src="/images/icp.png" style={{ width: 20, height: 20, marginRight: 8 }} />
-                                        <a href="https://beian.miit.gov.cn/#/Integrated/recordQuery" target="_blank" style={{color: "#8590a6"}}>鲁ICP备20003688号-1</a>
+                                        <a href="https://beian.miit.gov.cn/#/Integrated/recordQuery" rel="nofollow" target="_blank" style={{color: "#8590a6"}}>鲁ICP备20003688号-1</a>
                                     </div>
                                     <div>
                                         联系我: douyacun@gmail.com
