@@ -34,6 +34,11 @@ const useStyles = makeStyles(theme => ({
       marginLeft: theme.spacing(2),
     },
   },
+  hidden: {
+    [theme.breakpoints.down('sm')]: {
+      display: 'none !important'
+    },
+  },
   filler: {
     height: 48,
     minWidth: 160,
@@ -169,7 +174,7 @@ function MenuPopupState({ douyacun, logout, host }) {
           (
             <Button onClick={handleLogin}>
               <Typography>
-                登录
+                login
               </Typography>
             </Button>
           )
@@ -185,7 +190,7 @@ function MenuPopupState({ douyacun, logout, host }) {
         <Paper>
           <MenuList onKeyDown={handleListKeyDown}>
             <MenuItem onClick={handleToken}>token</MenuItem>
-            <MenuItem onClick={handleLogout}>退出</MenuItem>
+            <MenuItem onClick={handleLogout}>out</MenuItem>
           </MenuList>
         </Paper>
       </Popover>
@@ -274,7 +279,7 @@ function Layout({ children, leftDrawerDefaultDisplay = false, marginTop = true }
               >
                 <MenuIcon />
               </IconButton>
-              <Typography className={classes.title} variant="h2" noWrap>
+              <Typography className={classes.title + ' ' + classes.hidden} variant="h2" noWrap>
                 <a href="/" style={{ color: "#666" }}>Douyacun</a>
               </Typography>
             </div>
@@ -295,7 +300,7 @@ function Layout({ children, leftDrawerDefaultDisplay = false, marginTop = true }
                 </div>
               </div>
             </div>
-            <div className={classes.wc}>
+            <div className={classes.wc + ' ' + classes.hidden}>
               <MenuPopupState douyacun={cook} logout={logout} />
             </div>
             <div className={classes.filler}></div>
