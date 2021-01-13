@@ -168,7 +168,7 @@ function LeftDrawer(props) {
 
       <List>
         {Topics.map((item, index) => (
-          <ListItemLink button key={index} href={item.link} className={classes.dycListItem}>
+          <ListItemLink button key={index} ref="nofllow" href={item.link} className={classes.dycListItem}>
             <ListItemIcon>
               {item.icon}
             </ListItemIcon>
