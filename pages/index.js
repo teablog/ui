@@ -15,30 +15,50 @@ import Weather from 'react-tencent-weather/lib/ssr/index.js';
 import 'react-tencent-weather/lib/ssr/index.css';
 
 const useStyles = makeStyles(theme => ({
+    marginTop: {
+        height: 64,
+        [theme.breakpoints.down('sm')]: {
+            height: 66,
+            backgroundColor: "#EBEDEF",
+        },
+    },
     root: {
         maxWidth: '1176px',
         margin: 'auto',
-        padding: '16px 32px 32px 32px',
         '@media screen and (max-width: 1736px)': {
             'dyc-app[open-and-visible="true"] &': {
                 marginLeft: '280px'
             }
-        }
+        },
+        [theme.breakpoints.up('sm')]: {
+            padding: '16px 32px 32px 32px'
+        },
     },
     // grid
     dycGrid: {
         display: 'grid',
         gridTemplateColumns: 'repeat(12,1fr)',
-        gridGap: '16px 32px',
         gridColumn: '1/span 12',
+        gridGap: '8px 32px',
+        [theme.breakpoints.up('sm')]: {
+            gridGap: '16px 32px',
+        },
     },
     dycGridGap: {
         display: 'grid',
         gridTemplateColumns: 'repeat(12, 1fr)',
-        gridGap: '16px 32px'
+        gridGap: '8px 32px',
+        [theme.breakpoints.up('sm')]: {
+            gridGap: '16px 32px',
+        },
     },
     dycGridColmn: {
         gridColumn: 'span 12',
+    },
+    dycArticles: {
+        [theme.breakpoints.down('sm')]: {
+            backgroundColor: "#EBEDEF"
+        },
     },
     main: {
         gridColumn: 'span 8',
@@ -176,11 +196,12 @@ function Index({ total, articles, labels, page }) {
         setSnackbarState(false)
     }
     return (
-        <Layout leftDrawerDefaultDisplay={true}>
+        <Layout leftDrawerDefaultDisplay={true} marginTop={false}>
+            <div className={classes.marginTop}></div>
             <div className={classes.root}>
                 <div className={classes.dycGrid}>
                     <main className={classes.main}>
-                        <div className={classes.dycGridGap}>
+                        <div className={classes.dycGridGap + ' ' + classes.dycArticles}>
                             {/* <Column title="Headlines" subtitle="Recommended based on your interests" more="More For you" /> */}
                             {
                                 articles.map((item, key) => (

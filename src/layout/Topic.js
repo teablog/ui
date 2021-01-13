@@ -61,12 +61,16 @@ const useStyles = makeStyles(theme => {
         // 话题
         dycTopic: {
             position: relative,
-            // minHeight: '164px',
-            border: theme.dycBorder,
+            boxShadow: "0 0 0 1px #EBEDEF !important",
             position: 'relative',
             display: 'flex',
             flexDirection: 'column',
-            borderRadius: '8px'
+            backgroundColor: "#fff",
+            [theme.breakpoints.up('sm')]: {
+                borderRadius: '8px',
+                border: theme.dycBorder,
+                boxShadow: "none",
+            },
         }
     }
 });

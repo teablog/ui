@@ -959,6 +959,6 @@
 @media only screen and (max-width: 460px) {
     .markdown-body {
         line-height: 1.6;
-        font-weight: 500;
+        font-weight: 400;
     }
 }
