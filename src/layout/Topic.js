@@ -68,7 +68,7 @@ const useStyles = makeStyles(theme => {
             backgroundColor: "#fff",
             [theme.breakpoints.up('sm')]: {
                 borderRadius: '8px',
-                border: theme.dycBorder,
+                // border: theme.dycBorder,
                 boxShadow: "none",
             },
         }
