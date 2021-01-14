@@ -8,12 +8,11 @@ import theme from '../src/theme';
 export default class MyDocument extends Document {
   getAnalyticsTag = () => {
     return {
-      __html: `
-      var _hmt = _hmt || [];
+      __html: `var _hmt = _hmt || [];
       (function() {
         var hm = document.createElement("script");
-        hm.src = "https://hm.baidu.com/hm.js?你的代码";
-        var s = document.getElementsByTagName("script")[0];
+        hm.src = "https://hm.baidu.com/hm.js?2dc9642ed608cd40adc38495161d30db";
+        var s = document.getElementsByTagName("script")[0]; 
         s.parentNode.insertBefore(hm, s);
       })();`,
     }
