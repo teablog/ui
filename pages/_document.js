@@ -22,6 +22,7 @@ export default class MyDocument extends Document {
       <Html lang="en">
         <Head>
           {/* PWA primary color */}
+          <meta charset="utf-8" />
           <meta name="theme-color" content={theme.palette.primary.main} />
           <link
             rel="stylesheet"
@@ -33,9 +34,6 @@ export default class MyDocument extends Document {
         <body>
           <Main />
           <NextScript />
-          <div style={{ display: "none" }}>
-            <script type="text/javascript" src="https://s9.cnzz.com/z_stat.php?id=1278122506&web_id=1278122506"></script>
-          </div>
         </body>
       </Html>
     );
