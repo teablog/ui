@@ -3,7 +3,21 @@ import Document, { Html, Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/core/styles';
 import theme from '../src/theme';
 
+
+
 export default class MyDocument extends Document {
+  getAnalyticsTag = () => {
+    return {
+      __html: `
+      var _hmt = _hmt || [];
+      (function() {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?你的代码";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      })();`,
+    }
+  }
   render() {
     return (
       <Html lang="en">
@@ -15,6 +29,7 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           />
           <meta name="google-site-verification" content="2DLzfQDkcF8lbICxI_aVB7y_JSVVz9EfRR7MiMPqDcI" />
+          <script dangerouslySetInnerHTML={this.getAnalyticsTag()}/>
         </Head>
         <body>
           <Main />
