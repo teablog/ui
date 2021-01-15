@@ -21,7 +21,6 @@ import { ENV } from '../../src/config';
 import '../../src/css/github-markdown.css';
 import '../../node_modules/highlight.js/styles/github.css';
 
-
 const useStyles = makeStyles(theme => ({
     root: {
         width: "100%",
@@ -118,6 +117,17 @@ const useStyles = makeStyles(theme => ({
         [theme.breakpoints.up('md')]: {
             display: 'block',
         },
+    },
+    shareBtn: {
+        position: "relative",
+        height: 20,
+        boxSizing: "border-box",
+        padding: "1px 8px 1px 6px",
+        backgroundColor: "#1b95e0",
+        color: "#fff",
+        borderRadius: 3,
+        fontWeight: 500,
+        cursor: "pointer",
     }
 }))
 
@@ -227,7 +237,7 @@ function Article({ article = {}, statusCode, errMessage, articleId, isSmallDevic
     }
     return (<Layout marginTop={false} >
         <Head>
-            <title data-react-helmet="true">{article.title} (douyacun)</title>
+            <title data-react-helmet="true">{article.title} - douyacun</title>
             <meta data-react-helmet="true" http-equiv="cleartype" content="on" />
             <meta data-react-helmet="true" name="apple-mobile-web-app-capable" content="yes" />
             <meta data-react-helmet="true" name="viewport" content="width=device-width,minimum-scale=1.0,initial-scale=1,user-scalable=yes" />
@@ -240,7 +250,10 @@ function Article({ article = {}, statusCode, errMessage, articleId, isSmallDevic
             <meta data-react-helmet="true" name="twitter:card" content="summary" />
             <meta data-react-helmet="true" name="twitter:url" content={"https://www.douyacun.com/article/" + articleId} />
             <meta data-react-helmet="true" name="twitter:title" content={article.title} />
-            <meta data-react-helmet="true" name="twitter:description" content={article.description} />
+            <meta data-react-helmet="true" name="twitter:description" content={article.description + " - douyacun"} />
+            <meta data-react-helmet="true" name="twitter:image" content={article.cover != "" ? article.cover : article.wechat_subscription_qrcode} />
+            <meta data-react-helmet="true" name="twitter:site" content="@douyacun" />
+            <meta data-react-helmet="true" name="twitter:creator" content="@douyuacun" />
         </Head>
         <div className={classes.root} onMouseMove={mouseMoveHandler}>
             <div className={classes.left} style={{ width: leftWidth + "%", userSelect: userSelect }} ref={leftRef}>
@@ -250,6 +263,7 @@ function Article({ article = {}, statusCode, errMessage, articleId, isSmallDevic
                         <Typography component="span" className={classes.media_meta}>原创:</Typography>
                         <Typography component="span" className={classes.media_meta}>{article.author}</Typography>
                         <Typography component="span" className={classes.media_meta}>{moment(article.date).calendar()}发布</Typography>
+                        <Typography component="span" className={classes.media_meta}><a href={`https://twitter.com/intent/tweet?hashtags=${article.topic}&url=https://www.douyacun.com/article/${article.id}&text=${article.title}`} target="_blank" className={classes.shareBtn} data-show-count="false">twitter #{article.topic}</a></Typography>
                     </div>
                     <article className="markdown-body" >
                         <div dangerouslySetInnerHTML={{ __html: md.render(article.content) }}></div>

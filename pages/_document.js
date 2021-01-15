@@ -3,8 +3,6 @@ import Document, { Html, Head, Main, NextScript } from 'next/document';
 import { ServerStyleSheets } from '@material-ui/core/styles';
 import theme from '../src/theme';
 
-
-
 export default class MyDocument extends Document {
   getAnalyticsTag = () => {
     return {
@@ -22,7 +20,7 @@ export default class MyDocument extends Document {
       <Html lang="en">
         <Head>
           {/* PWA primary color */}
-          <meta charset="utf-8" />
+          <meta charSet="utf-8" />
           <meta name="theme-color" content={theme.palette.primary.main} />
           <link
             rel="stylesheet"
