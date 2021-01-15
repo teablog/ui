@@ -242,18 +242,19 @@ function Article({ article = {}, statusCode, errMessage, articleId, isSmallDevic
             <meta data-react-helmet="true" name="apple-mobile-web-app-capable" content="yes" />
             <meta data-react-helmet="true" name="viewport" content="width=device-width,minimum-scale=1.0,initial-scale=1,user-scalable=yes" />
             <meta data-react-helmet="true" name="description" content={article.description} />
-            <meta data-react-helmet="true" property="og:description" content={article.description} />
-            <meta data-react-helmet="true" property="og:title" content={article.title} />
-            <meta data-react-helmet="true" property="og:url" content={"https://www.douyacun.com/article/" + articleId} />
-            <meta data-react-helmet="true" property="og:site_name" content="douyacun" />
-            <meta data-react-helmet="true" name="keywords" content={article.keywords} />
-            <meta data-react-helmet="true" name="twitter:card" content="summary" />
-            <meta data-react-helmet="true" name="twitter:url" content={"https://www.douyacun.com/article/" + articleId} />
-            <meta data-react-helmet="true" name="twitter:title" content={article.title} />
-            <meta data-react-helmet="true" name="twitter:description" content={article.description + " - douyacun"} />
-            <meta data-react-helmet="true" name="twitter:image" content={article.cover != "" ? article.cover : article.wechat_subscription_qrcode} />
-            <meta data-react-helmet="true" name="twitter:site" content="@douyacun" />
-            <meta data-react-helmet="true" name="twitter:creator" content="@douyuacun" />
+            <meta property="og:description" content={article.description} />
+            <meta property="og:title" content={article.title} />
+            <meta property="og:url" content={"https://www.douyacun.com/article/" + articleId} />
+            <meta name="og:image" content={article.cover != "" ? article.cover : article.wechat_subscription_qrcode} />
+            <meta property="og:site_name" content="www.douyacun.com" />
+            <meta name="keywords" content={article.keywords} />
+            <meta name="twitter:card" content="summary" />
+            <meta name="twitter:url" content={"https://www.douyacun.com/article/" + articleId} />
+            <meta name="twitter:title" content={article.title} />
+            <meta name="twitter:description" content={article.description + " - douyacun"} />
+            <meta name="twitter:image" content={article.cover != "" ? article.cover : article.wechat_subscription_qrcode} />
+            <meta name="twitter:creator" content="@douyuacun" />
+            <meta name="twitter:domain" content="douyacun.com" />
         </Head>
         <div className={classes.root} onMouseMove={mouseMoveHandler}>
             <div className={classes.left} style={{ width: leftWidth + "%", userSelect: userSelect }} ref={leftRef}>
