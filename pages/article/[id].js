@@ -238,21 +238,21 @@ function Article({ article = {}, statusCode, errMessage, articleId, isSmallDevic
     return (<Layout marginTop={false} >
         <Head>
             <title data-react-helmet="true">{article.title} - douyacun</title>
-            <meta data-react-helmet="true" http-equiv="cleartype" content="on" />
+            <meta data-react-helmet="true" httpEquiv="cleartype" content="on" />
             <meta data-react-helmet="true" name="apple-mobile-web-app-capable" content="yes" />
             <meta data-react-helmet="true" name="viewport" content="width=device-width,minimum-scale=1.0,initial-scale=1,user-scalable=yes" />
             <meta data-react-helmet="true" name="description" content={article.description} />
             <meta property="og:description" content={article.description} />
             <meta property="og:title" content={article.title} />
             <meta property="og:url" content={"https://www.douyacun.com/article/" + articleId} />
-            <meta name="og:image" content={article.cover != "" ? article.cover : article.wechat_subscription_qrcode} />
+            <meta name="og:image" content={article.cover_raw != "" ? article.cover_raw : article.wechat_subscription_qrcode_raw} />
             <meta property="og:site_name" content="www.douyacun.com" />
             <meta name="keywords" content={article.keywords} />
             <meta name="twitter:card" content="summary" />
             <meta name="twitter:url" content={"https://www.douyacun.com/article/" + articleId} />
             <meta name="twitter:title" content={article.title} />
             <meta name="twitter:description" content={article.description + " - douyacun"} />
-            <meta name="twitter:image" content={article.cover != "" ? article.cover : article.wechat_subscription_qrcode} />
+            <meta name="twitter:image" content={article.cover_raw != "" ? article.cover_raw : article.wechat_subscription_qrcode_raw} />
             <meta name="twitter:creator" content="@douyuacun" />
             <meta name="twitter:domain" content="douyacun.com" />
         </Head>
