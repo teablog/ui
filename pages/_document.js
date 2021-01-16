@@ -27,6 +27,8 @@ export default class MyDocument extends Document {
             href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
           />
           <meta name="google-site-verification" content="2DLzfQDkcF8lbICxI_aVB7y_JSVVz9EfRR7MiMPqDcI" />
+          {/* google ad */}
+          <script data-ad-client="ca-pub-2963446487596884" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
           <script dangerouslySetInnerHTML={this.getAnalyticsTag()} height="0" width="0" style={{display:"none",visibility:"hidden"}}/>
         </Head>
         <body>
