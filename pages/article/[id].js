@@ -342,9 +342,6 @@ Article.getInitialProps = async ({ req, query }) => {
         params: {
             article_id: id,
             sort: sort
-        },
-        headers: {
-            Cookie: req.headers.cookie
         }
     }).then(({ data: { list, total } }) => {
         return { messages: list, messagesTotal: total }
