@@ -126,6 +126,18 @@ const useStyles = makeStyles(theme => ({
         borderRadius: 3,
         fontWeight: 500,
         cursor: "pointer",
+    },
+    adSenseInArticle: {
+        [theme.breakpoints.up('sm')]: {
+            width: 468,
+            height: 60,
+            textAlign: "center"
+        },
+        [theme.breakpoints.up('md')]: {
+            width: 728,
+            height: 90,
+            textAlign: "center"
+        },
     }
 }))
 
@@ -298,13 +310,15 @@ function Article({ article = {},
                     </Typography>
                     </div>
                     {/* google adsense */}
-                    <div style={{height: 60, width: 720}}>
+                    <div style={{ height: 60, width: 720 }}>
                         <AdSense
+                            className={}
                             style={{ display: 'block', textAlign: "center" }}
                             format='fluid'
                             layoutKey='in-article'
                             client='ca-pub-2963446487596884'
                             slot='6438116342'
+                            responsive="true"
                         />
                     </div>
                 </div>
