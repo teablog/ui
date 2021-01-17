@@ -298,13 +298,15 @@ function Article({ article = {},
                     </Typography>
                     </div>
                     {/* google adsense */}
-                    <AdSense.Google
-                        style={{ display: 'block', textAlign: "center" }}
-                        format='fluid'
-                        layoutKey='in-article'
-                        client='ca-pub-2963446487596884'
-                        slot='6438116342'
-                    />
+                    <div style={{height: 360}}>
+                        <AdSense.Google
+                            style={{ display: 'block', textAlign: "center" }}
+                            format='fluid'
+                            layoutKey='in-article'
+                            client='ca-pub-2963446487596884'
+                            slot='6438116342'
+                        />
+                    </div>
                 </div>
             </div>
             {

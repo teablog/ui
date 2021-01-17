@@ -77,7 +77,7 @@ const useStyles = makeStyles(theme => ({
                 display: 'none'
             }
         },
-        gridTemplateRows: "44% 250px 40%"
+        gridTemplateRows: "44% 250px 38%"
     },
     dycAsideColumn: {
         borderRadius: '8px',

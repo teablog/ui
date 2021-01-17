@@ -125,13 +125,11 @@ function Topic({ article, isVideo = false, variant = "first", type = "article" }
             {
                 article.type == ArticleTypeAdsense ?
                     <AdSense.Google
-                        className="adsbygoogle"
                         style={{ display: 'block' }}
                         format='fluid'
                         layoutKey='-g4+g+8-eu+rh'
-                        client='ca-pub-7292810486004926'
+                        client='ca-pub-2963446487596884'
                         slot='7078789336'
-                        responsive='true'
                     /> : ""
             }
         </div>
