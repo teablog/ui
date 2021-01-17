@@ -165,7 +165,7 @@ md.use(mila, [
     }
 ])
 
-function Article({ article = {}, statusCode, errMessage, articleId, isSmallDevice = true, messages, messagesTotal, ws_address }) {
+function Article({ article = {}, statusCode, errMessage, articleId, isSmallDevice = true, messages, messagesTotal, host }) {
     const [user, setUser] = React.useState({})
     const [canMove, setCanMove] = React.useState(false) // 聊天框：是否移动
     const [leftWidth, setLeftWidth] = React.useState(70);   // 窗口：文章宽度
@@ -242,12 +242,12 @@ function Article({ article = {}, statusCode, errMessage, articleId, isSmallDevic
             <meta data-react-helmet="true" name="description" content={article.description} />
             <meta property="og:description" content={article.description} />
             <meta property="og:title" content={article.title} />
-            <meta property="og:url" content={"https://www.douyacun.com/article/" + articleId} />
+            <meta property="og:url" content={host + "/article/" + articleId} />
             <meta name="og:image" content={article.cover_raw !== "" ? article.cover_raw : article.wechat_subscription_qrcode_raw} />
             <meta property="og:site_name" content="www.douyacun.com" />
             <meta name="keywords" content={article.keywords} />
             <meta name="twitter:card" content="summary" />
-            <meta name="twitter:url" content={"https://www.douyacun.com/article/" + articleId} />
+            <meta name="twitter:url" content={host + "/article/" + articleId} />
             <meta name="twitter:title" content={article.title} />
             <meta name="twitter:description" content={article.description + " - douyacun"} />
             <meta name="twitter:image" content={article.cover_raw !== "" ? article.cover_raw : article.wechat_subscription_qrcode_raw} />
@@ -351,7 +351,7 @@ Article.getInitialProps = async ({ req, query }) => {
     } else {
         ws_address = "ws://" + ENV.hostname + "/api/ws/join?article_id=" + id
     }
-    return { article: article, statusCode: statusCode, errMessage: errMessage, articleId: id, isSmallDevice, messages, messagesTotal, ws_address: ws_address }
+    return { article: article, statusCode: statusCode, errMessage: errMessage, articleId: id, isSmallDevice, messages, messagesTotal, ws_address: ws_address, host: ENV.host }
 }
 
 export default Article;

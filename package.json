@@ -40,7 +40,7 @@
   "scripts": {
     "dev": "node_modules/.bin/next",
     "build": "node_modules/.bin/next build",
-    "start": "node_modules/.bin/next build && node_modules/.bin/next start --port 80"
+    "start": "node_modules/.bin/next start"
   },
   "devDependencies": {
     "@babel/runtime-corejs2": "^7.9.2"
