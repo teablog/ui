@@ -298,7 +298,7 @@ function Article({ article = {},
                     </Typography>
                     </div>
                     {/* google adsense */}
-                    <div style={{height: 360}}>
+                    <div style={{height: 60, width: 720}}>
                         <AdSense
                             style={{ display: 'block', textAlign: "center" }}
                             format='fluid'

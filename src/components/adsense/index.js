@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-function AdSense({ style, format, layoutKey, client, slot, responsive }) {
+function AdSense({ style, format, layoutKey, client, slot, responsive, className }) {
     useEffect(() => {
         try {
             (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -8,7 +8,9 @@ function AdSense({ style, format, layoutKey, client, slot, responsive }) {
             console.log(err);
         }
     }, []);
-    const props = {}
+    const props = {
+        className: "adsbygoogle"
+    }
     if (style !== "") {
         props["style"] = style
     }
@@ -27,8 +29,11 @@ function AdSense({ style, format, layoutKey, client, slot, responsive }) {
     if (responsive != "") {
         props["data-full-width-responsive"] = responsive
     }
+    if (className != "") {
+        props["className"] + " " + className
+    }
     return (
-        <ins {...props}></ins>
+        <ins className="adsbygoogle" {...props}></ins>
     );
 };
 
