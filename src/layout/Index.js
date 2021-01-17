@@ -128,7 +128,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function MenuPopupState({ douyacun, logout, host }) {
+function MenuPopupState({ douyacun, logout }) {
 
   const [anchorEl, setAnchorEl] = React.useState(null);
 

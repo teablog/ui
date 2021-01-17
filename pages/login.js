@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-function Login({ github_oauth, host, protocol }) {
+function Login({ github_oauth, host}) {
     const classes = useStyles();
     const router = useRouter();
     React.useEffect(() => {
@@ -82,7 +82,7 @@ function Login({ github_oauth, host, protocol }) {
         console.log(error);
     }
     let redirect_uri = router.query["redirect_uri"] ? router.query["redirect_uri"] : "/"
-    github_oauth = github_oauth + escape(`${protocol}://${host}/api/oauth/github?redirect_uri=${protocol}://${host}${redirect_uri}`)
+    github_oauth = github_oauth + escape(`${host}/api/oauth/github?redirect_uri=${host}${redirect_uri}`)
     return (
         <div className={classes.sign}>
             <div className={classes.main}>
@@ -108,7 +108,7 @@ function Login({ github_oauth, host, protocol }) {
     )
 }
 
-Login.getServerSideProps = async ({ req, query }) => {
+Login.getInitialProps = async ({ req, query }) => {
     return {...ENV}
 }
 

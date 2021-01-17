@@ -10,7 +10,7 @@ services:
       timeout: 5s
       retries: 5
     environment:
-      HOST: www.douyacun.com
+      DOMAIN: www.douyacun.com
       PROTOCOL: https
     ports:
       - 3000:3000

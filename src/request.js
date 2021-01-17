@@ -21,7 +21,7 @@ function parseJson(response) {
 
 async function request(params) {
 	if (!params["url"].startsWith("http") && ENV.host) {
-		params['url'] = ENV.protocol + "://" + ENV.host + "/" + ltrim(params['url'], "/")
+		params['url'] = ENV.host + "/" + ltrim(params['url'], "/")
 	}
 	params['withCredentials'] = true;
 	

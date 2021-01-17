@@ -314,7 +314,7 @@ function Article({ article = {}, statusCode, errMessage, articleId, isSmallDevic
     );
 }
 
-Article.getServerSideProps = async ({ req, query }) => {
+Article.getInitialProps = async ({ req, query }) => {
     const { id } = query
     // 是否位小设备
     let isSmallDevice = false;
@@ -347,9 +347,9 @@ Article.getServerSideProps = async ({ req, query }) => {
     // websocket 地址
     let ws_address;
     if (ENV.protocol == "https") {
-        ws_address = "wss://" + ENV.host + "/api/ws/join?article_id=" + id
+        ws_address = "wss://" + ENV.hostname + "/api/ws/join?article_id=" + id
     } else {
-        ws_address = "ws://" + ENV.host + "/api/ws/join?article_id=" + id
+        ws_address = "ws://" + ENV.hostname + "/api/ws/join?article_id=" + id
     }
     return { article: article, statusCode: statusCode, errMessage: errMessage, articleId: id, isSmallDevice, messages, messagesTotal, ws_address: ws_address }
 }

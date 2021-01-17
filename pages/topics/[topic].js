@@ -209,7 +209,7 @@ function Topics({ articles, topic, page, total }) {
     )
 }
 
-Topics.getServerSideProps = async ({ query }) => {
+Topics.getInitialProps = async ({ query }) => {
     let { topic, page } = query
     page = page ? page : 1;
     const { data, total } = await GET({

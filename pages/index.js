@@ -291,7 +291,7 @@ function Index({ total, articles, labels, page }) {
     );
 }
 
-Index.getServerSideProps = async ({ req, query, res }) => {
+Index.getInitialProps = async ({ req, query, res }) => {
     let { page, redirect_uri } = query;
     page = page > 0 ? page : 1;
     const { data, total } = await GET({

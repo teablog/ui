@@ -26,7 +26,7 @@
     "markdown-it-toc-done-right": "^4.0.2",
     "material-ui-popup-state": "^1.5.3",
     "moment": "latest",
-    "next": "latest",
+    "next": "10.0.5",
     "nookies": "^2.0.8",
     "octicons": "^8.5.0",
     "prop-types": "latest",
@@ -38,10 +38,9 @@
     "react-textarea-autosize": "^7.1.0"
   },
   "scripts": {
-    "dev": "export $(cat .env|xargs) && node_modules/.bin/next",
+    "dev": "node_modules/.bin/next",
     "build": "node_modules/.bin/next build",
-    "start": "NODE_ENV=production node_modules/.bin/next start",
-    "export": "node_modules/.bin/next export"
+    "start": "node_modules/.bin/next build && node_modules/.bin/next start --hostname douyacun.io --port 10000"
   },
   "devDependencies": {
     "@babel/runtime-corejs2": "^7.9.2"
