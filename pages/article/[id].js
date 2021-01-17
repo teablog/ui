@@ -165,7 +165,7 @@ md.use(mila, [
     }
 ])
 
-function Article({ article = {}, statusCode, errMessage, articleId, isSmallDevice = true, messages, messagesTotal, host }) {
+function Article({ article = {}, statusCode, errMessage, articleId, isSmallDevice = true, messages, messagesTotal, ws_address, host }) {
     const [user, setUser] = React.useState({})
     const [canMove, setCanMove] = React.useState(false) // 聊天框：是否移动
     const [leftWidth, setLeftWidth] = React.useState(70);   // 窗口：文章宽度
