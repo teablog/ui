@@ -28,7 +28,7 @@ function AdSense({ style, format, layoutKey, client, slot, responsive }) {
         props["data-full-width-responsive"] = responsive
     }
     return (
-        <ins></ins>
+        <ins {...props}></ins>
     );
 };
 
