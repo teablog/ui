@@ -12,7 +12,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { useRouter } from 'next/router';
 import { parseCookies } from 'nookies'
 import Weather from 'react-tencent-weather/lib/ssr/index.js';
-import AdSense from 'react-adsense';
+import AdSense from '../src/components/adsense';
 import 'react-tencent-weather/lib/ssr/index.css';
 
 const useStyles = makeStyles(theme => ({
@@ -77,7 +77,7 @@ const useStyles = makeStyles(theme => ({
                 display: 'none'
             }
         },
-        gridTemplateRows: "44% 250px 38%"
+        gridTemplateRows: "42% 18% 37%"
     },
     dycAsideColumn: {
         borderRadius: '8px',
