@@ -217,14 +217,14 @@ function Index({ total, articles, labels, page }) {
                                     {
                                         parseInt(page) > 1 ?
                                             (
-                                                <Button variant="outlined" href={`/?page=` + (parseInt(page) - 1)} style={{ marginRight: 30, backgroundColor: "#fff" }}>
+                                                <Button variant="outlined" href={`/?page=` + (parseInt(page) - 1)} style={{ marginRight: 30, backgroundColor: "#fff", marginBottom: 30}}>
                                                     上一页
                                                 </Button>
                                             ) : ''
                                     }
                                     {
                                         parseInt(page) < Math.ceil(total / PAGE_SIZE) ?
-                                            (<Button variant="outlined" href={`/?page=` + (parseInt(page) + 1)} style={{ backgroundColor: "#fff" }}>
+                                            (<Button variant="outlined" href={`/?page=` + (parseInt(page) + 1)} style={{ backgroundColor: "#fff", marginBottom: 30}}>
                                                 下一页
                                             </Button>) : ''
                                     }
