@@ -1,4 +1,4 @@
-import React, { Fragment, useReducer, useState, useEffect, useRef } from 'react';
+import React, {useReducer, useState, useEffect, useRef } from 'react';
 import MessageInputSmall from '../message_input/small';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';

@@ -5,8 +5,7 @@ const PAGE_SIZE = 10;
 const ENV = {
   host: process.env.HOST,
   protocol: process.env.PROTOCOL,
-  github_oauth: `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_OAUTH_CLIENT_ID}&scope=user:email&redirect_uri=`,
-  disqus_enable: process.env.DISQUS_ENABLE,
+  github_oauth: `https://github.com/login/oauth/authorize?client_id=25fc4f51f48cb5d52edf&scope=user:email&redirect_uri=`,
   disqus_short_name: process.env.DISQUS_SHORT_NAME,
 }
 

@@ -38,9 +38,9 @@
     "react-textarea-autosize": "^7.1.0"
   },
   "scripts": {
-    "dev": "export $(cat .env|xargs) && node server.js",
+    "dev": "export $(cat .env|xargs) && node_modules/.bin/next",
     "build": "node_modules/.bin/next build",
-    "start": "NODE_ENV=production node server.js"
+    "start": "NODE_ENV=production node_modules/.bin/next start"
   },
   "devDependencies": {
     "@babel/runtime-corejs2": "^7.9.2"

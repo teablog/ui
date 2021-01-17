@@ -12,7 +12,5 @@ services:
     environment:
       HOST: www.douyacun.com
       PROTOCOL: https
-      GITHUB_OAUTH_CLIENT_ID: 25fc4f51f48cb5d52edf
-      DISQUS_ENABLE: 1
     ports:
       - 3000:3000
