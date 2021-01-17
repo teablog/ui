@@ -355,7 +355,7 @@ Article.getInitialProps = async ({ req, query }) => {
     })
     // websocket 地址
     let ws_address;
-    if (process.ENV.protocol == "https") {
+    if (process.ENV.PROTOCOL == "https") {
         ws_address = "wss://" + process.ENV.HOSTNAME + "/api/ws/join?article_id=" + id
     } else {
         ws_address = "ws://" + process.ENV.HOSTNAME + "/api/ws/join?article_id=" + id
