@@ -314,7 +314,7 @@ function Article({ article = {}, statusCode, errMessage, articleId, isSmallDevic
     );
 }
 
-Article.getInitialProps = async ({ req, query }) => {
+Article.getServerSideProps = async ({ req, query }) => {
     const { id } = query
     // 是否位小设备
     let isSmallDevice = false;

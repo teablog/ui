@@ -167,7 +167,7 @@ function Topics({ articles, q, page, total }) {
     )
 }
 
-Topics.getInitialProps = async ({ query }) => {
+Topics.getServerSideProps = async ({ query }) => {
     let { q, page } = query
     page = page ? page : 1
     const { data, total } = await GET({

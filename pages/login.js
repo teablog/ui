@@ -108,7 +108,7 @@ function Login({ github_oauth, host, protocol }) {
     )
 }
 
-Login.getInitialProps = async ({ req, query }) => {
+Login.getServerSideProps = async ({ req, query }) => {
     return {...ENV}
 }
 

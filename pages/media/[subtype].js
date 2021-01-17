@@ -203,7 +203,7 @@ function Media({ articles, subtype, page, total }) {
     )
 }
 
-Media.getInitialProps = async ({ query }) => {
+Media.getServerSideProps = async ({ query }) => {
     let { subtype, page } = query
     page = page ? page : 1;
     const { data, total } = await GET({
