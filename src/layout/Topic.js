@@ -3,7 +3,7 @@ import Article from './Article';
 import { SvgIcon } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles'
 import { relative } from 'path';
-import AdSense from '../components/adsense';
+import AdSense from '../components/adsense/index';
 
 const useStyles = makeStyles(theme => {
     return {
@@ -124,7 +124,7 @@ function Topic({ article, isVideo = false, variant = "first", type = "article" }
             }
             {
                 article.type == ArticleTypeAdsense ?
-                    <AdSense.Google
+                    <AdSense
                         style={{ display: 'block' }}
                         format='fluid'
                         layoutKey='-g4+g+8-eu+rh'

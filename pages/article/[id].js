@@ -17,7 +17,7 @@ import { GET } from '../../src/request';
 import Discuss from '../../src/components/discuss';
 import { parseCookies } from 'nookies'
 import Gitment from '../../src/components/gitment';
-import AdSense from '../../src/components/adsense';
+import AdSense from '../../src/components/adsense/index';
 import '../../src/css/github-markdown.css';
 import '../../node_modules/highlight.js/styles/github.css';
 
@@ -299,7 +299,7 @@ function Article({ article = {},
                     </div>
                     {/* google adsense */}
                     <div style={{height: 360}}>
-                        <AdSense.Google
+                        <AdSense
                             style={{ display: 'block', textAlign: "center" }}
                             format='fluid'
                             layoutKey='in-article'

@@ -281,7 +281,4 @@ function Discusss({ ws_address, articleId, styles, messages = [], messagesTotal 
     );
 }
 
-Discusss.getInitialProps = async ({ req, query }) => {
-
-}
 export default Discusss;

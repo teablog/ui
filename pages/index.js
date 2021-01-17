@@ -12,7 +12,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { useRouter } from 'next/router';
 import { parseCookies } from 'nookies'
 import Weather from 'react-tencent-weather/lib/ssr/index.js';
-import AdSense from '../src/components/adsense';
+import AdSense from '../src/components/adsense/index';
 import 'react-tencent-weather/lib/ssr/index.css';
 
 const useStyles = makeStyles(theme => ({
@@ -261,7 +261,7 @@ function Index({ total, articles, labels, page }) {
                         }
                         {/* google adsense */}
                         <div className={classes.dycGridColmn} style={{ maxHeight: 250 }}>
-                            <AdSense.Google
+                            <AdSense
                                 style={{ display: 'block' }}
                                 format='auto'
                                 layoutKey='-g4+g+8-eu+rh'

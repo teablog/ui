@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-const AdSense = ({ style, format, layoutKey, client, slot, responsive }) => {
+function AdSense({ style, format, layoutKey, client, slot, responsive }) {
     useEffect(() => {
         try {
             (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -28,13 +28,7 @@ const AdSense = ({ style, format, layoutKey, client, slot, responsive }) => {
         props["data-full-width-responsive"] = responsive
     }
     return (
-        <ins
-            style={{
-                display: "block"
-            }}
-            data-ad-client={ }
-            data-ad-slot={ }
-        />
+        <ins></ins>
     );
 };
 
