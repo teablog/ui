@@ -4,7 +4,7 @@ import {
   ImageDropzone,
   FileUploadButton,
 } from 'react-file-utils';
-import "./messageInputSmall.css";
+import "./small.css";
 import 'emoji-mart/css/emoji-mart.css'
 
 
