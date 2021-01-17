@@ -3,6 +3,7 @@ import Article from './Article';
 import { SvgIcon } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles'
 import { relative } from 'path';
+import AdSense from 'react-adsense';
 
 const useStyles = makeStyles(theme => {
     return {
@@ -75,6 +76,9 @@ const useStyles = makeStyles(theme => {
     }
 });
 
+const ArticleTypeArt = 0; // 文章
+const ArticleTypeAdsense = 1;// adsense
+
 function Topic({ article, isVideo = false, variant = "first", type = "article" }) {
     const classes = useStyles();
     // topic
@@ -108,13 +112,28 @@ function Topic({ article, isVideo = false, variant = "first", type = "article" }
                     <ViewImage image={article.cover} /> :
                     ''
             }
-            <Article
-                article={article}
-                variant={variant}
-                type={type}
-                style={hasImage ? { paddingRight: 132, minHeight: 132 } : {}}
-                className={classes.root}
-            />
+            {
+                article.type == ArticleTypeArt ?
+                    <Article
+                        article={article}
+                        variant={variant}
+                        type={type}
+                        style={hasImage ? { paddingRight: 132, minHeight: 132 } : {}}
+                        className={classes.root}
+                    /> : ""
+            }
+            {
+                article.type == ArticleTypeAdsense ?
+                    <AdSense.Google
+                        className="adsbygoogle"
+                        style={{ display: 'block' }}
+                        format='fluid'
+                        layoutKey='-g4+g+8-eu+rh'
+                        client='ca-pub-7292810486004926'
+                        slot='7078789336'
+                        responsive='true'
+                    /> : ""
+            }
         </div>
     );
 }

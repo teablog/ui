@@ -17,6 +17,7 @@ import { GET } from '../../src/request';
 import Discuss from '../../src/components/discuss';
 import { parseCookies } from 'nookies'
 import Gitment from '../../src/components/gitment';
+import AdSense from 'react-adsense';
 import '../../src/css/github-markdown.css';
 import '../../node_modules/highlight.js/styles/github.css';
 
@@ -164,13 +165,13 @@ md.use(mila, [
     }
 ])
 
-function Article({article = {}, 
-    statusCode, 
-    errMessage, 
-    articleId, 
-    isSmallDevice = true, 
-    messages, 
-    messagesTotal, 
+function Article({ article = {},
+    statusCode,
+    errMessage,
+    articleId,
+    isSmallDevice = true,
+    messages,
+    messagesTotal,
     ws_address,
     host,
     hostname
@@ -296,6 +297,14 @@ function Article({article = {},
                         关注该公众号
                     </Typography>
                     </div>
+                    {/* google adsense */}
+                    <AdSense.Google
+                        style={{ display: 'block', textAlign: "center" }}
+                        format='fluid'
+                        layoutKey='in-article'
+                        client='ca-pub-2963446487596884'
+                        slot='6438116342'
+                    />
                 </div>
             </div>
             {
@@ -355,21 +364,22 @@ Article.getInitialProps = async ({ req, query }) => {
     })
     // websocket 地址
     let ws_address;
-    if (process.ENV.PROTOCOL == "https") {
-        ws_address = "wss://" + process.ENV.HOSTNAME + "/api/ws/join?article_id=" + id
+    if (process.env.PROTOCOL == "https") {
+        ws_address = "wss://" + process.env.HOSTNAME + "/api/ws/join?article_id=" + id
     } else {
-        ws_address = "ws://" + process.ENV.HOSTNAME + "/api/ws/join?article_id=" + id
+        ws_address = "ws://" + process.env.HOSTNAME + "/api/ws/join?article_id=" + id
     }
-    return { article: article, 
-        statusCode: statusCode, 
-        errMessage: errMessage, 
-        articleId: id, 
-        isSmallDevice, 
-        messages, 
-        messagesTotal, 
-        ws_address: ws_address, 
-        host: process.ENV.HOST,
-        hostname: process.ENV.HOSTNAME
+    return {
+        article: article,
+        statusCode: statusCode,
+        errMessage: errMessage,
+        articleId: id,
+        isSmallDevice,
+        messages,
+        messagesTotal,
+        ws_address: ws_address,
+        host: process.env.HOST,
+        hostname: process.env.HOSTNAME
     }
 }
 

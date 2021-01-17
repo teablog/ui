@@ -12,6 +12,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { useRouter } from 'next/router';
 import { parseCookies } from 'nookies'
 import Weather from 'react-tencent-weather/lib/ssr/index.js';
+import AdSense from 'react-adsense';
 import 'react-tencent-weather/lib/ssr/index.css';
 
 const useStyles = makeStyles(theme => ({
@@ -76,7 +77,7 @@ const useStyles = makeStyles(theme => ({
                 display: 'none'
             }
         },
-        gridTemplateRows: "repeat(2, 49%)"
+        gridTemplateRows: "44% 250px 40%"
     },
     dycAsideColumn: {
         borderRadius: '8px',
@@ -216,14 +217,14 @@ function Index({ total, articles, labels, page }) {
                                     {
                                         parseInt(page) > 1 ?
                                             (
-                                                <Button variant="outlined" href={`/?page=` + (parseInt(page) - 1)} style={{ marginRight: 30 }}>
+                                                <Button variant="outlined" href={`/?page=` + (parseInt(page) - 1)} style={{ marginRight: 30, backgroundColor: "#fff" }}>
                                                     上一页
                                                 </Button>
                                             ) : ''
                                     }
                                     {
                                         parseInt(page) < Math.ceil(total / PAGE_SIZE) ?
-                                            (<Button variant="outlined" href={`/?page=` + (parseInt(page) + 1)}>
+                                            (<Button variant="outlined" href={`/?page=` + (parseInt(page) + 1)} style={{ backgroundColor: "#fff" }}>
                                                 下一页
                                             </Button>) : ''
                                     }
@@ -252,12 +253,26 @@ function Index({ total, articles, labels, page }) {
                         />
                     </main>
                     <aside className={classes.aside + ' ' + classes.dycGrid}>
+                        {/* 天气组件 */}
                         {
                             location && location.hasOwnProperty("city") && location.hasOwnProperty("province") && typeof document !== "undefined" ?
-                                (<div className={classes.dycGridColmn}> <Weather province={location["province"]["name"]} city={location["city"]["name"]} showDays={false} showLiving={false}/> </div>) :
+                                (<div className={classes.dycGridColmn}> <Weather province={location["province"]["name"]} city={location["city"]["name"]} showDays={false} showLiving={false} /> </div>) :
                                 ""
                         }
+                        {/* google adsense */}
+                        <div className={classes.dycGridColmn} style={{ maxHeight: 250 }}>
+                            <AdSense.Google
+                                style={{ display: 'block' }}
+                                format='auto'
+                                layoutKey='-g4+g+8-eu+rh'
+                                client='ca-pub-2963446487596884'
+                                slot='6753687404'
+                                responsive='true'
+                            />
+                        </div>
+                        {/* 关键词组件 */}
                         <div className={classes.dycGridColmn}>
+
                             <div className={classes.dycAsideColumn}>
                                 <div className={classes.dycAsideColumnTopic}>
                                     <Typography variant="h4">关键字</Typography>
@@ -276,7 +291,7 @@ function Index({ total, articles, labels, page }) {
                                 <div className={classes.dycFooter}>
                                     <div className={classes.dycIPC}>
                                         <img src="/images/icp.png" style={{ width: 20, height: 20, marginRight: 8 }} />
-                                        <a href="https://beian.miit.gov.cn/#/Integrated/recordQuery" rel="nofollow" target="_blank" style={{color: "#8590a6"}}>鲁ICP备20003688号-1</a>
+                                        <a href="https://beian.miit.gov.cn/#/Integrated/recordQuery" rel="nofollow" target="_blank" style={{ color: "#8590a6" }}>鲁ICP备20003688号-1</a>
                                     </div>
                                     <div>
                                         联系我: douyacun@gmail.com
