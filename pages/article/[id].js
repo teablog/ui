@@ -17,7 +17,6 @@ import { GET } from '../../src/request';
 import Discuss from '../../src/components/discuss';
 import { parseCookies } from 'nookies'
 import Gitment from '../../src/components/gitment';
-import { ENV } from '../../src/config';
 import '../../src/css/github-markdown.css';
 import '../../node_modules/highlight.js/styles/github.css';
 
@@ -165,7 +164,17 @@ md.use(mila, [
     }
 ])
 
-function Article({ article = {}, statusCode, errMessage, articleId, isSmallDevice = true, messages, messagesTotal, ws_address, host }) {
+function Article({article = {}, 
+    statusCode, 
+    errMessage, 
+    articleId, 
+    isSmallDevice = true, 
+    messages, 
+    messagesTotal, 
+    ws_address,
+    host,
+    hostname
+}) {
     const [user, setUser] = React.useState({})
     const [canMove, setCanMove] = React.useState(false) // 聊天框：是否移动
     const [leftWidth, setLeftWidth] = React.useState(70);   // 窗口：文章宽度
@@ -244,7 +253,7 @@ function Article({ article = {}, statusCode, errMessage, articleId, isSmallDevic
             <meta property="og:title" content={article.title} />
             <meta property="og:url" content={host + "/article/" + articleId} />
             <meta name="og:image" content={article.cover_raw !== "" ? article.cover_raw : article.wechat_subscription_qrcode_raw} />
-            <meta property="og:site_name" content="www.douyacun.com" />
+            <meta property="og:site_name" content={hostname} />
             <meta name="keywords" content={article.keywords} />
             <meta name="twitter:card" content="summary" />
             <meta name="twitter:url" content={host + "/article/" + articleId} />
@@ -252,7 +261,7 @@ function Article({ article = {}, statusCode, errMessage, articleId, isSmallDevic
             <meta name="twitter:description" content={article.description + " - douyacun"} />
             <meta name="twitter:image" content={article.cover_raw !== "" ? article.cover_raw : article.wechat_subscription_qrcode_raw} />
             <meta name="twitter:creator" content="@douyuacun" />
-            <meta name="twitter:domain" content="douyacun.com" />
+            <meta name="twitter:domain" content={hostname} />
         </Head>
         <div className={classes.root} onMouseMove={mouseMoveHandler}>
             <div className={classes.left} style={{ width: leftWidth + "%", userSelect: userSelect }} ref={leftRef}>
@@ -317,10 +326,10 @@ function Article({ article = {}, statusCode, errMessage, articleId, isSmallDevic
 Article.getInitialProps = async ({ req, query }) => {
     const { id } = query
     // 是否位小设备
-    let isSmallDevice = false;
+    let isSmallDevice = true;
     let sort = "desc"
-    if (/(iPhone|Android|iPad|iPod|iOS)/i.test(req.headers["user-agent"])) {
-        isSmallDevice = true
+    if (!/(iPhone|Android|iPad|iPod|iOS)/i.test(req.headers["user-agent"])) {
+        isSmallDevice = false
         sort = "asc"
     }
     // let isSmallDevice = true;
@@ -346,12 +355,22 @@ Article.getInitialProps = async ({ req, query }) => {
     })
     // websocket 地址
     let ws_address;
-    if (ENV.protocol == "https") {
-        ws_address = "wss://" + ENV.hostname + "/api/ws/join?article_id=" + id
+    if (process.ENV.protocol == "https") {
+        ws_address = "wss://" + process.ENV.HOSTNAME + "/api/ws/join?article_id=" + id
     } else {
-        ws_address = "ws://" + ENV.hostname + "/api/ws/join?article_id=" + id
+        ws_address = "ws://" + process.ENV.HOSTNAME + "/api/ws/join?article_id=" + id
     }
-    return { article: article, statusCode: statusCode, errMessage: errMessage, articleId: id, isSmallDevice, messages, messagesTotal, ws_address: ws_address, host: ENV.host }
+    return { article: article, 
+        statusCode: statusCode, 
+        errMessage: errMessage, 
+        articleId: id, 
+        isSmallDevice, 
+        messages, 
+        messagesTotal, 
+        ws_address: ws_address, 
+        host: process.ENV.HOST,
+        hostname: process.ENV.HOSTNAME
+    }
 }
 
 export default Article;
