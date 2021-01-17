@@ -40,7 +40,8 @@
   "scripts": {
     "dev": "export $(cat .env|xargs) && node_modules/.bin/next",
     "build": "node_modules/.bin/next build",
-    "start": "NODE_ENV=production node_modules/.bin/next start"
+    "start": "NODE_ENV=production node_modules/.bin/next start",
+    "export": "node_modules/.bin/next export"
   },
   "devDependencies": {
     "@babel/runtime-corejs2": "^7.9.2"
