@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 
-function AdSense({ style, format, layoutKey, client, slot, responsive, className }) {
+function AdSense({ style, format, layoutKey, client, slot, responsive, layout, className }) {
     useEffect(() => {
         try {
             (window.adsbygoogle = window.adsbygoogle || []).push({});
@@ -20,6 +20,9 @@ function AdSense({ style, format, layoutKey, client, slot, responsive, className
     if (layoutKey !== "") {
         props["data-ad-layout-key"] = layoutKey
     }
+    if (layout !== "") {
+        props["data-ad-layout"] = layout
+    }
     if (client !== "") {
         props["data-ad-client"] = client
     }
@@ -33,7 +36,7 @@ function AdSense({ style, format, layoutKey, client, slot, responsive, className
         props["className"] + " " + className
     }
     return (
-        <ins className="adsbygoogle" {...props}></ins>
+        <ins {...props}></ins>
     );
 };
 
