@@ -8,6 +8,6 @@ services:
       HOST: https://www.douyacun.com
       PROTOCOL: https
       NODE_ENV: production
-      CDN_HOST: http://cdn.douyacun.com
+      CDN_HOST: https://cdn.douyacun.com
     ports:
       - 3000:3000

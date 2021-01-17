@@ -1,6 +1,5 @@
 import axios from 'axios';
 import https from 'https';
-import {ENV} from "./config";
 import {ltrim, rtrim} from './utils';
 
 function checkStatus(response) {
@@ -20,8 +19,8 @@ function parseJson(response) {
 }
 
 async function request(params) {
-	if (!params["url"].startsWith("http") && ENV.host) {
-		params['url'] = ENV.host + "/" + ltrim(params['url'], "/")
+	if (!params["url"].startsWith("http") && process.env.HOST) {
+		params['url'] = process.env.HOST + "/" + ltrim(params['url'], "/")
 	}
 	params['withCredentials'] = true;
 	
