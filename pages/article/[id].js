@@ -61,8 +61,6 @@ const useStyles = makeStyles(theme => ({
         width: "100%",
     },
     drawerPaper: {
-        // width: 800,
-        overflow: "overlay",
         minWidth: 480,
         [theme.breakpoints.up('sm')]: {
             width: 480,
@@ -232,7 +230,7 @@ function Article({ article = {}, statusCode, errMessage, articleId, isSmallDevic
         }
     }
     const classes = useStyles();
-    if (statusCode != 0) {
+    if (statusCode !== 0) {
         return <Error statusCode={statusCode} message={errMessage} />
     }
     return (<Layout marginTop={false} >
@@ -245,14 +243,14 @@ function Article({ article = {}, statusCode, errMessage, articleId, isSmallDevic
             <meta property="og:description" content={article.description} />
             <meta property="og:title" content={article.title} />
             <meta property="og:url" content={"https://www.douyacun.com/article/" + articleId} />
-            <meta name="og:image" content={article.cover_raw != "" ? article.cover_raw : article.wechat_subscription_qrcode_raw} />
+            <meta name="og:image" content={article.cover_raw !== "" ? article.cover_raw : article.wechat_subscription_qrcode_raw} />
             <meta property="og:site_name" content="www.douyacun.com" />
             <meta name="keywords" content={article.keywords} />
             <meta name="twitter:card" content="summary" />
             <meta name="twitter:url" content={"https://www.douyacun.com/article/" + articleId} />
             <meta name="twitter:title" content={article.title} />
             <meta name="twitter:description" content={article.description + " - douyacun"} />
-            <meta name="twitter:image" content={article.cover_raw != "" ? article.cover_raw : article.wechat_subscription_qrcode_raw} />
+            <meta name="twitter:image" content={article.cover_raw !== "" ? article.cover_raw : article.wechat_subscription_qrcode_raw} />
             <meta name="twitter:creator" content="@douyuacun" />
             <meta name="twitter:domain" content="douyacun.com" />
         </Head>

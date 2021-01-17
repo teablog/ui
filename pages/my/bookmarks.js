@@ -4,7 +4,7 @@ import Typography from '@material-ui/core/Typography';
 import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import Link from 'next/link';
-import ArticleBookmark from '../../src/layout/ArticleBookmark'
+import ArticleBookmark from '../../src/layout/article_bookmark'
 import Router from 'next/router';
 import Layout from '../../src/layout/Index';
 

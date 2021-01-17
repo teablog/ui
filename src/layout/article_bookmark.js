@@ -7,7 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import Fade from '@material-ui/core/Fade';
 import Button from '@material-ui/core/Button';
 import moment from 'moment';
-import { POST } from '../../src/request';
+import { POST } from '../request';
 
 const useStyles = makeStyles(theme => ({
     // 作者 & 时间 & 分享 & 收藏 & 更多

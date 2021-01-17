@@ -1,7 +1,7 @@
 import React from 'react';
-import { makeStyles } from '@material-ui/core/styles'
+import {makeStyles} from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography';
-import ArticleBookmark from './ArticleBookmark';
+import ArticleBookmark from './article_bookmark';
 
 const useStyles = makeStyles(theme => ({
     dycArticle: {
@@ -126,7 +126,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function Article({ variant, className, style, stat, article, type}) {
+function Article({variant, className, style, stat, article, type}) {
     const classes = useStyles();
     article = article ? article : {}
 
@@ -147,23 +147,23 @@ function Article({ variant, className, style, stat, article, type}) {
     return (<article className={root.join(' ')} style={style}>
         <a href={`/${type}/${article.id}`} target="_blank" className={classes.dycLink}></a>
         <Typography variant="h3" className={classes.dycTitle} color="textPrimary">
-            <a href="/" style={{ color: "inherit" }}>
+            <a href="/" style={{color: "inherit"}}>
                 {article ? article.title : ''}
                 {article && article.rate ? '   ' + article.rate + '分' : ''}
             </a>
         </Typography>
         <div>
-          <ArticleBookmark
+            <ArticleBookmark
                 author={article ? article.author : ''}
                 last_edit_time={article.last_edit_time}
                 rate={article.rate}
                 type={type}
-            />  
+            />
             {
                 variant == 'highlight' && article.highlight ?
                     (
                         <Typography className={classes.dycAutoLine}>
-                            <span dangerouslySetInnerHTML={{ __html: article.highlight.join("<li>") }}></span>
+                            <span dangerouslySetInnerHTML={{__html: article.highlight.join("<li>")}}></span>
                         </Typography>
                     ) :
                     (
@@ -175,4 +175,5 @@ function Article({ variant, className, style, stat, article, type}) {
         </div>
     </article>);
 }
+
 export default Article;
