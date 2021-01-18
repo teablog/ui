@@ -213,9 +213,6 @@ function Index({ total, articles, labels, page, host, hostname }) {
             </Head>
             <div className={classes.marginTop}></div>
             <div className={classes.root}>
-                <div stlye={{display: "none"}}>
-                    <img src="https://cdn.douyacun.com/images/blog/1/assert/douyacun_qrcode.jpg" name="@douyacun"/>
-                </div>
                 <div className={classes.dycGrid}>
                     <main className={classes.main}>
                         <div className={classes.dycGridGap + ' ' + classes.dycArticles}>
