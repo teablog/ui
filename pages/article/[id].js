@@ -139,11 +139,6 @@ const useStyles = makeStyles(theme => ({
             height: 90,
             margin: "0 auto"
         },
-        [theme.breakpoints.up('lg')]: {
-            width: 980,
-            height: 90,
-            margin: "0 auto"
-        },
     }
 }))
 
@@ -288,13 +283,10 @@ function Article({ article = {},
                     <Typography variant="h2" className={classes.title}>{article.title}</Typography>
                     <div className={classes.meta_content}>
                         <Typography component="span" className={classes.media_meta}>原创:</Typography>
-                        <Typography component="span" className={classes.media_meta}>{article.author}</Typography>
+                        <Typography component="span" className={classes.media_meta}>{article.topic}</Typography>
                         <Typography component="span" className={classes.media_meta}>{moment(article.date).calendar()}发布</Typography>
                         <Typography component="span" className={classes.media_meta}><a href={`https://twitter.com/intent/tweet?hashtags=${article.topic}&url=https://www.douyacun.com/article/${article.id}&text=${article.title}`} target="_blank" className={classes.shareBtn} data-show-count="false">twitter #{article.topic}</a></Typography>
                     </div>
-                    <article className="markdown-body" >
-                        <div dangerouslySetInnerHTML={{ __html: md.render(article.content) }}></div>
-                    </article>
                     {/* google adsense */}
                     <div className={classes.adSenseInArticle}>
                         <AdSense
@@ -306,6 +298,9 @@ function Article({ article = {},
                             responsive="true"
                         />
                     </div>
+                    <article className="markdown-body" >
+                        <div dangerouslySetInnerHTML={{ __html: md.render(article.content) }}></div>
+                    </article>
                     {
                         isSmallDevice ? (
                             <div>
