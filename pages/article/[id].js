@@ -129,15 +129,14 @@ const useStyles = makeStyles(theme => ({
     },
     adSenseInArticle: {
         marginTop: 20,
+        marginBottom: 20,
         [theme.breakpoints.up('sm')]: {
             width: 468,
-            height: 60,
-            margin: "0 auto"
+            height: 60
         },
         [theme.breakpoints.up('md')]: {
             width: 784,
-            height: 90,
-            margin: "0 auto"
+            height: 200
         },
     }
 }))
