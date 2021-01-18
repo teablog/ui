@@ -17,7 +17,7 @@ import { GET } from '../../src/request';
 import Discuss from '../../src/components/discuss';
 import { parseCookies } from 'nookies'
 import Gitment from '../../src/components/gitment';
-import AdSense from '../../src/components/adsense/index';
+import AdSense from 'react-ssr-adsense';
 import '../../src/css/github-markdown.css';
 import '../../node_modules/highlight.js/styles/github.css';
 
@@ -128,13 +128,14 @@ const useStyles = makeStyles(theme => ({
         cursor: "pointer",
     },
     adSenseInArticle: {
+        marginTop: 20,
         [theme.breakpoints.up('sm')]: {
             width: 468,
             height: 60,
             margin: "0 auto"
         },
         [theme.breakpoints.up('md')]: {
-            width: 728,
+            width: 784,
             height: 90,
             margin: "0 auto"
         },
@@ -282,9 +283,20 @@ function Article({ article = {},
                     <Typography variant="h2" className={classes.title}>{article.title}</Typography>
                     <div className={classes.meta_content}>
                         <Typography component="span" className={classes.media_meta}>原创:</Typography>
-                        <Typography component="span" className={classes.media_meta}>{article.author}</Typography>
+                        <Typography component="span" className={classes.media_meta}>{article.topic}</Typography>
                         <Typography component="span" className={classes.media_meta}>{moment(article.date).calendar()}发布</Typography>
                         <Typography component="span" className={classes.media_meta}><a href={`https://twitter.com/intent/tweet?hashtags=${article.topic}&url=https://www.douyacun.com/article/${article.id}&text=${article.title}`} target="_blank" className={classes.shareBtn} data-show-count="false">twitter #{article.topic}</a></Typography>
+                    </div>
+                    {/* google adsense */}
+                    <div className={classes.adSenseInArticle}>
+                        <AdSense
+                            style={{ display: 'block', textAlign: "center" }}
+                            format='fluid'
+                            layout='in-article'
+                            client='ca-pub-2963446487596884'
+                            slot='6438116342'
+                            responsive="true"
+                        />
                     </div>
                     <article className="markdown-body" >
                         <div dangerouslySetInnerHTML={{ __html: md.render(article.content) }}></div>
@@ -309,17 +321,7 @@ function Article({ article = {},
                         关注该公众号
                     </Typography>
                     </div>
-                    {/* google adsense */}
-                    <div className={classes.adSenseInArticle}>
-                        <AdSense
-                            style={{ display: 'block', textAlign: "center" }}
-                            format='fluid'
-                            layout='in-article'
-                            client='ca-pub-2963446487596884'
-                            slot='6438116342'
-                            responsive="true"
-                        />
-                    </div>
+
                 </div>
             </div>
             {
