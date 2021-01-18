@@ -17,7 +17,7 @@ import { GET } from '../../src/request';
 import Discuss from '../../src/components/discuss';
 import { parseCookies } from 'nookies'
 import Gitment from '../../src/components/gitment';
-import AdSense from '../../src/components/adsense/index';
+import AdSense from 'react-ssr-adsense';
 import '../../src/css/github-markdown.css';
 import '../../node_modules/highlight.js/styles/github.css';
 
@@ -128,13 +128,19 @@ const useStyles = makeStyles(theme => ({
         cursor: "pointer",
     },
     adSenseInArticle: {
+        marginTop: 20,
         [theme.breakpoints.up('sm')]: {
             width: 468,
             height: 60,
             margin: "0 auto"
         },
         [theme.breakpoints.up('md')]: {
-            width: 728,
+            width: 784,
+            height: 90,
+            margin: "0 auto"
+        },
+        [theme.breakpoints.up('lg')]: {
+            width: 980,
             height: 90,
             margin: "0 auto"
         },
@@ -289,6 +295,17 @@ function Article({ article = {},
                     <article className="markdown-body" >
                         <div dangerouslySetInnerHTML={{ __html: md.render(article.content) }}></div>
                     </article>
+                    {/* google adsense */}
+                    <div className={classes.adSenseInArticle}>
+                        <AdSense
+                            style={{ display: 'block', textAlign: "center" }}
+                            format='fluid'
+                            layout='in-article'
+                            client='ca-pub-2963446487596884'
+                            slot='6438116342'
+                            responsive="true"
+                        />
+                    </div>
                     {
                         isSmallDevice ? (
                             <div>
@@ -309,17 +326,7 @@ function Article({ article = {},
                         关注该公众号
                     </Typography>
                     </div>
-                    {/* google adsense */}
-                    <div className={classes.adSenseInArticle}>
-                        <AdSense
-                            style={{ display: 'block', textAlign: "center" }}
-                            format='fluid'
-                            layout='in-article'
-                            client='ca-pub-2963446487596884'
-                            slot='6438116342'
-                            responsive="true"
-                        />
-                    </div>
+
                 </div>
             </div>
             {

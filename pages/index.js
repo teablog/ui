@@ -12,7 +12,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { useRouter } from 'next/router';
 import { parseCookies } from 'nookies'
 import Weather from 'react-tencent-weather/lib/ssr/index.js';
-import AdSense from '../src/components/adsense/index';
+import AdSense from 'react-ssr-adsense';
 import 'react-tencent-weather/lib/ssr/index.css';
 
 const useStyles = makeStyles(theme => ({
