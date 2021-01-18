@@ -132,11 +132,11 @@ const useStyles = makeStyles(theme => ({
         marginBottom: 20,
         [theme.breakpoints.up('sm')]: {
             width: 468,
-            height: 60
+            maxHeight: 60
         },
         [theme.breakpoints.up('md')]: {
             width: 784,
-            height: 200
+            maxHeight: 200
         },
     }
 }))
