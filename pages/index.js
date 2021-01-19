@@ -12,6 +12,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import { useRouter } from 'next/router';
 import { parseCookies } from 'nookies'
 import Weather from 'react-tencent-weather/lib/ssr/index.js';
+import Head from 'next/head'
 import AdSense from 'react-ssr-adsense';
 import 'react-tencent-weather/lib/ssr/index.css';
 
@@ -152,7 +153,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function Index({ total, articles, labels, page }) {
+function Index({ total, articles, labels, page, host, hostname }) {
     const classes = useStyles();
     const [location, setLocation] = useState(undefined)
     const [snackbarState, setSnackbarState] = useState(false)
@@ -198,6 +199,18 @@ function Index({ total, articles, labels, page }) {
     }
     return (
         <Layout leftDrawerDefaultDisplay={true} marginTop={false}>
+            <Head>
+                <title data-react-helmet="true">大宁的博客 - douyacun</title>
+                <meta data-react-helmet="true" httpEquiv="cleartype" content="on" />
+                <meta data-react-helmet="true" name="apple-mobile-web-app-capable" content="yes" />
+                <meta data-react-helmet="true" name="viewport" content="width=device-width,minimum-scale=1.0,initial-scale=1,user-scalable=yes" />
+                <meta data-react-helmet="true" name="description" content="不要质疑你付出，这些都会一种累积一种沉淀，它们会默默铺路，只为让你成为更优秀的人" />
+                <meta property="og:description" content="不要质疑你的付出，这些都会一种累积一种沉淀，它们会默默铺路，只为让你成为更优秀的人" />
+                <meta property="og:title" content="大宁的博客 - douyacun" />
+                <meta property="og:url" content={host} />
+                <meta name="og:image" content="https://cdn.douyacun.com/images/blog/1/assert/douyacun_qrcode.jpg" />
+                <meta property="og:site_name" content={hostname} />
+            </Head>
             <div className={classes.marginTop}></div>
             <div className={classes.root}>
                 <div className={classes.dycGrid}>
@@ -217,14 +230,14 @@ function Index({ total, articles, labels, page }) {
                                     {
                                         parseInt(page) > 1 ?
                                             (
-                                                <Button variant="outlined" href={`/?page=` + (parseInt(page) - 1)} style={{ marginRight: 30, backgroundColor: "#fff", marginBottom: 30}}>
+                                                <Button variant="outlined" href={`/?page=` + (parseInt(page) - 1)} style={{ marginRight: 30, backgroundColor: "#fff", marginBottom: 30 }}>
                                                     上一页
                                                 </Button>
                                             ) : ''
                                     }
                                     {
                                         parseInt(page) < Math.ceil(total / PAGE_SIZE) ?
-                                            (<Button variant="outlined" href={`/?page=` + (parseInt(page) + 1)} style={{ backgroundColor: "#fff", marginBottom: 30}}>
+                                            (<Button variant="outlined" href={`/?page=` + (parseInt(page) + 1)} style={{ backgroundColor: "#fff", marginBottom: 30 }}>
                                                 下一页
                                             </Button>) : ''
                                     }
@@ -316,7 +329,7 @@ Index.getInitialProps = async ({ req, query, res }) => {
         }
     }).then(resp => resp.data)
     const labels = await GET({ url: "/api/articles/labels" }).then(resp => resp.data);
-    return { total, articles: data, labels, page: page }
+    return { total, articles: data, labels, page: page, host: process.env.HOST, hostname: process.env.HOSTNAME }
 }
 
 export default Index;
