@@ -200,13 +200,13 @@ function Index({ total, articles, labels, page, host, hostname }) {
     return (
         <Layout leftDrawerDefaultDisplay={true} marginTop={false}>
             <Head>
-                <title data-react-helmet="true">大宁的博客 - douyacun</title>
+                <title data-react-helmet="true">大宁's blog - douyacun</title>
                 <meta data-react-helmet="true" httpEquiv="cleartype" content="on" />
                 <meta data-react-helmet="true" name="apple-mobile-web-app-capable" content="yes" />
                 <meta data-react-helmet="true" name="viewport" content="width=device-width,minimum-scale=1.0,initial-scale=1,user-scalable=yes" />
                 <meta data-react-helmet="true" name="description" content="不要质疑你付出，这些都会一种累积一种沉淀，它们会默默铺路，只为让你成为更优秀的人" />
                 <meta property="og:description" content="不要质疑你的付出，这些都会一种累积一种沉淀，它们会默默铺路，只为让你成为更优秀的人" />
-                <meta property="og:title" content="大宁的博客 - douyacun" />
+                <meta property="og:title" content="大宁's blog - douyacun" />
                 <meta property="og:url" content={host} />
                 <meta name="og:image" content="https://cdn.douyacun.com/images/blog/1/assert/douyacun_qrcode.jpg" />
                 <meta property="og:site_name" content={hostname} />
