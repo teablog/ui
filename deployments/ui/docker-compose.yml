@@ -4,12 +4,9 @@ services:
     image: registry.cn-hangzhou.aliyuncs.com/douyacun/tea-ui:latest
     container_name: ui
     environment:
-      NEXT_PUBLIC_HOSTNAME: www.douyacun.com
-      NEXT_PUBLIC_HOST: https://www.douyacun.com
-      NEXT_PUBLIC_PROTOCOL: https
       NODE_ENV: production
       CDN_HOST: https://cdn.douyacun.com
     volumes:
-      - "${UI_PATH}/node_modules:/app/node_modules"
+      - "/data/web/ui/node_modules:/app/node_modules"
     ports:
       - 3000:3000
