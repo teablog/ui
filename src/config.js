@@ -3,10 +3,9 @@ const DEFAULT_AVATAR = "/images/avatar/noavatar88.png"
 const PAGE_SIZE = 10;
 
 const ENV = {
-  host: process.env.HOST,
-  protocol: process.env.PROTOCOL,
+  host: process.env.NEXT_PUBLIC_HOST,
+  protocol: process.env.NEXT_PUBLIC_PROTOCOL,
   github_oauth: `https://github.com/login/oauth/authorize?client_id=25fc4f51f48cb5d52edf&scope=user:email&redirect_uri=`,
-  disqus_short_name: process.env.DISQUS_SHORT_NAME,
 }
 
 export {

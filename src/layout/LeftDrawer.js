@@ -10,10 +10,10 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import Typography from '@material-ui/core/Typography';
 import { Redis, Mysql, Golang, Elastic, Linux, Tools, Kafka, Rct } from './icon'
-// import HdIcon from '@material-ui/icons/Hd';
-// import TvIcon from '@material-ui/icons/Tv';
- 
-const useStyles = makeStyles(theme=> ({
+import Divider from '@material-ui/core/Divider';
+import WS from '../../src/components/ws';
+
+const useStyles = makeStyles(theme => ({
   header: {
     paddingLeft: 16
   },
@@ -52,7 +52,7 @@ const useStyles = makeStyles(theme=> ({
     [theme.breakpoints.up('sm')]: {
       display: 'block',
       fontSize: 20,
-      marginLeft:theme.spacing(2),
+      marginLeft: theme.spacing(2),
     }
   },
 
@@ -62,40 +62,34 @@ function LeftDrawer(props) {
   const classes = useStyles();
   const isOpen = Boolean(props.isOpen);
   const toggleDrawer = props.toggleDrawer;
-
+  const [online, setOnline] = React.useState(1)
   const ListItemLink = (props) => {
     return <ListItem button component="a" {...props} target="_blank" />;
   }
-
-  // const customize = [
-  //   {
-  //     name: '热点',
-  //     icon: <FeaturedPlayList className={classes.dycListItemIcon} />,
-  //     link: "/"
-  //   },
-  //   {
-  //     name: '为您推荐',
-  //     icon: <Person className={classes.dycListItemIcon} />,
-  //     link: "/foryou"
-  //   },
-  //   {
-  //     name: '收藏夹',
-  //     icon: <BookmarkBorder className={classes.dycListItemIcon} />,
-  //     link: "/my/library"
-  //   },
-  //   {
-  //     name: '已保存的文章',
-  //     icon: <Search className={classes.dycListItemIcon} />,
-  //     link: "/my/bookmarks"
-  //   }
-  // ];
+  const customize = [
+    {
+      name: '当前在线人数：' + online,
+      icon: "",
+      link: ""
+    },
+    // {
+    //   name: '为您推荐',
+    //   icon: <Person className={classes.dycListItemIcon} />,
+    //   link: "/foryou"
+    // },
+    // {
+    //   name: '收藏夹',
+    //   icon: <BookmarkBorder className={classes.dycListItemIcon} />,
+    //   link: "/my/library"
+    // },
+    // {
+    //   name: '已保存的文章',
+    //   icon: <Search className={classes.dycListItemIcon} />,
+    //   link: "/my/bookmarks"
+    // }
+  ];
 
   const Topics = [
-    // {
-    //   name: 'Chat',
-    //   icon: <Chat className={classes.dycListItemIcon} />,
-    //   link: "/chat"
-    // },
     {
       name: 'Redis',
       icon: <Redis className={classes.dycListItemIcon} />,
@@ -136,13 +130,19 @@ function LeftDrawer(props) {
       icon: <Tools className={classes.dycListItemIcon} />,
       link: "/topics/tools"
     },
-  ]
+  ];
 
+  let ws_address;
+  if (process.env.NEXT_PUBLIC_PROTOCOL == "https") {
+    ws_address = "wss://" + process.env.NEXT_PUBLIC_HOSTNAME + "/api/ws/join"
+  } else {
+    ws_address = "ws://" + process.env.NEXT_PUBLIC_HOSTNAME + "/api/ws/join"
+  }
   const sideList = side => (
     <div>
       <Toolbar className={classes.header}>
         <IconButton className={classes.menuButton} onClick={toggleDrawer()} aria-label="Open drawer">
-          <MenuIcon style={{color: "rgba(0,0,0,0.87)"}}/>
+          <MenuIcon style={{ color: "rgba(0,0,0,0.87)" }} />
         </IconButton>
         <a href="/">
           <h4 className={classes.title}>
@@ -150,22 +150,6 @@ function LeftDrawer(props) {
           </h4>
         </a>
       </Toolbar>
-
-      {/* <List className={classes.dycList} style={{ marginTop: '19.2px' }}>
-        {customize.map((item, index) => (
-          <ListItemLink button key={index} href={item.link} className={classes.dycListItem}>
-            <ListItemIcon>{item.icon}</ListItemIcon>
-            <ListItemText >
-              <Typography variant="body2">
-                {item.name}
-              </Typography>
-            </ListItemText>
-          </ListItemLink>
-        ))}
-      </List> */}
-
-      {/* <Divider style={{ margin: '14.4px 0 14.4px 19.2px' }} /> */}
-
       <List>
         {Topics.map((item, index) => (
           <ListItemLink button key={index} rel="nofllow" href={item.link} className={classes.dycListItem}>
@@ -180,6 +164,25 @@ function LeftDrawer(props) {
           </ListItemLink>
         ))}
       </List>
+      <Divider style={{ margin: '0px 19.2px' }} />
+      <List className={classes.dycList}>
+        {customize.map((item, index) => {
+          let hasIcon = Boolean(item.icon)
+          return (
+            <ListItemLink button key={index} href={item.link} className={classes.dycListItem}>
+              {
+                hasIcon ? (<ListItemIcon>{item.icon}</ListItemIcon>) : ""
+              }
+              <ListItemText style={{ paddingLeft: 24 }}>
+                <Typography variant="body2">
+                  {item.name}
+                </Typography>
+              </ListItemText>
+            </ListItemLink>
+          )
+        })}
+      </List>
+      <WS ws_address={ws_address} setOnline={setOnline} />
     </div>
   );
 
@@ -199,5 +202,7 @@ function LeftDrawer(props) {
     </div>
   );
 }
+
+
 
 export default LeftDrawer;

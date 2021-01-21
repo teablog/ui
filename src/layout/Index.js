@@ -201,7 +201,7 @@ function MenuPopupState({ douyacun, logout }) {
 function Layout({ children, leftDrawerDefaultDisplay = false, marginTop = true }) {
   const classes = useStyles();
   const [wideEl, setWideEl] = React.useState(null); // 判断屏幕是否为宽屏
-  const [drawerStat, setDrawerStat] = React.useState(false);// leftDrawer
+  const [drawerStat, setDrawerStat] = React.useState(true);// leftDrawer
 
   const isDrawerOpen = Boolean(drawerStat);
   const isWide = Boolean(wideEl);

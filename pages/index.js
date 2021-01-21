@@ -153,7 +153,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function Index({ total, articles, labels, page, host, hostname }) {
+function Index({ total, articles, labels, page}) {
     const classes = useStyles();
     const [location, setLocation] = useState(undefined)
     const [snackbarState, setSnackbarState] = useState(false)
@@ -207,9 +207,9 @@ function Index({ total, articles, labels, page, host, hostname }) {
                 <meta data-react-helmet="true" name="description" content="不要质疑你付出，这些都会一种累积一种沉淀，它们会默默铺路，只为让你成为更优秀的人" />
                 <meta property="og:description" content="不要质疑你的付出，这些都会一种累积一种沉淀，它们会默默铺路，只为让你成为更优秀的人" />
                 <meta property="og:title" content="大宁's blog - douyacun" />
-                <meta property="og:url" content={host} />
+                <meta property="og:url" content={process.env.NEXT_PUBLIC_HOST} />
                 <meta name="og:image" content="https://cdn.douyacun.com/images/blog/1/assert/douyacun_qrcode.jpg" />
-                <meta property="og:site_name" content={hostname} />
+                <meta property="og:site_name" content={process.env.NEXT_PUBLIC_HOSTNAME} />
             </Head>
             <div className={classes.marginTop}></div>
             <div className={classes.root}>
@@ -329,7 +329,7 @@ Index.getInitialProps = async ({ req, query, res }) => {
         }
     }).then(resp => resp.data)
     const labels = await GET({ url: "/api/articles/labels" }).then(resp => resp.data);
-    return { total, articles: data, labels, page: page, host: process.env.HOST, hostname: process.env.HOSTNAME }
+    return { total, articles: data, labels, page: page}
 }
 
 export default Index;

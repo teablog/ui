@@ -19,8 +19,8 @@ function parseJson(response) {
 }
 
 async function request(params) {
-	if (!params["url"].startsWith("http") && process.env.HOST) {
-		params['url'] = process.env.HOST + "/" + ltrim(params['url'], "/")
+	if (!params["url"].startsWith("http") && process.env.NEXT_PUBLIC_HOST) {
+		params['url'] = process.env.NEXT_PUBLIC_HOST + "/" + ltrim(params['url'], "/")
 	}
 	params['withCredentials'] = true;
 	

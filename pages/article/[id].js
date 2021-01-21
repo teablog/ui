@@ -14,10 +14,9 @@ import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
 import Layout from '../../src/layout/Index';
 import { GET } from '../../src/request';
-import Discuss from '../../src/components/discuss';
 import { parseCookies } from 'nookies'
 import Gitment from '../../src/components/gitment';
-import AdSense from 'react-ssr-adsense';
+// import AdSense from 'react-ssr-adsense';
 import '../../src/css/github-markdown.css';
 import '../../node_modules/highlight.js/styles/github.css';
 
@@ -25,19 +24,7 @@ const useStyles = makeStyles(theme => ({
     root: {
         width: "100%",
         height: "100vh",
-        display: "inline-flex",
-        position: "fixed",
-    },
-    left: {
         marginTop: "64px",
-        overflowY: "scroll",
-        padding: 10,
-        "&::-webkit-scrollbar": {
-            width: 4
-        },
-        "&::-webkit-scrollbar-thumb": {
-            backgroundColor: "rgba(105, 112, 125, 0.5)"
-        }
     },
     content: {
         maxWidth: 980,
@@ -56,9 +43,6 @@ const useStyles = makeStyles(theme => ({
         alignItems: "center",
         justifyContent: "center",
         border: "0.5px solid rgba(0, 0, 0, 0.07)",
-    },
-    right: {
-        width: "100%",
     },
     drawerPaper: {
         minWidth: 480,
@@ -95,7 +79,7 @@ const useStyles = makeStyles(theme => ({
     },
     qr_code: {
         position: 'absolute',
-        right: 0,
+        right: -140,
         top: 20,
         width: 140,
         padding: 16,
@@ -142,8 +126,6 @@ const useStyles = makeStyles(theme => ({
 }))
 
 moment.locale('zh-cn');
-const DiscussLeftWidth = "article_discuss_left_width"
-const DiscussRightWidth = "article_discuss_right_right"
 const md = new MarkdownIt({
     highlight: function (str, lang) {
         if (lang && hljs.getLanguage(lang)) {
@@ -177,19 +159,16 @@ md.use(mila, [
     }
 ])
 
+let conn;
+
 function Article({ article = {},
     statusCode,
     errMessage,
     articleId,
-    isSmallDevice = true,
     messages,
     messagesTotal,
-    ws_address,
-    host,
-    hostname
 }) {
     const [user, setUser] = React.useState({})
-    const leftRef = React.useRef(null);
     // 首次加载
     React.useEffect(() => {
         const all = parseCookies();
@@ -212,30 +191,29 @@ function Article({ article = {},
             <meta data-react-helmet="true" name="description" content={article.description} />
             <meta property="og:description" content={article.description} />
             <meta property="og:title" content={article.title} />
-            <meta property="og:url" content={host + "/article/" + articleId} />
+            <meta property="og:url" content={process.env.NEXT_PUBLIC_HOST + "/article/" + articleId} />
             <meta name="og:image" content={article.cover_raw !== "" ? article.cover_raw : article.wechat_subscription_qrcode_raw} />
-            <meta property="og:site_name" content={hostname} />
+            <meta property="og:site_name" content={process.env.NEXT_PUBLIC_HOSTNAME} />
             <meta name="keywords" content={article.keywords} />
             <meta name="twitter:card" content="summary" />
-            <meta name="twitter:url" content={host + "/article/" + articleId} />
+            <meta name="twitter:url" content={process.env.NEXT_PUBLIC_HOST + "/article/" + articleId} />
             <meta name="twitter:title" content={article.title} />
             <meta name="twitter:description" content={article.description + " - douyacun"} />
             <meta name="twitter:image" content={article.cover_raw !== "" ? article.cover_raw : article.wechat_subscription_qrcode_raw} />
             <meta name="twitter:creator" content="@douyuacun" />
-            <meta name="twitter:domain" content={hostname} />
+            <meta name="twitter:domain" content={process.env.NEXT_PUBLIC_HOSTNAME} />
         </Head>
-        <div className={classes.root} onMouseMove={mouseMoveHandler}>
-            <div className={classes.left} style={{ width: leftWidth + "%", userSelect: userSelect }} ref={leftRef}>
-                <div className={classes.content}>
-                    <Typography variant="h2" className={classes.title}>{article.title}</Typography>
-                    <div className={classes.meta_content}>
-                        <Typography component="span" className={classes.media_meta}>原创:</Typography>
-                        <Typography component="span" className={classes.media_meta}>{article.topic}</Typography>
-                        <Typography component="span" className={classes.media_meta}>{moment(article.date).calendar()}发布</Typography>
-                        <Typography component="span" className={classes.media_meta}><a href={`https://twitter.com/intent/tweet?hashtags=${article.topic}&url=https://www.douyacun.com/article/${article.id}&text=${article.title}`} target="_blank" className={classes.shareBtn} data-show-count="false">twitter #{article.topic}</a></Typography>
-                    </div>
-                    {/* google adsense */}
-                    <div className={classes.adSenseInArticle}>
+        <div className={classes.root}>
+            <div className={classes.content}>
+                <Typography variant="h2" className={classes.title}>{article.title}</Typography>
+                <div className={classes.meta_content}>
+                    <Typography component="span" className={classes.media_meta}>原创:</Typography>
+                    <Typography component="span" className={classes.media_meta}>{article.topic}</Typography>
+                    <Typography component="span" className={classes.media_meta}>{moment(article.date).calendar()}发布</Typography>
+                    <Typography component="span" className={classes.media_meta}><a href={`https://twitter.com/intent/tweet?hashtags=${article.topic}&url=https://www.douyacun.com/article/${article.id}&text=${article.title}`} target="_blank" className={classes.shareBtn} data-show-count="false">twitter #{article.topic}</a></Typography>
+                </div>
+                {/* google adsense */}
+                {/* <div className={classes.adSenseInArticle}>
                         <AdSense
                             style={{ display: 'block', textAlign: "center" }}
                             format='fluid'
@@ -244,26 +222,24 @@ function Article({ article = {},
                             slot='6438116342'
                             responsive="true"
                         />
-                    </div>
-                    <article className="markdown-body" >
-                        <div dangerouslySetInnerHTML={{ __html: md.render(article.content) }}></div>
-                    </article>
-                    <div>
-                        <Gitment
-                            articleId={articleId}
-                            messages={messages}
-                            messagesTotal={messagesTotal}
-                            user={user}
-                            isSmallDevice={isSmallDevice}
-                        />
-                    </div>
-                    <div className={classes.qr_code}>
-                        <img src={article.wechat_subscription_qrcode} />
-                        <Typography variant="inherit">
-                            微信扫一扫<br />
+                    </div> */}
+                <article className="markdown-body" >
+                    <div dangerouslySetInnerHTML={{ __html: md.render(article.content) }}></div>
+                </article>
+                <div>
+                    <Gitment
+                        articleId={articleId}
+                        messages={messages}
+                        messagesTotal={messagesTotal}
+                        user={user}
+                    />
+                </div>
+                <div className={classes.qr_code}>
+                    <img src={article.wechat_subscription_qrcode} />
+                    <Typography variant="inherit">
+                        微信扫一扫<br />
                         关注该公众号
                     </Typography>
-                    </div>
                 </div>
             </div>
         </div>
@@ -273,15 +249,6 @@ function Article({ article = {},
 
 Article.getInitialProps = async ({ req, query }) => {
     const { id } = query
-    // 是否位小设备
-    let isSmallDevice = true;
-    let sort = "desc"
-    if (!/(iPhone|Android|iPad|iPod|iOS)/i.test(req.headers["user-agent"])) {
-        isSmallDevice = false
-        sort = "asc"
-    }
-    // let isSmallDevice = true;
-    // let sort = "asc"
     // 文章详情
     const { article, statusCode, errMessage } = await GET({
         "url": `/api/article/${id}`,
@@ -296,29 +263,19 @@ Article.getInitialProps = async ({ req, query }) => {
         url: "/api/ws/article/messages",
         params: {
             article_id: id,
-            sort: sort
+            sort: "desc"
         }
     }).then(({ data: { list, total } }) => {
         return { messages: list, messagesTotal: total }
     })
-    // websocket 地址
-    let ws_address;
-    if (process.env.PROTOCOL == "https") {
-        ws_address = "wss://" + process.env.HOSTNAME + "/api/ws/join?article_id=" + id
-    } else {
-        ws_address = "ws://" + process.env.HOSTNAME + "/api/ws/join?article_id=" + id
-    }
+
     return {
         article: article,
         statusCode: statusCode,
         errMessage: errMessage,
         articleId: id,
-        isSmallDevice,
         messages,
         messagesTotal,
-        ws_address: ws_address,
-        host: process.env.HOST,
-        hostname: process.env.HOSTNAME
     }
 }
 

@@ -1,20 +1,28 @@
 import React from 'react';
 
-function WS(host) {
-    React.useEffect(() => {
+let conn;
 
+const ONLINE = "ONLINE"
+
+function WS({ ws_address, setOnline = undefined }) {
+    React.useEffect(() => {
+        connect()
     }, [])
     /**
      * websocket: 初始化 
      */
-    const initWebsocket = () => {
+    const connect = () => {
         conn = new WebSocket(ws_address);
         conn.onmessage = handlerMessage;
         conn.onclose = function () {
-            dispatch({ type: "dialog_open", dialogOpen: true })
+            console.log('Socket is closed. Reconnect will be attempted in 1 second.', e.reason);
+            setTimeout(function() {
+              connect();
+            }, 1000);
         };
         conn.onerror = function () {
-            console.log("连接失败");
+            console.error('Socket encountered error: ', err.message, 'Closing socket');
+            ws.close();
         }
     }
     /**
@@ -22,12 +30,11 @@ function WS(host) {
      */
     const handlerMessage = function (evt) {
         let msg = JSON.parse(evt.data)
-        console.log("new message: " + msg)
-        switch (msg['type']) {
-            case "SYSTEM":
-            case "TEXT":
-                dispatch({ type: "new_message", msgs: [msg] });
-                break;
+        switch (msg.type) {
+            case ONLINE:
+                if (setOnline != undefined) {
+                    setOnline(msg.content)
+                }
         }
     }
     return (

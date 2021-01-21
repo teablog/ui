@@ -200,7 +200,7 @@ const userStyle = makeStyles(theme => ({
     }
 }))
 
-function Gitment({ user = {}, articleId = "", messages = [], messagesTotal = 0, isSmallDevice = false }) {
+function Gitment({ user = {}, articleId = "", messages = [], messagesTotal = 0}) {
     const [commentValue, setCommentValue] = React.useState("")
     const [comments, setComments] = React.useState(messages)
     const [total, setTotal] = React.useState(messagesTotal)
@@ -308,15 +308,13 @@ function Gitment({ user = {}, articleId = "", messages = [], messagesTotal = 0, 
                         <Pagination count={Math.ceil(total / size) > 0 ? Math.ceil(total / size) : 1} page={page} onChange={changePage} />
                     </div>
                     <div className={classes.timeline_comment_wrapper + " " + classes.timeline_new_comment}>
-                        {
-                            !isSmallDevice && (<span className={classes.timeline_comment_avatar}>
-                                {
-                                    user.url ?
-                                        <a href={user.url} target="_blank" rel="nofollow"><img className={classes.avatar} src={user.avatar_url ? user.avatar_url : DEFAULT_AVATAR} height="44" weight="44" /></a> :
-                                        <img className={classes.avatar} src={user.avatar_url ? user.avatar_url : DEFAULT_AVATAR} height="44" weight="44" />
-                                }
-                            </span>)
-                        }
+                        <span className={classes.timeline_comment_avatar}>
+                            {
+                                user.url ?
+                                    <a href={user.url} target="_blank" rel="nofollow"><img className={classes.avatar} src={user.avatar_url ? user.avatar_url : DEFAULT_AVATAR} height="44" weight="44" /></a> :
+                                    <img className={classes.avatar} src={user.avatar_url ? user.avatar_url : DEFAULT_AVATAR} height="44" weight="44" />
+                            }
+                        </span>
                         <div className={classes.timeline_comment_group}>
                             {
                                 isLogin() ? '' : (<a href={oauth} target="_blank" rel="nofollow" className={classes.comment_login} />)
