@@ -16,7 +16,7 @@ import Layout from '../../src/layout/Index';
 import { GET } from '../../src/request';
 import { parseCookies } from 'nookies'
 import Gitment from '../../src/components/gitment';
-// import AdSense from 'react-ssr-adsense';
+import AdSense from 'react-ssr-adsense';
 import '../../src/css/github-markdown.css';
 import '../../node_modules/highlight.js/styles/github.css';
 
@@ -213,16 +213,16 @@ function Article({ article = {},
                     <Typography component="span" className={classes.media_meta}><a href={`https://twitter.com/intent/tweet?hashtags=${article.topic}&url=https://www.douyacun.com/article/${article.id}&text=${article.title}`} target="_blank" className={classes.shareBtn} data-show-count="false">twitter #{article.topic}</a></Typography>
                 </div>
                 {/* google adsense */}
-                {/* <div className={classes.adSenseInArticle}>
-                        <AdSense
-                            style={{ display: 'block', textAlign: "center" }}
-                            format='fluid'
-                            layout='in-article'
-                            client='ca-pub-2963446487596884'
-                            slot='6438116342'
-                            responsive="true"
-                        />
-                    </div> */}
+                <div className={classes.adSenseInArticle}>
+                    <AdSense
+                        style={{ display: 'block', textAlign: "center" }}
+                        format='fluid'
+                        layout='in-article'
+                        client='ca-pub-2963446487596884'
+                        slot='6438116342'
+                        responsive="true"
+                    />
+                </div>
                 <article className="markdown-body" >
                     <div dangerouslySetInnerHTML={{ __html: md.render(article.content) }}></div>
                 </article>
