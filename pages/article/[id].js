@@ -189,12 +189,6 @@ function Article({ article = {},
     hostname
 }) {
     const [user, setUser] = React.useState({})
-    const [canMove, setCanMove] = React.useState(false) // 聊天框：是否移动
-    const [leftWidth, setLeftWidth] = React.useState(70);   // 窗口：文章宽度
-    const [rightWidth, setRightWidth] = React.useState(29); // 窗口：聊天框宽度Î
-    const [screenWidth, setScreenWidth] = React.useState(100); // 聊天框：当前窗口宽度，计算左右比例
-    const [lockResize, setLockResize] = React.useState(false); // 聊天框：加载锁，不要设置太快了
-    const [userSelect, setUserSelect] = React.useState("text"); // 聊天框：移动时，文章内容不要选中
     const leftRef = React.useRef(null);
     // 首次加载
     React.useEffect(() => {
@@ -202,55 +196,9 @@ function Article({ article = {},
         if (all.douyacun) {
             setUser(JSON.parse(all.douyacun));
         }
-        // 加载聊天框宽度
-        if (isSmallDevice) {
-            setLeftWidth(100)
-        } else {
-            let lw = localStorage.getItem(DiscussLeftWidth);
-            if (lw > 0) {
-                setLeftWidth(lw);
-            }
-            let rw = localStorage.getItem(DiscussRightWidth);
-            if (rw > 0) {
-                setRightWidth(rw);
-            }
-        }
-        setScreenWidth(document.body.clientWidth);
         return () => {
         }
     }, [])
-    React.useEffect(() => {
-        // document：鼠标抬起时结束移动
-        document.addEventListener("mouseup", mouseUpHandler);
-        return () => {
-            document.removeEventListener("mouseup", mouseUpHandler);
-        }
-    }, [leftWidth, rightWidth])
-    // 聊天框：开启移动
-    const mousedownHandler = (e) => {
-        setCanMove(true)
-        setUserSelect("none");
-    }
-    // 聊天框：结束移动
-    const mouseUpHandler = () => {
-        setCanMove(false)
-        setUserSelect("text");
-        // 持久化聊天宽度
-        localStorage.setItem(DiscussLeftWidth, leftWidth);
-        localStorage.setItem(DiscussRightWidth, rightWidth);
-    }
-    const mouseMoveHandler = (e) => {
-        if (canMove) {
-            let lw = (e.clientX / screenWidth * 100).toFixed(3)
-            let rw = (100 - lw - 1).toFixed(3);
-            if (!lockResize && lw > 50 && (screenWidth - e.clientX) > 300) {
-                setLeftWidth(lw)
-                setRightWidth(rw)
-                setLockResize(true)
-                setTimeout(() => { setLockResize(false) }, 10)
-            }
-        }
-    }
     const classes = useStyles();
     if (statusCode !== 0) {
         return <Error statusCode={statusCode} message={errMessage} />
@@ -300,19 +248,15 @@ function Article({ article = {},
                     <article className="markdown-body" >
                         <div dangerouslySetInnerHTML={{ __html: md.render(article.content) }}></div>
                     </article>
-                    {
-                        isSmallDevice ? (
-                            <div>
-                                <Gitment
-                                    articleId={articleId}
-                                    messages={messages}
-                                    messagesTotal={messagesTotal}
-                                    user={user}
-                                    isSmallDevice={isSmallDevice}
-                                />
-                            </div>
-                        ) : ""
-                    }
+                    <div>
+                        <Gitment
+                            articleId={articleId}
+                            messages={messages}
+                            messagesTotal={messagesTotal}
+                            user={user}
+                            isSmallDevice={isSmallDevice}
+                        />
+                    </div>
                     <div className={classes.qr_code}>
                         <img src={article.wechat_subscription_qrcode} />
                         <Typography variant="inherit">
@@ -320,29 +264,8 @@ function Article({ article = {},
                         关注该公众号
                     </Typography>
                     </div>
-
                 </div>
             </div>
-            {
-                !isSmallDevice ?
-                    (
-                        <React.Fragment>
-                            <div
-                                className={classes.conAppResizer}
-                                onMouseDown={mousedownHandler}
-                            >︙</div>
-                            <div className={classes.right} style={{ width: rightWidth + "%" }}>
-                                <Discuss
-                                    ws_address={ws_address}
-                                    articleId={articleId}
-                                    styles={{ paddingTop: 64 }}
-                                    messages={messages}
-                                    messagesTotal={messagesTotal}
-                                />
-                            </div>
-                        </React.Fragment>
-                    ) : ""
-            }
         </div>
     </Layout >
     );
