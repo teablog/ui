@@ -14,7 +14,7 @@ function WS({ ws_address, setOnline = undefined }) {
     const connect = () => {
         conn = new WebSocket(ws_address);
         conn.onmessage = handlerMessage;
-        conn.onclose = function () {
+        conn.onclose = function (e) {
             console.log('Socket is closed. Reconnect will be attempted in 1 second.', e.reason);
             setTimeout(function() {
               connect();
