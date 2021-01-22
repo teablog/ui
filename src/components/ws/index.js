@@ -16,13 +16,13 @@ function WS({ ws_address, setOnline = undefined }) {
         conn.onmessage = handlerMessage;
         conn.onclose = function (e) {
             console.log('Socket is closed. Reconnect will be attempted in 1 second.', e.reason);
-            setTimeout(function() {
-              connect();
+            setTimeout(function () {
+                connect();
             }, 1000);
         };
         conn.onerror = function (e) {
             console.error('Socket encountered error: ', e.message, 'Closing socket');
-            ws.close();
+            conn.close()
         }
     }
     /**
