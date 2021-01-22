@@ -20,8 +20,8 @@ function WS({ ws_address, setOnline = undefined }) {
               connect();
             }, 1000);
         };
-        conn.onerror = function () {
-            console.error('Socket encountered error: ', err.message, 'Closing socket');
+        conn.onerror = function (e) {
+            console.error('Socket encountered error: ', e.message, 'Closing socket');
             ws.close();
         }
     }
