@@ -202,6 +202,7 @@ function Article({ article = {},
             <meta name="twitter:image" content={article.cover_raw !== "" ? article.cover_raw : article.wechat_subscription_qrcode_raw} />
             <meta name="twitter:creator" content="@douyuacun" />
             <meta name="twitter:domain" content={process.env.NEXT_PUBLIC_HOSTNAME} />
+            <script type="text/javascript" src="https://platform.foremedia.net/code/232/video_ads"></script>
         </Head>
         <div className={classes.root}>
             <div className={classes.content}>
@@ -214,14 +215,15 @@ function Article({ article = {},
                 </div>
                 {/* google adsense */}
                 <div className={classes.adSenseInArticle}>
-                    <AdSense
+                    {/* <AdSense
                         style={{ display: 'block', textAlign: "center" }}
                         format='fluid'
                         layout='in-article'
                         client='ca-pub-2963446487596884'
                         slot='6438116342'
                         responsive="true"
-                    />
+                    /> */}
+                    <div id="foremediaads-video_ads"></div>
                 </div>
                 <article className="markdown-body" >
                     <div dangerouslySetInnerHTML={{ __html: md.render(article.content) }}></div>
