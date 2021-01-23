@@ -6,7 +6,12 @@ const ONLINE = "ONLINE"
 
 function WS({ ws_address, setOnline = undefined }) {
     React.useEffect(() => {
-        connect()
+        let t = setTimeout(() => {
+            connect()
+        }, 500);
+        return () => {
+            clearTimeout(t)
+        }
     }, [])
     /**
      * websocket: 初始化 
