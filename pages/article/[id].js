@@ -251,7 +251,7 @@ Article.getInitialProps = async ({ req, query }) => {
     const { id } = query
     // 文章详情
     const { article, statusCode, errMessage } = await GET({
-        "url": `/api/article/${id}`,
+        "url": `/api/article?id=${id}`,
         "headers": {
             "User-Agent": req.headers["user-agent"]
         }
@@ -260,7 +260,7 @@ Article.getInitialProps = async ({ req, query }) => {
     })
     // 评论列表
     const { messages, messagesTotal } = await GET({
-        url: "/api/ws/article/messages",
+        url: "/api/article/messages",
         params: {
             article_id: id,
             sort: "desc"

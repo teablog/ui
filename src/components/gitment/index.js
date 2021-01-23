@@ -1,14 +1,13 @@
 import React from 'react';
 import { makeStyles } from "@material-ui/core/styles";
-import Typography from '@material-ui/core/Typography';
 import Pagination from '@material-ui/lab/Pagination';
 import MarkdownTextarea from './markdown_textarea'
-import { POST, GET } from '../../request';
-import { BACKEND_URL, DEFAULT_AVATAR } from '../../config';
-import { useRouter } from 'next/router'
+import { GET, POST } from '../../request';
+import { DEFAULT_AVATAR } from '../../config';
+import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
 import MarkdownIt from 'markdown-it';
-
+import Settled from '../settled';
 import "../../css/github-markdown.css";
 
 const markdown = new MarkdownIt();
@@ -197,21 +196,31 @@ const userStyle = makeStyles(theme => ({
     },
     avatar: {
         borderRadius: "50%",
-    }
+    },
+    appBar: {
+        position: 'relative',
+    },
+    title: {
+        marginLeft: theme.spacing(2),
+        flex: 1,
+        color: "#666"
+    },
 }))
 
-function Gitment({ user = {}, articleId = "", messages = [], messagesTotal = 0}) {
+let checkNameLock = false;
+
+function Gitment({ user = {}, articleId = "", messages = [], messagesTotal = 0 }) {
     const [commentValue, setCommentValue] = React.useState("")
     const [comments, setComments] = React.useState(messages)
+
     const [total, setTotal] = React.useState(messagesTotal)
+    const [open, setOpen] = React.useState(false);
     const [size, setSize] = React.useState(20)
     const [page, setPage] = React.useState(1);
     const isLogin = () => {
         return user && user.id
     }
     const classes = userStyle()
-    const router = useRouter()
-    const oauth = "/login"
 
     /**
      * 分页：
@@ -245,7 +254,7 @@ function Gitment({ user = {}, articleId = "", messages = [], messagesTotal = 0})
             return;
         }
         await POST({
-            url: "/api/ws/article/comment",
+            url: "/api/article/comment",
             data: {
                 content: commentValue,
                 article_id: articleId,
@@ -263,11 +272,36 @@ function Gitment({ user = {}, articleId = "", messages = [], messagesTotal = 0})
         setComments([...comments, data])
         return false
     }
-
     return (
         <div className={classes.root}>
             <Typography variant="subtitle2">{messagesTotal} 条评论 </Typography>
 
+            <div className={classes.discussion_timeline_actions}>
+
+                <div className={classes.timeline_comment_wrapper + " " + classes.timeline_new_comment}>
+                    <span className={classes.timeline_comment_avatar}>
+                        {
+                            user.url ?
+                                <a href={user.url} target="_blank" rel="nofollow"><img className={classes.avatar} src={user.avatar_url ? user.avatar_url : DEFAULT_AVATAR} height="44" weight="44" /></a> :
+                                <img className={classes.avatar} src={user.avatar_url ? user.avatar_url : DEFAULT_AVATAR} height="44" weight="44" />
+                        }
+                    </span>
+                    <div className={classes.timeline_comment_group}>
+                        {
+                            isLogin() ? '' : (<div onClick={() => setOpen(true)} target="_blank" rel="nofollow" className={classes.comment_login} />)
+                        }
+                        <div>
+                            <MarkdownTextarea
+                                render={value => markdown.render(value)}
+                                onChange={setCommentValue}
+                                onComment={onComment}
+                                isLogin={isLogin}
+                                toolbarAlwaysVisible={true}
+                            />
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div className={classes.discussion_timeline}>
                 {
                     comments && comments.length > 0 ? comments.map((item, key) => {
@@ -303,36 +337,12 @@ function Gitment({ user = {}, articleId = "", messages = [], messagesTotal = 0})
                         </div>)
                     }) : ""
                 }
-                <div className={classes.discussion_timeline_actions}>
-                    <div className={classes.discussion_timeline_pagenation}>
-                        <Pagination count={Math.ceil(total / size) > 0 ? Math.ceil(total / size) : 1} page={page} onChange={changePage} />
-                    </div>
-                    <div className={classes.timeline_comment_wrapper + " " + classes.timeline_new_comment}>
-                        <span className={classes.timeline_comment_avatar}>
-                            {
-                                user.url ?
-                                    <a href={user.url} target="_blank" rel="nofollow"><img className={classes.avatar} src={user.avatar_url ? user.avatar_url : DEFAULT_AVATAR} height="44" weight="44" /></a> :
-                                    <img className={classes.avatar} src={user.avatar_url ? user.avatar_url : DEFAULT_AVATAR} height="44" weight="44" />
-                            }
-                        </span>
-                        <div className={classes.timeline_comment_group}>
-                            {
-                                isLogin() ? '' : (<a href={oauth} target="_blank" rel="nofollow" className={classes.comment_login} />)
-                            }
-                            <div>
-                                <MarkdownTextarea
-                                    render={value => markdown.render(value)}
-                                    onChange={setCommentValue}
-                                    onComment={onComment}
-                                    isLogin={isLogin}
-                                    toolbarAlwaysVisible={true}
-                                />
-                            </div>
-                        </div>
-                    </div>
+                <div className={classes.discussion_timeline_pagenation}>
+                    <Pagination count={Math.ceil(total / size) > 0 ? Math.ceil(total / size) : 1} page={page} onChange={changePage} />
                 </div>
             </div>
-        </div>
+            <Settled open={open} close={setOpen}/>
+        </div >
     )
 }
 

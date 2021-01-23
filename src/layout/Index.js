@@ -10,12 +10,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 import SearchIcon from '@material-ui/icons/Search';
 import LeftDrawer from './LeftDrawer';
 import Paper from '@material-ui/core/Paper';
-import MenuItem from '@material-ui/core/MenuItem';
-import MenuList from '@material-ui/core/MenuList';
-import Button from '@material-ui/core/Button';
-import Popover from '@material-ui/core/Popover';
-import { parseCookies } from 'nookies'
-import { ENV } from '../config';
+import Account from './account';
+
 const BIG_SCREEN_WIDTH = 1276;
 
 const useStyles = makeStyles(theme => ({
@@ -128,75 +124,6 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-function MenuPopupState({ douyacun, logout }) {
-
-  const [anchorEl, setAnchorEl] = React.useState(null);
-
-  const handleClick = event => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const handleLogout = () => {
-    logout()
-    handleClose()
-  }
-
-  const handleLogin = () => {
-    window.location = "/login"
-  }
-
-  const handleListKeyDown = () => {
-    handleClose()
-  }
-
-  const handleToken = () => {
-    window.location = "/helper/token"
-  }
-
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
-  return (
-    <React.Fragment>
-      {
-        Boolean(douyacun) ?
-          (
-            <Button onClick={handleClick}>
-              <Typography>
-                {douyacun.name.replace("+", " ")}
-              </Typography>
-            </Button>
-          )
-          :
-          (
-            <Button onClick={handleLogin}>
-              <Typography>
-                login
-              </Typography>
-            </Button>
-          )
-      }
-      <Popover
-        id={id}
-        open={open}
-        anchorEl={anchorEl}
-        onClose={handleClose}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
-        transformOrigin={{ vertical: 'top', horizontal: 'center' }}
-      >
-        <Paper>
-          <MenuList onKeyDown={handleListKeyDown}>
-            <MenuItem onClick={handleToken}>token</MenuItem>
-            <MenuItem onClick={handleLogout}>out</MenuItem>
-          </MenuList>
-        </Paper>
-      </Popover>
-    </React.Fragment>
-  );
-}
 
 function Layout({ children, leftDrawerDefaultDisplay = false, marginTop = true }) {
   const classes = useStyles();
@@ -206,7 +133,6 @@ function Layout({ children, leftDrawerDefaultDisplay = false, marginTop = true }
   const isDrawerOpen = Boolean(drawerStat);
   const isWide = Boolean(wideEl);
   const [firstLoad, setFirstLoad] = React.useState(0);// 大屏第一次加载显示左侧边框
-  const [cook, setCook] = React.useState(undefined);
 
   React.useEffect(() => {
     // 监听窗口变化
@@ -223,14 +149,6 @@ function Layout({ children, leftDrawerDefaultDisplay = false, marginTop = true }
       window.removeEventListener('resize', updateSize)
     };
   });
-
-  React.useEffect(() => {
-    const all = parseCookies();
-    if (all.douyacun) {
-      const douyacun = JSON.parse(all.douyacun);
-      setCook(douyacun);
-    }
-  }, []);
 
   const updateSize = () => {
     // 响应式处理
@@ -259,10 +177,6 @@ function Layout({ children, leftDrawerDefaultDisplay = false, marginTop = true }
       window.location.href = `/search/articles?q=${content}`
     }
   }
-  const logout = () => {
-    document.cookie = `douyacun=; path=/;domain=.www.douyacun.com;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
-    setCook(undefined);
-  }
 
   return (
     <dyc-app className={classes.root} open-and-visible={isWide && isDrawerOpen ? "true" : "false"}>
@@ -280,7 +194,7 @@ function Layout({ children, leftDrawerDefaultDisplay = false, marginTop = true }
                 <MenuIcon />
               </IconButton>
               <Typography className={classes.title + ' ' + classes.hidden} variant="h2" noWrap>
-                <a href="/" style={{ color: "#666" }}>Douyacun</a>
+                <a href="/" style={{ color: "#666" }}>Douya村</a>
               </Typography>
             </div>
             <div className={classes.wc + ' ' + classes.fullWidth}>
@@ -301,7 +215,7 @@ function Layout({ children, leftDrawerDefaultDisplay = false, marginTop = true }
               </div>
             </div>
             <div className={classes.wc + ' ' + classes.hidden}>
-              <MenuPopupState douyacun={cook} logout={logout} />
+              <Account />
             </div>
             <div className={classes.filler}></div>
           </Toolbar>
@@ -318,7 +232,4 @@ function Layout({ children, leftDrawerDefaultDisplay = false, marginTop = true }
   );
 }
 
-Layout.getInitialProps = async ({ req, query }) => {
-  return { ...ENV }
-}
 export default Layout;

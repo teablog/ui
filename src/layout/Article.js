@@ -154,7 +154,7 @@ function Article({variant, className, style, stat, article, type}) {
         </Typography>
         <div>
             <ArticleBookmark
-                author={article ? article.author : ''}
+                author={article ? article.topic : ''}
                 last_edit_time={article.last_edit_time}
                 rate={article.rate}
                 type={type}

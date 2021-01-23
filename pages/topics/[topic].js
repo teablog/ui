@@ -213,7 +213,7 @@ Topics.getInitialProps = async ({ query }) => {
     let { topic, page } = query
     page = page ? page : 1;
     const { data, total } = await GET({
-        "url": `/api/topic/${topic}?page=${page}`
+        "url": `/api/topic?page=${page}&topic=${topic}`
     }).then(resp => {
         if (resp.code === 0) {
             return resp.data

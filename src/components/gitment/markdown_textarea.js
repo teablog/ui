@@ -331,7 +331,7 @@ class MarkdownTextarea extends Component {
         {isActive && this.renderToolbar()}
         <div className={classes.write_content}>
           <Textarea
-            disabled={!isLogin()}
+            // disabled={!isLogin()}
             inputRef={(textarea) => { this.textarea = textarea; }}
             style={{ display: writing ? 'block' : 'none' }}
             className={classes.markdown_editor + ' ' + classes.inputContrast + ' ' + (focused ? classes.focus : "")}

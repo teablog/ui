@@ -172,7 +172,7 @@ Topics.getInitialProps = async ({ query }) => {
     let { q, page } = query
     page = page ? page : 1
     const { data, total } = await GET({
-        "url": `/api/search/articles`,
+        "url": `/api/articles/search`,
         "params": {
             'page': page,
             'q': q,
