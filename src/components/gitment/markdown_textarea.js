@@ -6,7 +6,6 @@ import octicons from 'octicons';
 import Button from '@material-ui/core/Button';
 import MarkdownIt from 'markdown-it';
 
-
 const insert = (state, selection, actionData) => {
   const newSelection = {};
   const newState = {};
@@ -56,7 +55,7 @@ const actions = [
     content: renderIcon('quote'),
     props: { 'aria-label': 'Insert a quote' },
     execute(state, selection) {
-      return insert(state, selection, { prefix: '> ', multiline: true });
+      return insert(state, selection, { key: "quote", prefix: '> ', multiline: true });
     },
   }, {
     content: 'URL',
@@ -70,14 +69,14 @@ const actions = [
     props: { 'aria-label': 'Add a bulleted list' },
     content: renderIcon('list-unordered'),
     execute(state, selection) {
-      return insert(state, selection, { prefix: '- ', multiline: true });
+      return insert(state, selection, { key: "ul", prefix: '- '});
     },
   }, {
     content: 'OL',
     props: { 'aria-label': 'Add a numbered list' },
     content: renderIcon('list-ordered'),
     execute(state, selection) {
-      return insert(state, selection, { prefix: '1. ', multiline: true });
+      return insert(state, selection, { key: "ol", prefix: '1. '});
     },
   },
 ];
@@ -229,7 +228,7 @@ class MarkdownTextarea extends Component {
     this.state = {
       writing: true,
       focused: false,
-      value: (props.value||'').replace(/\r\n/g, '\n'),
+      value: (props.value || '').replace(/\r\n/g, '\n'),
     };
   }
   componentDidMount() {
@@ -238,6 +237,13 @@ class MarkdownTextarea extends Component {
   componentWillUnmount() {
     if (this.state.writing) {
       document.removeEventListener('click', this.handleClickOutside, true);
+    }
+  }
+  componentDidUpdate(prevProps) {
+    // 典型用法（不要忘记比较 props）：
+    if (this.props.value !== prevProps.value) {
+      this.setState({...this.state, value: this.props.value});
+      this.textarea.focus();
     }
   }
   enableWrite = () => {
@@ -342,10 +348,10 @@ class MarkdownTextarea extends Component {
           />
           {writing && (
             <p className={classes.drag_and_drop + ' ' + (focused ? classes.focus : "")}>
-              <input accept=".gif,.jpeg,.jpg,.png,.docx,.gz,.log,.pdf,.pptx,.txt,.xlsx,.zip" className={classes.manual_file_chooser} type="file" multiple="" />
+              {/* <input accept=".gif,.jpeg,.jpg,.png,.docx,.gz,.log,.pdf,.pptx,.txt,.xlsx,.zip" className={classes.manual_file_chooser} type="file" multiple="" /> */}
               <span>
-                Attach files by dragging &amp; dropping, selecting or pasting them.
-                  </span>
+                暂不支持上传文件
+              </span>
               <span className={classes.tooltipped}>
                 <a href="https://guides.github.com/features/mastering-markdown/" target="_blank" rel="nofollow"><span>{renderIcon('markdown', { class: 'MarkdownTextarea-help-icon' })}</span></a>
               </span>

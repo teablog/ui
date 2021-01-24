@@ -3,16 +3,19 @@ import { makeStyles } from "@material-ui/core/styles";
 import Pagination from '@material-ui/lab/Pagination';
 import MarkdownTextarea from './markdown_textarea'
 import { GET, POST } from '../../request';
-import { DEFAULT_AVATAR } from '../../config';
 import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
 import MarkdownIt from 'markdown-it';
 import Settled from '../settled';
 import "../../css/github-markdown.css";
+import { parseCookies } from 'nookies'
+import Avatar from '@material-ui/core/Avatar';
+import Prompt from '../prompt';
+import ReplyIcon from '@material-ui/icons/Reply';
+import Button from '@material-ui/core/Button';
 
 const markdown = new MarkdownIt();
 const TEXTMSG = "TEXT"
-const IMGMSG = "IMAGE"
 
 const userStyle = makeStyles(theme => ({
     root: {
@@ -107,6 +110,8 @@ const userStyle = makeStyles(theme => ({
         },
     },
     timeline_comment_header: {
+        display: "flex",
+        alignItems: "center",
         backgroundColor: '#f6f8fa',
         borderBottom: "1px solid rgba(3, 102, 214, 0.2)",
         borderTopLeftRadius: 3,
@@ -120,9 +125,10 @@ const userStyle = makeStyles(theme => ({
         backgroundColor: '#f1f8ff'
     },
     timeline_comment_header_text: {
-        maxWidth: "78%",
+        // maxWidth: "78%",
         paddingBottom: 10,
         paddingTop: 10,
+        flex: 1,
     },
     author: {
         maxWidth: 125,
@@ -196,6 +202,17 @@ const userStyle = makeStyles(theme => ({
     },
     avatar: {
         borderRadius: "50%",
+        backgroundColor: "#fff",
+        border: "1px solid #d1d5da",
+        width: 44,
+        height: 44,
+        color: "#666",
+        fontWeight: 500,
+    },
+    senderUrl: {
+        "&:hover": {
+            textDecoration: "none !important"
+        }
     },
     appBar: {
         position: 'relative',
@@ -205,23 +222,36 @@ const userStyle = makeStyles(theme => ({
         flex: 1,
         color: "#666"
     },
+    commentIcon: {
+        cursor: "pointer"
+    }
 }))
 
-let checkNameLock = false;
-
-function Gitment({ user = {}, articleId = "", messages = [], messagesTotal = 0 }) {
+function Gitment({ articleId = "", msgData: { list, total: t, page: p, size: s } }) {
     const [commentValue, setCommentValue] = React.useState("")
-    const [comments, setComments] = React.useState(messages)
-
-    const [total, setTotal] = React.useState(messagesTotal)
+    const [comments, setComments] = React.useState(list)
+    const [user, setUser] = React.useState({})
+    const [total, setTotal] = React.useState(t)
     const [open, setOpen] = React.useState(false);
-    const [size, setSize] = React.useState(20)
-    const [page, setPage] = React.useState(1);
+    const [size, setSize] = React.useState(s)
+    const [page, setPage] = React.useState(p);
+    const [prompt, setPrompt] = React.useState({
+        open: false,
+        content: "",
+    });
     const isLogin = () => {
         return user && user.id
     }
     const classes = userStyle()
-
+    // 首次加载
+    React.useEffect(() => {
+        const all = parseCookies();
+        if (all.douyacun) {
+            setUser(JSON.parse(all.douyacun));
+        }
+        return () => {
+        }
+    }, [])
     /**
      * 分页：
      */
@@ -231,14 +261,15 @@ function Gitment({ user = {}, articleId = "", messages = [], messagesTotal = 0 }
     /**
      * 消息：加载
      */
-    const LoadMessage = (page) => {
+    const LoadMessage = (p) => {
+        if (p == page) {
+            return
+        }
         return GET({
-            url: "/api/ws/article/messages",
+            url: "/api/article/messages",
             params: {
                 article_id: articleId,
-                sort: "asc",
-                size: size,
-                page: page
+                page: p
             }
         }).then(({ data: { list, total } }) => {
             setComments(list)
@@ -260,59 +291,47 @@ function Gitment({ user = {}, articleId = "", messages = [], messagesTotal = 0 }
                 article_id: articleId,
                 type: TEXTMSG,
             }
+        }).then(({ code, data, message }) => {
+            if (code == 401) {
+                setOpen(true);
+            }
+            if (code = 503) {
+                setPrompt({open: true, content: message})
+            }
+            if (code === 0) {
+                setComments([...comments, data])
+            }
         })
-        let data = {
-            "id": moment().unix() + "",
-            "date": moment(),
-            "sender": user,
-            "type": TEXTMSG,
-            "content": commentValue,
-            "article_id": articleId
-        }
-        setComments([...comments, data])
-        return false
     }
+    /**
+     * 消息回复：replay
+     */
+    const replay = (name) => {
+        let v
+        if (commentValue != "") {
+            v = commentValue + " @" +  name + " "
+        } else {
+            v = "@" + name + " "
+        }
+        
+        setCommentValue(v);
+    }
+
     return (
         <div className={classes.root}>
-            <Typography variant="subtitle2">{messagesTotal} 条评论 </Typography>
-
-            <div className={classes.discussion_timeline_actions}>
-
-                <div className={classes.timeline_comment_wrapper + " " + classes.timeline_new_comment}>
-                    <span className={classes.timeline_comment_avatar}>
-                        {
-                            user.url ?
-                                <a href={user.url} target="_blank" rel="nofollow"><img className={classes.avatar} src={user.avatar_url ? user.avatar_url : DEFAULT_AVATAR} height="44" weight="44" /></a> :
-                                <img className={classes.avatar} src={user.avatar_url ? user.avatar_url : DEFAULT_AVATAR} height="44" weight="44" />
-                        }
-                    </span>
-                    <div className={classes.timeline_comment_group}>
-                        {
-                            isLogin() ? '' : (<div onClick={() => setOpen(true)} target="_blank" rel="nofollow" className={classes.comment_login} />)
-                        }
-                        <div>
-                            <MarkdownTextarea
-                                render={value => markdown.render(value)}
-                                onChange={setCommentValue}
-                                onComment={onComment}
-                                isLogin={isLogin}
-                                toolbarAlwaysVisible={true}
-                            />
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <Typography variant="subtitle2">{total} 条评论 </Typography>
             <div className={classes.discussion_timeline}>
                 {
                     comments && comments.length > 0 ? comments.map((item, key) => {
                         let isMe = user.id == item.sender.id ? true : false;
-                        // let isMe = false;
                         return (<div className={classes.timeline_comment_wrapper} key={key}>
                             <div className={classes.timeline_comment_avatar}>
                                 {
                                     item.sender.url ?
-                                        <a href={item.sender.url} target="_blank" rel="nofollow"><img className={classes.avatar} src={item.sender.avatar_url ? item.sender.avatar_url : DEFAULT_AVATAR} height="44" weight="44" /></a> :
-                                        <img className={classes.avatar} src={item.sender.avatar_url ? item.sender.avatar_url : DEFAULT_AVATAR} height="44" weight="44" />
+                                        <a href={item.sender.url} className={classes.senderUrl} target="_blank">
+                                            <Avatar className={classes.avatar}>{item.sender && item.sender.name.length > 0 ? item.sender.name[0] : "D"}</Avatar>
+                                        </a> :
+                                        <Avatar className={classes.avatar}>{item.sender && item.sender.name.length > 0 ? item.sender.name[0] : "D"}</Avatar>
                                 }
                             </div>
                             <div className={classes.timeline_comment + " " + (isMe ? classes.timeline_comment_current_user : "")}>
@@ -326,6 +345,7 @@ function Gitment({ user = {}, articleId = "", messages = [], messagesTotal = 0 }
                                             }
                                         </strong> commented <relative-time datetime=""> {moment(item.date).calendar()}</relative-time>
                                     </Typography>
+                                    <ReplyIcon className={classes.commentIcon} onClick={() => replay(item.sender.name)} />
                                 </div>
                                 <div className={classes.comment_body}>
                                     <div
@@ -337,11 +357,40 @@ function Gitment({ user = {}, articleId = "", messages = [], messagesTotal = 0 }
                         </div>)
                     }) : ""
                 }
+            </div>
+            <div className={classes.discussion_timeline_actions}>
                 <div className={classes.discussion_timeline_pagenation}>
                     <Pagination count={Math.ceil(total / size) > 0 ? Math.ceil(total / size) : 1} page={page} onChange={changePage} />
                 </div>
+                <div className={classes.timeline_comment_wrapper + " " + classes.timeline_new_comment}>
+                    <span className={classes.timeline_comment_avatar}>
+                        {
+                            user.url ?
+                                <a href={user.url} target="_blank">
+                                    <Avatar className={classes.avatar}>{user && user.name ? user.name[0] : "D"}</Avatar>
+                                </a> :
+                                <Avatar className={classes.avatar}>{user && user.name ? user.name[0] : "D"}</Avatar>
+                        }
+                    </span>
+                    <div className={classes.timeline_comment_group}>
+                        {
+                            isLogin() ? '' : (<div onClick={() => setOpen(true)} target="_blank" rel="nofollow" className={classes.comment_login} />)
+                        }
+                        <div>
+                            <MarkdownTextarea
+                                render={value => markdown.render(value)}
+                                onChange={setCommentValue}
+                                onComment={onComment}
+                                isLogin={isLogin}
+                                toolbarAlwaysVisible={true}
+                                value={commentValue}
+                            />
+                        </div>
+                    </div>
+                </div>
             </div>
-            <Settled open={open} close={setOpen}/>
+            <Settled open={open} close={setOpen} setUser={setUser} />
+            <Prompt open={prompt.open} close={() => { setPrompt({open: false, content: ""}) }} content={prompt.content}/>
         </div >
     )
 }

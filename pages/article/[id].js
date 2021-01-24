@@ -14,7 +14,7 @@ import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
 import Layout from '../../src/layout/Index';
 import { GET } from '../../src/request';
-import { parseCookies } from 'nookies'
+
 import Gitment from '../../src/components/gitment';
 import AdSense from 'react-ssr-adsense';
 import '../../src/css/github-markdown.css';
@@ -159,25 +159,12 @@ md.use(mila, [
     }
 ])
 
-let conn;
-
 function Article({ article = {},
     statusCode,
     errMessage,
     articleId,
-    messages,
-    messagesTotal,
+    msgData,
 }) {
-    const [user, setUser] = React.useState({})
-    // 首次加载
-    React.useEffect(() => {
-        const all = parseCookies();
-        if (all.douyacun) {
-            setUser(JSON.parse(all.douyacun));
-        }
-        return () => {
-        }
-    }, [])
     const classes = useStyles();
     if (statusCode !== 0) {
         return <Error statusCode={statusCode} message={errMessage} />
@@ -229,9 +216,7 @@ function Article({ article = {},
                 <div>
                     <Gitment
                         articleId={articleId}
-                        messages={messages}
-                        messagesTotal={messagesTotal}
-                        user={user}
+                        msgData={msgData}
                     />
                 </div>
                 <div className={classes.qr_code}>
@@ -249,33 +234,32 @@ function Article({ article = {},
 
 Article.getInitialProps = async ({ req, query }) => {
     const { id } = query
+    let ua = req && req.headers ? req.headers["user-agent"] : ""
+
     // 文章详情
     const { article, statusCode, errMessage } = await GET({
         "url": `/api/article?id=${id}`,
         "headers": {
-            "User-Agent": req.headers["user-agent"]
+            "User-Agent": ua
         }
     }).then(resp => {
         return { article: resp.data, statusCode: resp.code, errMessage: resp.message }
     })
     // 评论列表
-    const { messages, messagesTotal } = await GET({
+    const msgData = await GET({
         url: "/api/article/messages",
         params: {
-            article_id: id,
-            sort: "desc"
+            article_id: id
         }
-    }).then(({ data: { list, total } }) => {
-        return { messages: list, messagesTotal: total }
+    }).then(({ data }) => {
+        return data
     })
-
     return {
         article: article,
         statusCode: statusCode,
         errMessage: errMessage,
         articleId: id,
-        messages,
-        messagesTotal,
+        msgData,
     }
 }
 

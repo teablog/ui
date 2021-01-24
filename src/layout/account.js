@@ -9,13 +9,13 @@ import Paper from '@material-ui/core/Paper';
 import Settle from '../components/settled';
 
 function Account() {
-    const [cook, setCook] = React.useState(undefined);
+    const [douyacun, setDouyacun] = React.useState(undefined);
     const [openSettled,setOpenSettled] = React.useState(false);
     React.useEffect(() => {
         const all = parseCookies();
         if (all.douyacun) {
             const douyacun = JSON.parse(all.douyacun);
-            setCook(douyacun);
+            setDouyacun(douyacun);
         }
     }, []);
 
@@ -45,7 +45,7 @@ function Account() {
 
     const logout = () => {
         document.cookie = `douyacun=; path=/;domain=.www.douyacun.com;expires=Thu, 01 Jan 1970 00:00:00 GMT`;
-        setCook(undefined);
+        setDouyacun(undefined);
     }
 
     const open = Boolean(anchorEl);
@@ -53,10 +53,10 @@ function Account() {
     return (
         <React.Fragment>
             {
-                Boolean(cook) ?
+                Boolean(douyacun) ?
                     (
                         <Button onClick={handleClick}>
-                            <Typography>
+                            <Typography variant="h3" style={{display: "block", color: "#666"}}>
                                 {douyacun.name.replace("+", " ")}
                             </Typography>
                         </Button>
@@ -81,11 +81,10 @@ function Account() {
                 <Paper>
                     <MenuList onKeyDown={handleListKeyDown}>
                         <MenuItem onClick={handleToken}>token</MenuItem>
-                        <MenuItem onClick={handleLogout}>out</MenuItem>
                     </MenuList>
                 </Paper>
             </Popover>
-            <Settle open={openSettled} close={setOpenSettled}/>
+            <Settle open={openSettled} close={setOpenSettled} setUser={setDouyacun}/>
         </React.Fragment>
     );
 }

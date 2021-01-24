@@ -19,8 +19,11 @@ const userStyle = makeStyles(theme => ({
         flex: 1,
         color: "#666"
     },
+    input: {
+        margin: "8px"
+    }
 }))
-function Settled({ open, close }) {
+function Settled({ open, close, setUser }) {
     const [account, setAccount] = React.useState({
         name: "",
         url: "",
@@ -38,41 +41,56 @@ function Settled({ open, close }) {
     const closeDiaLog = () => {
         close(false)
     }
-
+    /**
+     * 注册：保存值
+     */
     const changeAccount = (event) => {
-        console.log(event.target.name, event.target.value);
-        setAccount({ ...account, [event.target.name]: event.target.value });
+        if (!/\s/i.test(event.target.value)) {
+            let h = accountHith
+            h[event.target.name] = "不支持有空格～"
+            setAccountHit(h)
+        } else {
+            setAccount({ ...account, [event.target.name]: event.target.value });
+        }
+    }
+    const register = () => {
+        console.log(account);
+        let name = account.name.replace(/^\s+|\s+$/g, "")
+        let email = account.email.replace(/^\s+|\s+$/g, "")
+        if (name === "" || email === "") {
+            return
+        }
+        POST({
+            url: "/api/account/register",
+            data: {
+                name: account.name,
+                email: account.email,
+                url: account.url,
+            }
+        }).then(({ code, data, message }) => {
+            if (code === 403) {
+                let hit = accountHit
+                hit[data] = message
+                setAccountHit(hit)
+                return
+            }
+            if (code === 0) {
+                setUser(data)
+                closeDiaLog()
+                return
+            }
+        })
     }
 
     const checkAccount = (event) => {
         if (event.target.name === "name") {
-            if (event.target.value != "") {
-                GET({
-                    url: `/api/account/name/exists?name=${event.target.value}`
-                }).then(({ data }) => {
-                    if (data) {
-                        setAccountHit({ ...accountHit, name: `${event.target.value} 村里人不允许重名～` })
-                    } else {
-                        setAccountHit({ ...accountHit, name: "" })
-                    }
-                })
-            } else {
+            if (event.target.value === "") {
                 setAccountHit({ ...accountHit, name: "起个名字可真的难～" })
             }
         }
         if (event.target.name === "email") {
-            if (event.target.value != "") {
-                GET({
-                    url: `/api/account/name/exists?name=${event.target.value}`
-                }).then(({ data }) => {
-                    if (data) {
-                        setAccountHit({ ...accountHit, name: `${event.target.value} 村里人不允许重名～` })
-                    } else {
-                        setAccountHit({ ...accountHit, name: "" })
-                    }
-                })
-            } else {
-                setAccountHit({ ...accountHit, name: "起个名字可真的难～" })
+            if (event.target.value == "") {
+                setAccountHit({ ...accountHit, email: "邮箱还是要写一下的" })
             }
         }
         if (event.target.name === "url" && event.target.value == "") {
@@ -93,7 +111,7 @@ function Settled({ open, close }) {
                     <Typography variant="h4" className={classes.title}>
                         要入驻该村吗？
                 </Typography>
-                    <Button color="inherit" onClick={closeDiaLog}>
+                    <Button color="inherit" onClick={register}>
                         <Typography variant="h4" color="secondary">
                             入驻
                     </Typography>
@@ -102,37 +120,38 @@ function Settled({ open, close }) {
             </AppBar>
             <TextField
                 label="恁叫啥？"
-                style={{ margin: 8 }}
                 helperText={accountHit.name == "" ? "村里人都会看到的" : accountHit.name}
-                fullWidth={true}
+                fullWidth={false}
                 onBlur={checkAccount}
                 onChange={changeAccount}
                 variant="standard"
                 color="secondary"
                 name="name"
                 error={accountHit.name != ""}
+                className={classes.input}
             />
             <TextField
                 label="Email"
-                style={{ margin: 8 }}
                 helperText={accountHit.email === "" ? "只有村长可见" : accountHit.email}
-                fullWidth={true}
+                fullWidth={false}
                 onBlur={checkAccount}
                 onChange={changeAccount}
                 variant="standard"
                 color="secondary"
                 name="email"
+                error={accountHit.email !== ""}
+                className={classes.input}
             />
             <TextField
                 label="站点"
-                style={{ margin: 8 }}
                 helperText={accountHit.url === "" ? "村里人都会串门拜访的" : accountHit.url}
-                fullWidth={true}
+                fullWidth={false}
                 onBlur={checkAccount}
                 onChange={changeAccount}
                 variant="standard"
                 color="secondary"
                 name="url"
+                className={classes.input}
             />
         </Dialog>
     )
