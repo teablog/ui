@@ -295,7 +295,7 @@ function Gitment({ articleId = "", msgData: { list, total: t, page: p, size: s }
             if (code == 401) {
                 setOpen(true);
             }
-            if (code = 503) {
+            if (code == 503) {
                 setPrompt({open: true, content: message})
             }
             if (code === 0) {
