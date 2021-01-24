@@ -48,7 +48,10 @@ const userStyle = makeStyles(theme => ({
         marginBottom: 15,
         marginTop: 15,
         paddingLeft: 60,
-        position: 'relative'
+        position: 'relative',
+        [theme.breakpoints.down('sm')]: {
+            paddingLeft: 0,
+        },
     },
     timeline_comment_avatar: {
         borderRadius: 3,
@@ -154,8 +157,7 @@ const userStyle = makeStyles(theme => ({
         zIndex: 10,
     },
     discussion_timeline_actions: {
-        backgroundColor: "#fff",
-        borderTop: "2px solid #e6ebf1"
+        backgroundColor: "#fff"
     },
     discussion_timeline_pagenation: {
         display: "flex",
