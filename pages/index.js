@@ -25,25 +25,16 @@ const useStyles = makeStyles(theme => ({
         },
     },
     root: {
-        maxWidth: '1176px',
+        maxWidth: '1282px',
         margin: 'auto',
+        display: "flex",
         '@media screen and (max-width: 1736px)': {
             'dyc-app[open-and-visible="true"] &': {
                 marginLeft: '280px'
             }
         },
         [theme.breakpoints.up('sm')]: {
-            padding: '16px 32px 32px 32px'
-        },
-    },
-    // grid
-    dycGrid: {
-        display: 'grid',
-        gridTemplateColumns: 'repeat(12,1fr)',
-        gridColumn: '1/span 12',
-        gridGap: '8px 32px',
-        [theme.breakpoints.up('sm')]: {
-            gridGap: '16px 32px',
+            padding: '16px 0px'
         },
     },
     dycGridGap: {
@@ -63,22 +54,20 @@ const useStyles = makeStyles(theme => ({
         },
     },
     main: {
-        gridColumn: 'span 8',
-        '@media screen and (max-width: 800px)': {
-            '&': {
-                gridColumn: '1/span 12'
-            }
-        }
+        flex: 1,
+        // gridColumn: 'span 8',
+        width: 900,
+        [theme.breakpoints.up('sm')]: {
+            marginRight: 32,
+        },
     },
     aside: {
-        gridColumn: 'span 4',
-        gridColumnGap: 0,
+        width: 350,
         '@media screen and (max-width: 800px)': {
             '&': {
                 display: 'none'
             }
         },
-        gridTemplateRows: "42% 18% 37%"
     },
     dycAsideColumn: {
         borderRadius: '8px',
@@ -87,13 +76,12 @@ const useStyles = makeStyles(theme => ({
     dycAsideColumnTopic: {
         color: '#5f6368',
         padding: '12.8px 0',
-        margin: '0 16px',
         borderBottom: '1px solid #dadce0',
         display: 'flex',
         flexDirection: 'row'
     },
     dycAsideTag: {
-        margin: '16px 16px 18px 16px'
+        margin: '16px 0'
     },
     dycAsideTagButton: {
         margin: '0 8px 8px 0',
@@ -153,7 +141,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function Index({ total, articles, labels, page}) {
+function Index({ total, articles, labels, page }) {
     const classes = useStyles();
     const [location, setLocation] = useState(undefined)
     const [snackbarState, setSnackbarState] = useState(false)
@@ -213,107 +201,98 @@ function Index({ total, articles, labels, page}) {
             </Head>
             <div className={classes.marginTop}></div>
             <div className={classes.root}>
-                <div className={classes.dycGrid}>
-                    <main className={classes.main}>
-                        <div className={classes.dycGridGap + ' ' + classes.dycArticles}>
-                            {/* <Column title="Headlines" subtitle="Recommended based on your interests" more="More For you" /> */}
+                <main className={classes.main}>
+                    <div className={classes.dycGridGap + ' ' + classes.dycArticles}>
+                        {/* <Column title="Headlines" subtitle="Recommended based on your interests" more="More For you" /> */}
+                        {
+                            articles.map((item, key) => (
+                                <Topic
+                                    key={key}
+                                    article={item}
+                                />
+                            ))
+                        }
+                        <div className={classes.dycGridColmn}>
+                            <div className={classes.dycPagenation}>
+                                {
+                                    parseInt(page) > 1 ?
+                                        (
+                                            <Button variant="outlined" href={`/?page=` + (parseInt(page) - 1)} style={{ marginRight: 30, backgroundColor: "#fff", marginBottom: 30 }}>
+                                                上一页
+                                            </Button>
+                                        ) : ''
+                                }
+                                {
+                                    parseInt(page) < Math.ceil(total / PAGE_SIZE) ?
+                                        (<Button variant="outlined" href={`/?page=` + (parseInt(page) + 1)} style={{ backgroundColor: "#fff", marginBottom: 30 }}>
+                                            下一页
+                                        </Button>) : ''
+                                }
+                            </div>
+                        </div>
+                    </div>
+                    <Snackbar
+                        anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'left',
+                        }}
+                        open={snackbarState}
+                        autoHideDuration={6000}
+                        onClose={closeSnackbar}
+                        message={errMessage}
+                        action={
+                            <React.Fragment>
+                                <Button color="secondary" size="small" onClick={closeSnackbar}>
+                                    知道了
+                                    </Button>
+                                <IconButton size="small" aria-label="close" color="inherit" onClick={closeSnackbar}>
+                                    <CloseIcon fontSize="small" />
+                                </IconButton>
+                            </React.Fragment>
+                        }
+                    />
+                </main>
+                <aside className={classes.aside}>
+                    {/* 天气组件 */}
+                    {
+                        location && location.hasOwnProperty("city") && location.hasOwnProperty("province") && typeof document !== "undefined" ?
+                            (<div className={classes.dycGridColmn}> <Weather province={location["province"]["name"]} city={location["city"]["name"]} showDays={false} showLiving={false} /> </div>) :
+                            ""
+                    }
+                    <AdSense
+                        style={{ display: 'block' }}
+                        format='auto'
+                        layoutKey='-g4+g+8-eu+rh'
+                        client='ca-pub-2963446487596884'
+                        slot='6753687404'
+                        responsive='true'
+                    />
+                    <div >
+                        <div className={classes.dycAsideColumnTopic}>
+                            <Typography variant="h4">关键字</Typography>
+                        </div>
+                        <div className={classes.dycAsideTag}>
                             {
-                                articles.map((item, key) => (
-                                    <Topic
-                                        key={key}
-                                        article={item}
-                                    />
+                                labels.map((item, key) => (
+                                    <Button variant="outlined" className={classes.dycAsideTagButton} key={key}>
+                                        <a href={`/article/${item.id}`}><Typography variant="h6">{item.label}</Typography></a>
+                                    </Button>
                                 ))
                             }
-                            <div className={classes.dycGridColmn}>
-                                <div className={classes.dycPagenation}>
-                                    {
-                                        parseInt(page) > 1 ?
-                                            (
-                                                <Button variant="outlined" href={`/?page=` + (parseInt(page) - 1)} style={{ marginRight: 30, backgroundColor: "#fff", marginBottom: 30 }}>
-                                                    上一页
-                                                </Button>
-                                            ) : ''
-                                    }
-                                    {
-                                        parseInt(page) < Math.ceil(total / PAGE_SIZE) ?
-                                            (<Button variant="outlined" href={`/?page=` + (parseInt(page) + 1)} style={{ backgroundColor: "#fff", marginBottom: 30 }}>
-                                                下一页
-                                            </Button>) : ''
-                                    }
-                                </div>
-                            </div>
                         </div>
-                        <Snackbar
-                            anchorOrigin={{
-                                vertical: 'bottom',
-                                horizontal: 'left',
-                            }}
-                            open={snackbarState}
-                            autoHideDuration={6000}
-                            onClose={closeSnackbar}
-                            message={errMessage}
-                            action={
-                                <React.Fragment>
-                                    <Button color="secondary" size="small" onClick={closeSnackbar}>
-                                        知道了
-                                    </Button>
-                                    <IconButton size="small" aria-label="close" color="inherit" onClick={closeSnackbar}>
-                                        <CloseIcon fontSize="small" />
-                                    </IconButton>
-                                </React.Fragment>
-                            }
-                        />
-                    </main>
-                    <aside className={classes.aside + ' ' + classes.dycGrid}>
-                        {/* 天气组件 */}
-                        {
-                            location && location.hasOwnProperty("city") && location.hasOwnProperty("province") && typeof document !== "undefined" ?
-                                (<div className={classes.dycGridColmn}> <Weather province={location["province"]["name"]} city={location["city"]["name"]} showDays={false} showLiving={false} /> </div>) :
-                                ""
-                        }
-                        {/* google adsense */}
-                        <div className={classes.dycGridColmn} style={{ maxHeight: 250 }}>
-                            <AdSense
-                                style={{ display: 'block' }}
-                                format='auto'
-                                layoutKey='-g4+g+8-eu+rh'
-                                client='ca-pub-2963446487596884'
-                                slot='6753687404'
-                                responsive='true'
-                            />
-                        </div>
-                        {/* 关键词组件 */}
-                        <div className={classes.dycGridColmn}>
-
-                            <div className={classes.dycAsideColumn}>
-                                <div className={classes.dycAsideColumnTopic}>
-                                    <Typography variant="h4">关键字</Typography>
-                                </div>
-                                <div className={classes.dycAsideTag}>
-                                    {
-                                        labels.map((item, key) => (
-                                            <Button variant="outlined" className={classes.dycAsideTagButton} key={key}>
-                                                <a href={`/article/${item.id}`}><Typography variant="h6">{item.label}</Typography></a>
-                                            </Button>
-                                        ))
-                                    }
-                                </div>
+                    </div>
+                    <div >
+                        <div className={classes.dycFooter}>
+                            <div className={classes.dycIPC}>
+                                <img src="/images/icp.png" style={{ width: 20, height: 20, marginRight: 8 }} />
+                                <a href="https://beian.miit.gov.cn/#/Integrated/recordQuery" rel="nofollow" target="_blank" style={{ color: "#8590a6" }}>鲁ICP备20003688号-1</a>
                             </div>
-                            <div className={classes.dycAsideColumn}>
-                                <div className={classes.dycFooter}>
-                                    <div className={classes.dycIPC}>
-                                        <img src="/images/icp.png" style={{ width: 20, height: 20, marginRight: 8 }} />
-                                        <a href="https://beian.miit.gov.cn/#/Integrated/recordQuery" rel="nofollow" target="_blank" style={{ color: "#8590a6" }}>鲁ICP备20003688号-1</a>
+                            <div>
+                                联系我: douyacun@gmail.com
                                     </div>
-                                    <div>
-                                        联系我: douyacun@gmail.com
-                                    </div>
-                                </div>
-                            </div>
                         </div>
-                    </aside>
-                </div>
+                    </div>
+                </aside>
             </div>
         </Layout>
     );
@@ -329,7 +308,7 @@ Index.getInitialProps = async ({ req, query, res }) => {
         }
     }).then(resp => resp.data)
     const labels = await GET({ url: "/api/articles/labels" }).then(resp => resp.data);
-    return { total, articles: data, labels, page: page}
+    return { total, articles: data, labels, page: page }
 }
 
 export default Index;

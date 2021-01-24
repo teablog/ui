@@ -12,7 +12,6 @@ import { parseCookies } from 'nookies'
 import Avatar from '@material-ui/core/Avatar';
 import Prompt from '../prompt';
 import ReplyIcon from '@material-ui/icons/Reply';
-import Button from '@material-ui/core/Button';
 
 const markdown = new MarkdownIt();
 const TEXTMSG = "TEXT"
@@ -165,11 +164,9 @@ const userStyle = makeStyles(theme => ({
     },
     timeline_new_comment: {
         marginBottom: 0,
-        '@media screen and (max-width: 600px)': {
-            '&': {
-                paddingBottom: 10,
-                paddingLeft: 10,
-            }
+        [theme.breakpoints.down('sm')]: {
+            paddingBottom: 10,
+            paddingLeft: 0,
         },
     },
     timeline_comment_group: {
@@ -208,6 +205,9 @@ const userStyle = makeStyles(theme => ({
         height: 44,
         color: "#666",
         fontWeight: 500,
+        [theme.breakpoints.down('sm')]: {
+            display: "none"
+        },
     },
     senderUrl: {
         "&:hover": {

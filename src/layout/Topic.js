@@ -62,15 +62,16 @@ const useStyles = makeStyles(theme => {
         // 话题
         dycTopic: {
             position: relative,
-            boxShadow: "0 0 0 1px #EBEDEF !important",
             position: 'relative',
             display: 'flex',
             flexDirection: 'column',
             backgroundColor: "#fff",
-            [theme.breakpoints.up('sm')]: {
-                borderRadius: '8px',
-                // border: theme.dycBorder,
-                boxShadow: "none",
+            border: theme.dycBorder,
+            borderRadius: '8px',
+            [theme.breakpoints.down('sm')]: {
+                boxShadow: "0 0 0 1px #EBEDEF !important",
+                border: "none",
+                borderRadius: '0px',
             },
         }
     }

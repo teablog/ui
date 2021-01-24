@@ -135,6 +135,10 @@ function Layout({ children, leftDrawerDefaultDisplay = false, marginTop = true }
   const [firstLoad, setFirstLoad] = React.useState(0);// 大屏第一次加载显示左侧边框
 
   React.useEffect(() => {
+    updateSize()
+  }, []);
+
+  React.useEffect(() => {
     // 监听窗口变化
     window.addEventListener('resize', updateSize);
     let clientWidth = document.documentElement.clientWidth;

@@ -28,7 +28,7 @@ const useStyles = makeStyles(theme => ({
     },
     content: {
         maxWidth: 980,
-        padding: '20px 10px 30px 0px',
+        padding: '20px 10px 30px 10px',
         position: 'relative',
         backgroundColor: "#fff",
         margin: "0 auto",
