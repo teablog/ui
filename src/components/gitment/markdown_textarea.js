@@ -229,6 +229,7 @@ class MarkdownTextarea extends Component {
       writing: true,
       focused: false,
       value: (props.value || '').replace(/\r\n/g, '\n'),
+      isLogin: false,
     };
   }
   componentDidMount() {
@@ -244,6 +245,9 @@ class MarkdownTextarea extends Component {
     if (this.props.value !== prevProps.value) {
       this.setState({...this.state, value: this.props.value});
       this.textarea.focus();
+    }
+    if (this.props.isLogin !== prevProps.isLogin) {
+      this.setState({...this.state, isLogin: this.props.isLogin});
     }
   }
   enableWrite = () => {
@@ -337,7 +341,7 @@ class MarkdownTextarea extends Component {
         {isActive && this.renderToolbar()}
         <div className={classes.write_content}>
           <Textarea
-            // disabled={!isLogin()}
+            disabled={!isLogin}
             inputRef={(textarea) => { this.textarea = textarea; }}
             style={{ display: writing ? 'block' : 'none' }}
             className={classes.markdown_editor + ' ' + classes.inputContrast + ' ' + (focused ? classes.focus : "")}

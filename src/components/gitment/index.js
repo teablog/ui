@@ -239,8 +239,8 @@ function Gitment({ articleId = "", msgData: { list, total: t, page: p, size: s }
         open: false,
         content: "",
     });
-    const isLogin = () => {
-        return user && user.id
+    const isLogin = (u) => {
+        return u && u.id !== ""
     }
     const classes = userStyle()
     // 首次加载
@@ -281,7 +281,7 @@ function Gitment({ articleId = "", msgData: { list, total: t, page: p, size: s }
      * 消息：发布 todo
      */
     const onComment = async () => {
-        if (!isLogin()) {
+        if (!isLogin(user)) {
             return;
         }
         await POST({
@@ -316,7 +316,6 @@ function Gitment({ articleId = "", msgData: { list, total: t, page: p, size: s }
         
         setCommentValue(v);
     }
-
     return (
         <div className={classes.root}>
             <Typography variant="subtitle2">{total} 条评论 </Typography>
@@ -374,14 +373,14 @@ function Gitment({ articleId = "", msgData: { list, total: t, page: p, size: s }
                     </span>
                     <div className={classes.timeline_comment_group}>
                         {
-                            isLogin() ? '' : (<div onClick={() => setOpen(true)} target="_blank" rel="nofollow" className={classes.comment_login} />)
+                            isLogin(user) ? '' : (<div onClick={() => setOpen(true)} target="_blank" rel="nofollow" className={classes.comment_login} />)
                         }
                         <div>
                             <MarkdownTextarea
                                 render={value => markdown.render(value)}
                                 onChange={setCommentValue}
                                 onComment={onComment}
-                                isLogin={isLogin}
+                                isLogin={isLogin(user)}
                                 toolbarAlwaysVisible={true}
                                 value={commentValue}
                             />
@@ -389,7 +388,7 @@ function Gitment({ articleId = "", msgData: { list, total: t, page: p, size: s }
                     </div>
                 </div>
             </div>
-            <Settled open={open} close={setOpen} setUser={setUser} />
+            <Settled open={open} close={setOpen} setUser={(u) => setUser(u)} />
             <Prompt open={prompt.open} close={() => { setPrompt({open: false, content: ""}) }} content={prompt.content}/>
         </div >
     )

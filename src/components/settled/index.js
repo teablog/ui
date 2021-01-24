@@ -45,16 +45,18 @@ function Settled({ open, close, setUser }) {
      * 注册：保存值
      */
     const changeAccount = (event) => {
-        if (!/\s/i.test(event.target.value)) {
-            let h = accountHith
-            h[event.target.name] = "不支持有空格～"
+        if (/\s/i.test(event.target.value)) {
+            let h = accountHit
+            h[event.target.name] = "不支持空格～"
             setAccountHit(h)
         } else {
+            let h = accountHit
+            h[event.target.name] = ""
+            setAccountHit(h)
             setAccount({ ...account, [event.target.name]: event.target.value });
         }
     }
     const register = () => {
-        console.log(account);
         let name = account.name.replace(/^\s+|\s+$/g, "")
         let email = account.email.replace(/^\s+|\s+$/g, "")
         if (name === "" || email === "") {
@@ -75,6 +77,7 @@ function Settled({ open, close, setUser }) {
                 return
             }
             if (code === 0) {
+                console.log("settled: ", data);
                 setUser(data)
                 closeDiaLog()
                 return
