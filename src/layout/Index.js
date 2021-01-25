@@ -221,7 +221,6 @@ function Layout({ children, leftDrawerDefaultDisplay = false, marginTop = true }
             <div className={classes.wc + ' ' + classes.hidden}>
               <Account />
             </div>
-            <div className={classes.filler}></div>
           </Toolbar>
         </AppBar>
         <LeftDrawer isOpen={isDrawerOpen} toggleDrawer={() => toggleDrawer(false)} isWide={isWide} />

@@ -14,7 +14,6 @@ import Typography from '@material-ui/core/Typography';
 import moment from 'moment';
 import Layout from '../../src/layout/Index';
 import { GET } from '../../src/request';
-
 import Gitment from '../../src/components/gitment';
 import AdSense from 'react-ssr-adsense';
 import '../../src/css/github-markdown.css';
@@ -25,6 +24,11 @@ const useStyles = makeStyles(theme => ({
         width: "100%",
         height: "100vh",
         marginTop: "64px",
+        '@media screen and (max-width: 1736px)': {
+            'dyc-app[open-and-visible="true"] &': {
+                marginLeft: '280px'
+            }
+        },
     },
     content: {
         maxWidth: 980,
