@@ -24,6 +24,12 @@ const useStyles = makeStyles(theme => ({
         width: "100%",
         height: "100vh",
         marginTop: "64px",
+        transition: "paddingLeft 200ms cubic-bezier(0, 0, 0.2, 1) 0ms",
+        '@media screen and (max-width: 1680px)': {
+            'dyc-app[open-and-visible="true"] &': {
+                paddingLeft: 290,
+            }
+        },
     },
     content: {
         maxWidth: 980,
@@ -31,11 +37,14 @@ const useStyles = makeStyles(theme => ({
         position: 'relative',
         backgroundColor: "#fff",
         margin: "0 auto",
-        '@media screen and (max-width: 1736px)': {
-            'dyc-app[open-and-visible="true"] &': {
-                marginLeft: '290px'
-            }
+        [theme.breakpoints.down('md')]: {
+            maxWidth: 760,
         },
+        // '@media screen and (max-width: 1680px)': {
+        //     'dyc-app[open-and-visible="true"] &': {
+        //         maxWidth: 760,
+        //     }
+        // },
     },
     conAppResizer: {
         userSelect: "none",
@@ -99,9 +108,14 @@ const useStyles = makeStyles(theme => ({
             height: 102,
             position: 'relative'
         },
-        display: "none",
+        opacity: 0,
         [theme.breakpoints.up('md')]: {
-            display: 'block',
+            'dyc-app[open-and-visible="false"] &': {
+                opacity: 1,
+            }
+        },
+        '@media screen and (min-width: 1600px)': {
+            opacity: 1,
         },
     },
     shareBtn: {

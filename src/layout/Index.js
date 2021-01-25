@@ -12,7 +12,7 @@ import LeftDrawer from './LeftDrawer';
 import Paper from '@material-ui/core/Paper';
 import Account from './account';
 
-const BIG_SCREEN_WIDTH = 1276;
+const BIG_SCREEN_WIDTH = 1400;
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -37,9 +37,9 @@ const useStyles = makeStyles(theme => ({
   },
   filler: {
     height: 48,
-    minWidth: 160,
+    width: 130,
     display: 'none',
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       display: 'block',
     },
   },
@@ -218,6 +218,7 @@ function Layout({ children, leftDrawerDefaultDisplay = false, marginTop = true }
                 </div>
               </div>
             </div>
+            <div className={classes.filler}></div>
             <div className={classes.wc + ' ' + classes.hidden}>
               <Account />
             </div>

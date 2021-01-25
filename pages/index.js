@@ -30,11 +30,12 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         '@media screen and (max-width: 1736px)': {
             'dyc-app[open-and-visible="true"] &': {
-                marginLeft: '290px'
+                marginLeft: 290,
+                marginRight: 10,
             }
         },
-        [theme.breakpoints.up('sm')]: {
-            padding: '16px 0px'
+        [theme.breakpoints.up('md')]: {
+            padding: '16px 10px'
         },
     },
     dycGridGap: {
@@ -57,7 +58,7 @@ const useStyles = makeStyles(theme => ({
         flex: 1,
         // gridColumn: 'span 8',
         width: 900,
-        [theme.breakpoints.up('sm')]: {
+        [theme.breakpoints.up('md')]: {
             marginRight: 32,
         },
     },
