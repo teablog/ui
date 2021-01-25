@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
         display: "flex",
         '@media screen and (max-width: 1736px)': {
             'dyc-app[open-and-visible="true"] &': {
-                marginLeft: '280px'
+                marginLeft: '290px'
             }
         },
         [theme.breakpoints.up('sm')]: {
