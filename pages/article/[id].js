@@ -24,11 +24,6 @@ const useStyles = makeStyles(theme => ({
         width: "100%",
         height: "100vh",
         marginTop: "64px",
-        '@media screen and (max-width: 1736px)': {
-            'dyc-app[open-and-visible="true"] &': {
-                marginLeft: '280px'
-            }
-        },
     },
     content: {
         maxWidth: 980,
@@ -36,6 +31,11 @@ const useStyles = makeStyles(theme => ({
         position: 'relative',
         backgroundColor: "#fff",
         margin: "0 auto",
+        '@media screen and (max-width: 1736px)': {
+            'dyc-app[open-and-visible="true"] &': {
+                marginLeft: '290px'
+            }
+        },
     },
     conAppResizer: {
         userSelect: "none",
