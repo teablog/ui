@@ -142,7 +142,7 @@ const useStyles = makeStyles(theme => ({
     }
 }));
 
-function Index({ total, articles, labels, page }) {
+function Index({ total, articles, labels, page, outside}) {
     const classes = useStyles();
     const [location, setLocation] = useState(undefined)
     const [snackbarState, setSnackbarState] = useState(false)
@@ -243,9 +243,7 @@ function Index({ total, articles, labels, page }) {
                         message={errMessage}
                         action={
                             <React.Fragment>
-                                <Button color="secondary" size="small" onClick={closeSnackbar}>
-                                    知道了
-                                    </Button>
+                                <Button color="secondary" size="small" onClick={closeSnackbar}>知道了</Button>
                                 <IconButton size="small" aria-label="close" color="inherit" onClick={closeSnackbar}>
                                     <CloseIcon fontSize="small" />
                                 </IconButton>
@@ -268,7 +266,7 @@ function Index({ total, articles, labels, page }) {
                         slot='6753687404'
                         responsive='true'
                     />
-                    <div >
+                    <div>
                         <div className={classes.dycAsideColumnTopic}>
                             <Typography variant="h4">关键字</Typography>
                         </div>
@@ -282,15 +280,27 @@ function Index({ total, articles, labels, page }) {
                             }
                         </div>
                     </div>
+                    <div>
+                        <div className={classes.dycAsideColumnTopic}>
+                            <Typography variant="h4">友情链接</Typography>
+                        </div>
+                        <div className={classes.dycAsideTag}>
+                            {
+                                outside.map((item, key) => (
+                                    <Button variant="outlined" className={classes.dycAsideTagButton} key={key}>
+                                        <a href={item.url}  target="_blank"><Typography variant="h6">{item.title}</Typography></a>
+                                    </Button>
+                                ))
+                            }
+                        </div>
+                    </div>
                     <div >
                         <div className={classes.dycFooter}>
                             <div className={classes.dycIPC}>
                                 <img src="/images/icp.png" style={{ width: 20, height: 20, marginRight: 8 }} />
                                 <a href="https://beian.miit.gov.cn/#/Integrated/recordQuery" rel="nofollow" target="_blank" style={{ color: "#8590a6" }}>鲁ICP备20003688号-1</a>
                             </div>
-                            <div>
-                                联系我: douyacun@gmail.com
-                                    </div>
+                            <div>联系我: douyacun@gmail.com</div>
                         </div>
                     </div>
                 </aside>
@@ -308,8 +318,17 @@ Index.getInitialProps = async ({ req, query, res }) => {
             "User-Agent": req.headers["user-agent"]
         }
     }).then(resp => resp.data)
+
+    const outside = await GET({
+        url: "/api/outside"
+    }).then(({data, code}) => {
+        if (code === 0) {
+            return data.list
+        }
+        return []
+    })
     const labels = await GET({ url: "/api/articles/labels" }).then(resp => resp.data);
-    return { total, articles: data, labels, page: page }
+    return { total, articles: data, labels, page: page, outside}
 }
 
 export default Index;
