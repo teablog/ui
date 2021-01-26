@@ -108,14 +108,14 @@ const useStyles = makeStyles(theme => ({
             height: 102,
             position: 'relative'
         },
-        opacity: 0,
+        display: "none",
         [theme.breakpoints.up('md')]: {
             'dyc-app[open-and-visible="false"] &': {
-                opacity: 1,
+                display: "block",
             }
         },
         '@media screen and (min-width: 1600px)': {
-            opacity: 1,
+            display: "block",
         },
     },
     shareBtn: {
