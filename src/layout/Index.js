@@ -198,7 +198,7 @@ function Layout({ children, leftDrawerDefaultDisplay = false, marginTop = true }
                 <MenuIcon />
               </IconButton>
               <Typography className={classes.title + ' ' + classes.hidden} variant="h2" noWrap>
-                <a href="/" style={{ color: "#666" }}>Douya村</a>
+                <a href="/" style={{ color: "#666" }}>Douyacun</a>
               </Typography>
             </div>
             <div className={classes.wc + ' ' + classes.fullWidth}>
