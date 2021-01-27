@@ -288,7 +288,7 @@ function Index({ total, articles, labels, page, outside}) {
                             {
                                 outside.map((item, key) => (
                                     <Button variant="outlined" className={classes.dycAsideTagButton} key={key}>
-                                        <a href={item.url}  target="_blank"><Typography variant="h6">{item.title}</Typography></a>
+                                        <a href={item.url} target="_blank"><Typography variant="h6">{item.title}</Typography></a>
                                     </Button>
                                 ))
                             }

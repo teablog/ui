@@ -242,7 +242,7 @@ function Gitment({ articleId = "", msgData: { list, total: t, page: p, size: s }
         content: "",
     });
     const isLogin = (u) => {
-        return u && u.id !== ""
+        return u && u.id
     }
     const classes = userStyle()
     // 首次加载
@@ -318,6 +318,7 @@ function Gitment({ articleId = "", msgData: { list, total: t, page: p, size: s }
         
         setCommentValue(v);
     }
+    console.log(user, isLogin(user));
     return (
         <div className={classes.root}>
             <Typography variant="subtitle2">{total} 条评论 </Typography>
