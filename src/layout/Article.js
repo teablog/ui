@@ -147,7 +147,7 @@ function Article({variant, className, style, stat, article, type}) {
     return (<article className={root.join(' ')} style={style}>
         <a href={`/${type}/${article.id}`} target="_blank" className={classes.dycLink}></a>
         <Typography variant="h3" className={classes.dycTitle} color="textPrimary">
-            <a href="/" style={{color: "inherit"}}>
+            <a href={`/${type}/${article.id}`} style={{color: "inherit"}}>
                 {article ? article.title : ''}
                 {article && article.rate ? '   ' + article.rate + '分' : ''}
             </a>
