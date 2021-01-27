@@ -318,7 +318,6 @@ function Gitment({ articleId = "", msgData: { list, total: t, page: p, size: s }
         
         setCommentValue(v);
     }
-    console.log(user, isLogin(user));
     return (
         <div className={classes.root}>
             <Typography variant="subtitle2">{total} 条评论 </Typography>
